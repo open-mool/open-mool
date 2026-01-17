@@ -4,6 +4,8 @@ import Link from "next/link";
 import { MoolDefinition } from "@/components/MoolDefinition";
 import { auth0 } from "@/lib/auth0";
 
+export const runtime = 'edge';
+
 export default async function Home() {
     let isLoggedIn = false;
     try {

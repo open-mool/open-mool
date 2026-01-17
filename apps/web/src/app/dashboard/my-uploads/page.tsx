@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { auth0 } from '@/lib/auth0';
 import Link from 'next/link';
 
+export const runtime = 'edge';
+
 interface Upload {
     id: number;
     title: string;

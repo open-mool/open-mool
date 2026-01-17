@@ -2,6 +2,8 @@ import { auth0 } from '@/lib/auth0';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 
+export const runtime = 'edge';
+
 export default async function ProfilePage() {
     let session = null;
     try {

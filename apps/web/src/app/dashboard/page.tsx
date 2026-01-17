@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { auth0 } from '@/lib/auth0';
 import { redirect } from 'next/navigation';
 
+export const runtime = 'edge';
+
 export default async function DashboardPage() {
     let session = null;
     try {
