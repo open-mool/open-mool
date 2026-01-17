@@ -1,6 +1,6 @@
 # Cloudflare Pages Deployment Setup
 
-This document provides step-by-step instructions for setting up automated deployments to Cloudflare Pages.
+This document provides step-by-step instructions for setting up automated deployments to Cloudflare Pages using Cloudflare's native Git integration.
 
 ## Prerequisites
 
@@ -8,54 +8,16 @@ This document provides step-by-step instructions for setting up automated deploy
 - Admin access to the GitHub repository
 - The repository already contains the necessary configuration files
 
-## Step 1: Get Cloudflare Credentials
+## Step 1: Create Cloudflare Pages Project
 
-### Account ID
-
-1. Log in to your [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Select any website or go to the Workers & Pages section
-3. Your Account ID is visible in the URL: `https://dash.cloudflare.com/{ACCOUNT_ID}/...`
-4. Or find it in the right sidebar under "Account ID"
-5. Copy this value - you'll need it for GitHub secrets
-
-### API Token
-
-1. Go to [API Tokens](https://dash.cloudflare.com/profile/api-tokens)
-2. Click **"Create Token"**
-3. Use the **"Edit Cloudflare Workers"** template or create a custom token with these permissions:
-   - Account > Cloudflare Pages > Edit
-4. Under **"Account Resources"**, select your account
-5. Under **"Zone Resources"**, select "All zones" or specific zones as needed
-6. Click **"Continue to summary"** then **"Create Token"**
-7. **Copy the token immediately** - it won't be shown again
-
-## Step 2: Configure GitHub Secrets
-
-1. Go to your GitHub repository
-2. Navigate to **Settings** > **Secrets and variables** > **Actions**
-3. Click **"New repository secret"**
-4. Add the following secrets:
-
-### Secret 1: CLOUDFLARE_ACCOUNT_ID
-- **Name**: `CLOUDFLARE_ACCOUNT_ID`
-- **Value**: Your Account ID from Step 1
-- Click **"Add secret"**
-
-### Secret 2: CLOUDFLARE_API_TOKEN
-- **Name**: `CLOUDFLARE_API_TOKEN`
-- **Value**: Your API Token from Step 1
-- Click **"Add secret"**
-
-## Step 3: Create Cloudflare Pages Project
-
-Before the first deployment, you need to create the Pages project:
+Cloudflare Pages provides built-in CI/CD through direct Git integration - no GitHub Actions or external workflows needed.
 
 1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com) > **Workers & Pages**
 2. Click **"Create application"** > **"Pages"** > **"Connect to Git"**
 3. Authorize Cloudflare to access your GitHub account
 4. Select the `open-mool` repository
 5. Configure the build settings:
-   - **Project name**: `open-mool-web` (must match the workflow file)
+   - **Project name**: `open-mool-web`
    - **Production branch**: `main` or `master`
    - **Framework preset**: Next.js (Static HTML Export)
    - **Build command**: `pnpm install && pnpm --filter web run build`
@@ -70,18 +32,22 @@ Currently, the web application **does not require any environment variables**. I
 
 For reference, see the `apps/web/.env.example` file which documents the structure for future integrations if needed.
 
-## Step 4: Test the Deployment
+## Step 2: Verify the Deployment
 
-1. Make a small change to the web app (e.g., update a comment)
-2. Commit and push to the `main` branch:
-   ```bash
-   git add .
-   git commit -m "Test Cloudflare Pages deployment"
-   git push origin main
-   ```
-3. Go to the **Actions** tab in your GitHub repository
-4. You should see the "Deploy to Cloudflare Pages" workflow running
-5. Once complete, visit your Cloudflare Pages dashboard to see the deployment
+1. After saving, Cloudflare will automatically trigger the first build
+2. Monitor the build progress in the Cloudflare Pages dashboard
+3. Once complete, your app will be live at `https://open-mool-web.pages.dev`
+
+## How It Works
+
+Once connected, Cloudflare Pages automatically:
+
+- **Monitors your repository** for changes to the production branch
+- **Triggers builds** automatically when you push commits
+- **Installs dependencies** using pnpm (detected from lockfile)
+- **Builds the application** using the configured build command
+- **Deploys to the edge** across Cloudflare's global network
+- **Creates preview deployments** for pull requests automatically
 
 ## Deployment URLs
 
@@ -94,15 +60,15 @@ You can also add a custom domain in the Cloudflare Pages settings.
 
 ## Troubleshooting
 
-### Workflow fails with authentication error
-- Verify your `CLOUDFLARE_API_TOKEN` has the correct permissions
-- Check that the token hasn't expired
-- Ensure `CLOUDFLARE_ACCOUNT_ID` is correct
+### Build fails with dependency errors
+- Check that `pnpm-lock.yaml` is committed to the repository
+- Verify the build command in Cloudflare Pages settings matches: `pnpm install && pnpm --filter web run build`
+- Check build logs in the Cloudflare Pages dashboard for specific errors
 
-### Build fails
-- Check the build logs in the GitHub Actions tab
-- Verify the build command works locally: `pnpm --filter web run build`
-- Ensure all dependencies are listed in `package.json`
+### Build fails with ESLint errors
+- Run `pnpm run lint` locally to check for linting errors
+- Fix any errors before pushing
+- All quotes in JSX should be properly escaped
 
 ### Security headers not applied
 - The `_headers` file in `apps/web/public/` is copied to the output during build
@@ -111,7 +77,7 @@ You can also add a custom domain in the Cloudflare Pages settings.
 
 ## Manual Deployment
 
-If you need to deploy manually:
+If you need to deploy manually (not recommended for production):
 
 ```bash
 # Install dependencies
@@ -120,7 +86,7 @@ pnpm install
 # Build the app
 pnpm --filter web run build
 
-# Deploy using Wrangler CLI
+# Deploy using Wrangler CLI (requires CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID)
 npx wrangler pages deploy apps/web/out --project-name=open-mool-web
 ```
 

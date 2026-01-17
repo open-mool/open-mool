@@ -70,7 +70,7 @@ pnpm dev
 
 The platform is designed for Cloudflare's edge infrastructure:
 
-- **Web App**: Automated deployment to Cloudflare Pages via GitHub Actions
+- **Web App**: Automated deployment to Cloudflare Pages via native Git integration
 - **API**: Cloudflare Workers deployment via Wrangler
 
 For detailed deployment instructions, see:
@@ -79,9 +79,10 @@ For detailed deployment instructions, see:
 
 ### Quick Deploy (Web)
 
-1. Configure GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
-2. Push to `main` branch - GitHub Actions handles the rest
-3. Your app is live at `https://open-mool-web.pages.dev`
+1. Connect your GitHub repository to Cloudflare Pages
+2. Configure build settings (see [Cloudflare Pages Setup](./docs/cloudflare-pages-setup.md))
+3. Push to `main` branch - Cloudflare automatically builds and deploys
+4. Your app is live at `https://open-mool-web.pages.dev`
 
 ## 📜 Documentation
 

@@ -80,51 +80,40 @@ Click **Deploy**. Vercel will build and host your application.
 
 ## Deploying Web App to Cloudflare Pages (Recommended)
 
-The web application is configured for deployment to Cloudflare Pages with automated CI/CD via GitHub Actions.
+The web application is configured for deployment to Cloudflare Pages with automated CI/CD via Cloudflare's native Git integration.
 
-### Automated Deployment (GitHub Actions)
+### Cloudflare Pages Setup
 
-The repository includes a GitHub Actions workflow that automatically deploys to Cloudflare Pages on every push to the main branch.
+Cloudflare Pages provides built-in CI/CD that automatically builds and deploys your application when you push to your repository.
 
 #### Prerequisites
 1. A Cloudflare account with Pages enabled
-2. GitHub repository secrets configured
+2. GitHub repository access
 
-#### Setup GitHub Secrets
-
-Add the following secrets to your GitHub repository (Settings > Secrets and variables > Actions):
-
-- `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token with Pages permissions
-  - Go to Cloudflare Dashboard > My Profile > API Tokens
-  - Create token with "Cloudflare Pages - Edit" permissions
-  
-- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID
-  - Find this in the Cloudflare Dashboard URL or in your account overview
-
-#### How It Works
-
-The workflow (`.github/workflows/deploy-web.yml`) will:
-1. Trigger on pushes to `main`/`master` branches
-2. Install dependencies using pnpm
-3. Build the Next.js application as a static export
-4. Deploy the `apps/web/out` directory to Cloudflare Pages
-5. Automatically create preview deployments for pull requests
-
-### Manual Cloudflare Pages Setup
-
-If you prefer to set up Cloudflare Pages manually:
+#### Setup Steps
 
 1. Go to **Cloudflare Dashboard** > **Pages**
 2. Click **"Create a project"** > **"Connect to Git"**
-3. Select your `open-mool` repository
-4. Configure build settings:
+3. Authorize Cloudflare to access your GitHub account
+4. Select your `open-mool` repository
+5. Configure build settings:
    - **Production branch**: `main` (or `master`)
    - **Framework preset**: `Next.js (Static HTML Export)`
    - **Build command**: `pnpm install && pnpm --filter web run build`
    - **Build output directory**: `apps/web/out`
    - **Root directory**: `/` (leave as root)
-   - **Environment variables**: None required for basic deployment
-5. Click **"Save and Deploy"**
+   - **Environment variables**: None required (see `apps/web/.env.example` for details)
+6. Click **"Save and Deploy"**
+
+#### How It Works
+
+Cloudflare Pages will:
+1. Monitor your repository for changes to the production branch
+2. Automatically trigger builds when you push commits
+3. Install dependencies using pnpm
+4. Build the Next.js application as a static export
+5. Deploy the `apps/web/out` directory to Cloudflare's edge network
+6. Automatically create preview deployments for pull requests
 
 ### Security Features
 
