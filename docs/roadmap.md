@@ -103,6 +103,22 @@
 
 ---
 
+## 🔮 Phase 4: Decentralization & Governance (The Mirror)
+
+### 4.1 "Mool Nodes" (Federation)
+- **Concept:** Allow partner institutions (Universities, NGOs) to host read-only mirrors of specific collections.
+- **Tech:** Containerized "Pocket Archive" (Next.js + SQLite) deployable on local servers.
+- **Goal:** Resilience against central failure and localized access in low-connectivity zones.
+
+### 4.2 The Content Trust (Licensing)
+- **Legal Framework:** Establish the "Open Mool Foundation" to hold data in trust.
+- **Licensing Model:**
+    - **Code:** MIT (Fully Open).
+    - **Data:** Custom "Heritage License" (research/education free, commercial with revenue share).
+- **Permaweb Backup:** Periodic snapshots of the verified vault to Arweave/IPFS.
+
+---
+
 ## Technology Stack
 
 ### Core

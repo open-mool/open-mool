@@ -1,51 +1,72 @@
 # Open Mool (The Source Code of the Himalayas)
 
 <div align="center">
-  <img src="https://via.placeholder.com/150?text=Open+Mool" alt="Open Mool Logo" height="100" />
+  <br />
+  <img src="https://raw.githubusercontent.com/open-mool/brand-assets/main/logo/open-mool-logo-v1.png" alt="Open Mool Logo" height="120" />
+  <br />
+  
+  <h1>Open Mool</h1>
   
   <p>
     <strong>A Public Utility for Culture.</strong><br/>
     Building the sovereign digital infrastructure to capture, code, and immortalize Himalayan heritage.
   </p>
 
+  <p align="center">
+    <a href="https://github.com/open-mool/open-mool/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="MIT License" />
+    </a>
+    <a href="https://github.com/open-mool/open-mool/pulls">
+      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+    </a>
+    <a href="https://twitter.com/openmool">
+      <img src="https://img.shields.io/twitter/follow/openmool.svg?style=social" alt="Twitter" />
+    </a>
+  </p>
+
   <p>
-    <a href="./docs/manifesto.md">Manifesto</a> • 
-    <a href="./docs/roadmap.md">Roadmap</a> • 
-    <a href="./docs/architecture.md">Architecture</a>
+    <a href="./docs/whitepaper.md"><strong>Whitepaper</strong></a> • 
+    <a href="./docs/roadmap.md"><strong>Roadmap</strong></a> • 
+    <a href="./docs/architecture.md"><strong>Architecture</strong></a> •
+    <a href="./docs/marketing_plan.md"><strong>Marketing Plan</strong></a>
   </p>
 </div>
 
 ---
 
 ## 🏔 Mission
-Open Mool is an open-source "Digital Vault" for the Himalayan region. We aggregate audio, video, and text data—preserving folklore, dialects, rituals, and oral history before it is lost.
+
+**Open Mool** is an open-source "Digital Vault" for the Himalayan region. We aggregate audio, video, and text data—preserving folklore, dialects, rituals, and oral history before it is lost to time and modernization.
 
 We are not just a storage solution; we are an **AI-ready archival system** that makes cultural data searchable, translatable, and accessible to the future.
 
+> *"We are building the Source Code of the Himalayas."*
+
+---
+
 ## 🏗 Tech Stack (Himalayan Minimalism)
 
-- **Frontend:** Next.js 14 (Static Export), Tailwind CSS, Shadcn UI, Cloudflare Pages.
-- **Backend:** Cloudflare Workers (Hono.js).
-- **Data:** Cloudflare D1 (SQLite), Cloudflare R2 (Object Storage).
-- **Auth:** Auth0.
-- **AI:** Cloudflare Workers AI + OpenAI.
-- **Security:** HTTPS enforcement, CSP headers, security-first defaults.
+We utilize a modern, edge-first stack designed for sustainability and speed:
 
-## 📂 Repository Structure
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | [Next.js 14](https://nextjs.org/) (App Router), Tailwind CSS, Shadcn UI |
+| **Edge** | [Cloudflare Pages](https://pages.cloudflare.com/) (Deploy), [Cloudflare Workers](https://workers.cloudflare.com/) (API) |
+| **Database** | [Cloudflare D1](https://developers.cloudflare.com/d1/) (SQLite at the Edge) |
+| **Storage** | [Cloudflare R2](https://developers.cloudflare.com/r2/) (Zero Egress Object Storage) |
+| **Auth** | [Auth0](https://auth0.com/) (Universal Login) |
+| **AI** | [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/) + [OpenAI](https://openai.com/) |
 
-This is a **Turborepo** monorepo:
-
-- **[`apps/web`](./apps/web)**: The public-facing platform (The Gallery & Upload Node).
-- **[`apps/api`](./apps/api)**: The backend worker handling Data & AI piping.
-- **[`packages/ui`](./packages/ui)**: Shared "Himalayan Minimalism" UI components.
-- **[`packages/config`](./packages/config)**: Shared TypeScript/ESLint configurations.
+---
 
 ## 🚀 Getting Started
+
+We welcome **Guardians** (contributors) of all backgrounds.
 
 ### Prerequisites
 - Node.js > 18
 - pnpm > 9.0.0
-- Wrangler CLI (for Cloudflare)
+- Wrangler CLI (for backend dev)
 
 ### Installation
 
@@ -53,48 +74,50 @@ This is a **Turborepo** monorepo:
 # 1. Clone the repo
 git clone https://github.com/open-mool/open-mool.git
 
-# 2. Install dependencies
+# 2. Install dependencies (Turborepo)
 pnpm install
 
-# 3. Configure environment (optional)
-# No environment variables are required for the web app
-# See apps/web/.env.example for future reference
-
-# 4. Start local development
+# 3. Start local development (Web + API)
 pnpm dev
+
 # Web: http://localhost:3000
 # API: http://localhost:8787
 ```
 
-## 🚢 Deployment
+---
 
-The platform is designed for Cloudflare's edge infrastructure:
+## 📂 Repository Structure
 
-- **Web App**: Automated deployment to Cloudflare Pages via native Git integration
-- **API**: Cloudflare Workers deployment via Wrangler
+This is a **monorepo** managed by Turborepo:
 
-For detailed deployment instructions, see:
-- **[Deployment Guide](./DEPLOYMENT.md)**: Complete deployment instructions
-- **[Cloudflare Pages Setup](./docs/cloudflare-pages-setup.md)**: Step-by-step CI/CD configuration
+- **[`apps/web`](./apps/web)**: The public-facing platform (The Gallery & Upload Node).
+- **[`apps/api`](./apps/api)**: The backend worker handling Data & AI piping.
+- **[`packages/ui`](./packages/ui)**: Shared "Himalayan Minimalism" UI components.
+- **[`packages/config`](./packages/config)**: Shared TypeScript/ESLint configurations.
 
-### Quick Deploy (Web)
+---
 
-1. Connect your GitHub repository to Cloudflare Pages
-2. Configure build settings (see [Cloudflare Pages Setup](./docs/cloudflare-pages-setup.md))
-3. Push to `main` branch - Cloudflare automatically builds and deploys
-4. Your app is live at `https://open-mool-web.pages.dev`
+## 🤝 Community & Governance
 
-## 📜 Documentation
+Open Mool runs on a transparent, two-tiered community model:
 
-- **[Roadmap](./docs/roadmap.md)**: From MVP ("The Trident") to the "Pahadi LLM".
-- **[Architecture](./docs/architecture.md)**: System design and deployment strategy.
-- **[Design Specs](./docs/design_specs.md)**: The "Snow & Vermilion" aesthetic.
-- **[Brand Guidelines](./docs/brand_guidelines.md)**: Our voice, vocabulary, and manifesto.
-- **[Development Rules](./docs/development_rules.md)**: How to contribute code.
-- **[Cloudflare Pages Setup](./docs/cloudflare-pages-setup.md)**: Automated deployment guide.
+1.  **Contributors (Guardians):** Individuals who submit code or cultural data.
+2.  **Partners (Foundations):** NGOs and institutions who curate large collections.
 
-## 🤝 Contribution
+### Decentralization Roadmap
+We are moving towards a **federated model** ("Mool Nodes") where verified institutions can host read-only mirrors of the archive, ensuring long-term resilience. 
 
-We call our contributors **Guardians**. If you want to help preserve history or write code for the future, please read our [Development Rules](./docs/development_rules.md) first.
+See our **[Whitepaper](./docs/whitepaper.md)** for details on our governance and content licensing strategy.
 
-**License:** MIT
+---
+
+## ⚖️ License
+
+**Code:** [MIT License](./LICENSE)  
+**Content:** See [Content Licensing Policy](./docs/whitepaper.md#51-content-licensing-the-trust)
+
+---
+
+<div align="center">
+  <p>Made with ❤️ in the Himalayas.</p>
+</div>
