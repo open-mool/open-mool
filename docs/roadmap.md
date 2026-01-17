@@ -2,83 +2,129 @@
 
 **Mission:** Build the "Source Code of the Himalayas" — a sovereign, AI-ready digital archive.
 
-## Phase 1: The Trident (MVP)
-**Status:** In Progress
-**Goal:** Deploy a secure, highly-visual ingestion and retrieval system.
+---
 
-### 1.1 The Platform Foundation (Frontend)
-- **Tech Stack:** Next.js 14, Tailwind CSS, Framer Motion.
-- [x] **Landing Page:** Narrative-driven "Scrollventure" explaining the mission.
-- [x] **"How It Works":** Interactive timeline of the preservation protocol.
-- [ ] **Dashboard Layout:** `apps/web/src/app/dashboard`
-    - Sidebar navigation (Upload, My Archives, Profile).
-    - Status indicators for upload quotas.
-- [ ] **Global Player:** Persistent audio player context for uninterrupted listening.
+## ✅ Completed (Phase 1: Foundation)
+
+### 1.1 The Platform Foundation
+- [x] Landing page with "Scrollventure" narrative
+- [x] "How It Works" interactive timeline  
+- [x] Dashboard layout with sidebar navigation
+- [x] Public/private route separation (middleware)
 
 ### 1.2 The Gatekeeper (Auth & Identity)
-- **Tech Stack:** Clerk (Recommended) or Auth0, Cloudflare D1.
-- [ ] **Authentication Flow:**
-    - Social Login (Google/Apple) for ease.
-    - Magic Link for passwordless entry.
-- [ ] **User Model (`User`):**
-    - `id`: Unique ID (KSUID/UUID).
-    - `role`: `SCOUT` (Default), `GUARDIAN` (Verified), `ARCHIVIST` (Admin).
-    - `reputation_score`: Integer (gamification base).
-    - `wallet_address`: Optional (for future Web3 incentives).
-- [ ] **Middleware:** Edge-compatible route protection (`apps/web/src/middleware.ts`).
+- [x] Auth0 integration with UserProvider
+- [x] User schema in D1 (`users` table)
+- [x] Role system: `SCOUT`, `GUARDIAN`, `ARCHIVIST`
+- [x] Reputation score tracking
+- [x] Profile page with "Guardian Card" UI
+- [x] Auth0 webhook for user sync
 
-### 1.3 The Ingest Engine (Submission Node)
-- **Tech Stack:** Cloudflare R2, React Dropzone, Hono (API).
-- [ ] **Upload Interface (`/dashboard/upload`):**
-    - Multi-file drag-and-drop.
-    - Client-side validation (File type: `.wav`, `.mp3`, `.mp4`; Max size: 500MB).
-- [ ] **Metadata Form:**
-    - **Language/Dialect:** Dropdown with fuzzy search.
-    - **Geolocation:** Lat/Long auto-capture + Village Name manual override.
-    - **Context:** "What is happening here?" (Textarea).
-- [ ] **Storage Pipeline:**
-    - Generate Presigned URL from API.
-    - Direct upload to R2 Bucket (`open-mool-raw`).
-
-### 1.4 The Refinery (AI Processing)
-- **Tech Stack:** Cloudflare Workers AI / OpenAI Whisper API.
-- [ ] **Transcription Worker:**
-    - Triggered on R2 `PutObject` event.
-    - Process audio to text (Hindi/English/Pahadi dialects).
-- [ ] **Enrichment Worker:**
-    - **Auto-Tagging:** Extract entities (Deities, Festivals, Seasons).
-    - **Sentiment Analysis:** Determine emotional tone.
-- [ ] **Vectorization:**
-    - Embed title, description, and transcript using `text-embedding-3-small`.
-    - Upsert to Vector DB (Cloudflare Vectorize).
-
-### 1.5 The Oracle (Search & Discovery)
-- **Tech Stack:** CommandAI / cmdk, Cloudflare Vectorize.
-- [ ] **Semantic Search:** "Songs about rain in Kumaon" -> Returns matches based on meaning, not just keywords.
-- [ ] **Map View:** deck.gl or Mapbox GL JS visualization of archives.
+### 1.3 The Ingest Engine
+- [x] Upload page (`/upload`) with drag & drop
+- [x] FileUploader component with progress tracking
+- [x] Metadata form (title, description, language, geolocation)
+- [x] R2 bucket integration
+- [x] D1 `media` table
+- [x] Presigned URL generation (`POST /upload/presigned`)
+- [x] Metadata storage (`POST /upload/complete`)
 
 ---
 
-## Phase 2: The Trust Layer (Reputation)
-**Goal:** Gamify preservation and ensure data integrity.
+## 🚧 In Progress
 
-### 2.1 The Guardian Protocol
-- [ ] **Verification Badge:** Logic to upgrade user from Scout to Guardian after 5 valid uploads.
-- [ ] **Leaderboard:** "Top Guardians of the Week" based on data volume and quality.
-
----
-
-## Phase 3: The API (Developer Access)
-**Goal:** Allow third-party apps to build on the archive.
-
-- [ ] **Public API Keys:** Issue read-only keys for researchers.
-- [ ] **Endpoints:**
-    - `GET /api/v1/archives/{id}`
-    - `GET /api/v1/search?q={query}`
+### Upload History Dashboard (Priority 1)
+- [ ] Add `user_id` to media table
+- [ ] Create `GET /api/media/my-uploads` endpoint
+- [ ] Build `/dashboard/my-uploads` page
+- [ ] Display upload cards with status
 
 ---
 
-## Architecture References
-- **Monorepo:** Turborepo (`apps/web`, `apps/api`, `packages/ui`).
-- **Database:** Drizzle ORM + Cloudflare D1 (SQLite).
-- **Edge:** All API routes run on Cloudflare Workers.
+## 📋 Backlog (Prioritized)
+
+### Priority 1: Complete Upload Experience
+1. **Upload History** (Current)
+2. **File Validation & Preview**
+   - Client-side type/size validation
+   - Audio/video preview before upload
+   - Thumbnail generation
+3. **Multipart Upload**
+   - Chunked uploads for large files (>100MB)
+   - Pause/resume functionality
+
+### Priority 2: The Refinery (AI Processing)
+1. **Transcription Worker**
+   - Cloudflare Workers AI or OpenAI Whisper
+   - R2 event trigger on upload
+   - Add `transcript` column to media table
+   - Support Hindi, English, Pahadi dialects
+2. **Auto-Tagging & Enrichment**
+   - Entity extraction (people, places, festivals)
+   - Language detection
+   - Store metadata as JSON
+3. **Processing Status UI**
+   - Real-time progress updates
+   - Display extracted tags
+
+### Priority 3: The Oracle (Discovery & Search)
+1. **Browse Gallery (`/explore`)**
+   - Grid/list view of all archives
+   - Filters: type, language, region, date
+   - Infinite scroll pagination
+2. **Global Audio/Video Player**
+   - Context-based player (continues while navigating)
+   - Waveform visualization (Wavesurfer.js)
+   - Transcript sync
+3. **Semantic Search**
+   - Cloudflare Vectorize integration
+   - Embed transcripts with `text-embedding-3-small`
+   - Natural language queries
+4. **Map View**
+   - Mapbox GL or deck.gl
+   - Cluster markers by region
+
+### Priority 4: Community & Gamification
+1. **Reputation System**
+   - Award points for uploads, metadata quality
+   - Milestone badges (10, 50, 100 uploads)
+2. **Guardian Verification**
+   - Review workflow for Guardians
+   - Flag/approve content
+   - Auto-promotion after 5 verified uploads
+3. **Leaderboard**
+   - Weekly/monthly top contributors
+
+### Priority 5: API & Developer Access
+1. **Public API**
+   - Read-only endpoints
+   - API key authentication
+   - OpenAPI docs
+2. **Embeddable Player**
+   - Widget for external sites
+
+---
+
+## Technology Stack
+
+### Core
+- **Frontend:** Next.js 14, React, TypeScript, Tailwind CSS
+- **Backend:** Hono (Cloudflare Workers)
+- **Database:** Cloudflare D1 + Drizzle ORM
+- **Storage:** Cloudflare R2
+- **Auth:** Auth0
+
+### Future Additions
+- **AI:** Cloudflare Workers AI / OpenAI Whisper
+- **Search:** Cloudflare Vectorize
+- **Maps:** Mapbox GL
+- **Audio:** Wavesurfer.js
+- **Video:** Video.js or Plyr
+
+---
+
+## Success Metrics
+- **Upload Success Rate:** >95%
+- **Transcription Accuracy:** >85% (Hindi/English)
+- **Active Users:** 100+ contributors in first 3 months
+- **Archive Size:** 500+ items in 6 months
