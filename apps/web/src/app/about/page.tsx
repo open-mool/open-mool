@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { MoolDefinition } from "@/components/MoolDefinition";
 
 export default function About() {
     return (
@@ -15,6 +16,13 @@ export default function About() {
                 <h1 className="font-heading text-4xl mb-2 text-text-primary">The Open Mool Manifesto</h1>
                 <h2 className="text-xl text-primary font-medium mb-8">The Digital Firebreak</h2>
                 <div className="w-12 h-1 bg-primary mb-12"></div>
+
+                {/* The Hook Quote */}
+                <p className="font-human text-3xl leading-relaxed text-text-primary mb-16 italic border-l-4 border-primary pl-6 py-2">
+                    "Culture does not die in battles;<br /> it dies in silence."
+                </p>
+
+                <MoolDefinition />
 
                 {/* Section I */}
                 <section className="mb-12">
@@ -65,7 +73,7 @@ export default function About() {
                         <strong>Open Mool is the resistance against this silence.</strong>
                     </p>
                     <p className="mb-4">
-                        We are a collective of engineers, historians, and hill-folk building the sovereign digital infrastructure to protect Himalayan heritage. We are building a &ldquo;Firebreak&rdquo;—a permanent, indestructible line of defense against the erosion of memory.
+                        We are a collective of engineers, historians, and hill-folk building the sovereign digital infrastructure to protect Himalayan heritage. We are building a "Firebreak"—a permanent, indestructible line of defense against the erosion of memory.
                     </p>
                     <ul className="list-disc pl-6 space-y-2 mb-4">
                         <li><strong>We are not a startup.</strong> We do not sell data; we steward it.</li>
