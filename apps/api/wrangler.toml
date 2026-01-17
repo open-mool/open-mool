@@ -5,14 +5,14 @@ main = "src/index.ts"
 [vars]
 # Environment variables
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "open-mool-db"
-# database_id = "YOUR_DATABASE_ID"
+[[d1_databases]]
+binding = "DB"
+database_name = "open-mool-db"
+database_id = "open-mool-db-id"
 
-# [[r2_buckets]]
-# binding = "STORAGE"
-# bucket_name = "open-mool-storage"
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "open-mool-storage"
 
 # [ai]
 # binding = "AI"
