@@ -60,8 +60,16 @@ export default function DashboardLayout({
                 {user && (
                     <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20">
-                                {user.name?.[0] || 'G'}
+                            <div className="w-10 h-10 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20 overflow-hidden relative">
+                                {user.picture ? (
+                                    <img
+                                        src={user.picture}
+                                        alt={user.name || 'User'}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    user.name?.[0] || 'G'
+                                )}
                             </div>
                             <div className="flex flex-col overflow-hidden">
                                 <div className="flex items-center gap-2">
