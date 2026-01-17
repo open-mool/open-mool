@@ -12,6 +12,7 @@ out
 # Cloudflare / Wrangler
 .wrangler
 wrangler-debug.log
+.dev.vars
 
 # Environment variables
 .env
