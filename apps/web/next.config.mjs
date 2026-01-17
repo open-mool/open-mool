@@ -20,6 +20,12 @@ const nextConfig = {
             },
         ],
     },
+    webpack: (config, { isServer, nextRuntime }) => {
+        if (nextRuntime === 'edge') {
+            config.resolve.alias['crypto'] = false;
+        }
+        return config;
+    },
 };
 
 export default nextConfig;
