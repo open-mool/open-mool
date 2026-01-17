@@ -24,11 +24,12 @@ We are not just a storage solution; we are an **AI-ready archival system** that 
 
 ## 🏗 Tech Stack (Himalayan Minimalism)
 
-- **Frontend:** Next.js 14 (Edge), Tailwind CSS, Shadcn UI.
+- **Frontend:** Next.js 14 (Static Export), Tailwind CSS, Shadcn UI, Cloudflare Pages.
 - **Backend:** Cloudflare Workers (Hono.js).
 - **Data:** Cloudflare D1 (SQLite), Cloudflare R2 (Object Storage).
 - **Auth:** Auth0.
 - **AI:** Cloudflare Workers AI + OpenAI.
+- **Security:** HTTPS enforcement, CSP headers, security-first defaults.
 
 ## 📂 Repository Structure
 
@@ -61,6 +62,23 @@ pnpm dev
 # API: http://localhost:8787
 ```
 
+## 🚢 Deployment
+
+The platform is designed for Cloudflare's edge infrastructure:
+
+- **Web App**: Automated deployment to Cloudflare Pages via GitHub Actions
+- **API**: Cloudflare Workers deployment via Wrangler
+
+For detailed deployment instructions, see:
+- **[Deployment Guide](./DEPLOYMENT.md)**: Complete deployment instructions
+- **[Cloudflare Pages Setup](./docs/cloudflare-pages-setup.md)**: Step-by-step CI/CD configuration
+
+### Quick Deploy (Web)
+
+1. Configure GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+2. Push to `main` branch - GitHub Actions handles the rest
+3. Your app is live at `https://open-mool-web.pages.dev`
+
 ## 📜 Documentation
 
 - **[Roadmap](./docs/roadmap.md)**: From MVP ("The Trident") to the "Pahadi LLM".
@@ -68,6 +86,7 @@ pnpm dev
 - **[Design Specs](./docs/design_specs.md)**: The "Snow & Vermilion" aesthetic.
 - **[Brand Guidelines](./docs/brand_guidelines.md)**: Our voice, vocabulary, and manifesto.
 - **[Development Rules](./docs/development_rules.md)**: How to contribute code.
+- **[Cloudflare Pages Setup](./docs/cloudflare-pages-setup.md)**: Automated deployment guide.
 
 ## 🤝 Contribution
 
