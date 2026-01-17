@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     // Content Security Policy
     const csp = [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires unsafe-eval for development
+        "script-src 'self' 'unsafe-inline'", // Static export only needs unsafe-inline for inline scripts
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
