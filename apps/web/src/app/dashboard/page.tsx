@@ -35,7 +35,7 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
                 {/* Archive a Story */}
                 <Link
-                    href="/upload"
+                    href="/dashboard/upload"
                     className="group bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-8 hover:border-[var(--accent-primary)]/40 transition-all"
                 >
                     <div className="w-12 h-12 bg-[var(--accent-primary)]/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-[var(--accent-primary)]/20 transition-colors">
