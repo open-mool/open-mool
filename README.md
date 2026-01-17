@@ -2,7 +2,7 @@
 
 <div align="center">
   <br />
-  <img src="https://raw.githubusercontent.com/open-mool/brand-assets/main/logo/open-mool-logo-v1.png" alt="Open Mool Logo" height="120" />
+  <img src="./apps/web/public/logo.svg" alt="Open Mool Logo" height="120" />
   <br />
   
   <h1>Open Mool</h1>
