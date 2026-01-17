@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Eczar, Yantramanav, Gotu } from "next/font/google";
 import "./globals.css";
 
@@ -24,7 +24,13 @@ const gotu = Gotu({
 
 export const metadata: Metadata = {
     title: "Open Mool | The Source Code of the Himalayas",
-    description: "The world’s first open-source, AI-ready multimodal archive for the Himalayan region.",
+    description: "The world's first open-source, AI-ready multimodal archive for the Himalayan region.",
+};
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
 };
 
 export default function RootLayout({

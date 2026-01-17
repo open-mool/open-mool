@@ -50,9 +50,11 @@ npx wrangler secret put DATABASE_URL
 
 ---
 
-## 2. Deploying the Web App (Vercel)
+## 2. Alternative: Deploying the Web App to Vercel
 
-The frontend is a standard Next.js application, making Vercel the seamless deployment choice.
+While Cloudflare Pages is the recommended deployment target (see below), Vercel is also supported.
+
+The frontend is a standard Next.js application with static export enabled.
 
 ### Step 1: Push to GitHub/GitLab
 Ensure your latest code is pushed to your remote repository.
@@ -76,23 +78,79 @@ Click **Deploy**. Vercel will build and host your application.
 
 ---
 
-## Alternative: Deploying Web App to Cloudflare Pages
+## Deploying Web App to Cloudflare Pages (Recommended)
 
-If you prefer to keep everything on Cloudflare:
+The web application is configured for deployment to Cloudflare Pages with automated CI/CD via GitHub Actions.
 
-### Cloudflare Pages Setup
+### Automated Deployment (GitHub Actions)
+
+The repository includes a GitHub Actions workflow that automatically deploys to Cloudflare Pages on every push to the main branch.
+
+#### Prerequisites
+1. A Cloudflare account with Pages enabled
+2. GitHub repository secrets configured
+
+#### Setup GitHub Secrets
+
+Add the following secrets to your GitHub repository (Settings > Secrets and variables > Actions):
+
+- `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token with Pages permissions
+  - Go to Cloudflare Dashboard > My Profile > API Tokens
+  - Create token with "Cloudflare Pages - Edit" permissions
+  
+- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID
+  - Find this in the Cloudflare Dashboard URL or in your account overview
+
+#### How It Works
+
+The workflow (`.github/workflows/deploy-web.yml`) will:
+1. Trigger on pushes to `main`/`master` branches
+2. Install dependencies using pnpm
+3. Build the Next.js application as a static export
+4. Deploy the `apps/web/out` directory to Cloudflare Pages
+5. Automatically create preview deployments for pull requests
+
+### Manual Cloudflare Pages Setup
+
+If you prefer to set up Cloudflare Pages manually:
+
 1. Go to **Cloudflare Dashboard** > **Pages**
 2. Click **"Create a project"** > **"Connect to Git"**
 3. Select your `open-mool` repository
 4. Configure build settings:
-   - **Production branch**: `master` (or `main`)
+   - **Production branch**: `main` (or `master`)
    - **Framework preset**: `Next.js (Static HTML Export)`
-   - **Build command**: `pnpm run build`
-   - **Build output directory**: `out`
-   - **Root directory**: `apps/web`
+   - **Build command**: `pnpm install && pnpm --filter web run build`
+   - **Build output directory**: `apps/web/out`
+   - **Root directory**: `/` (leave as root)
+   - **Environment variables**: None required for basic deployment
 5. Click **"Save and Deploy"**
 
+### Security Features
+
+The deployment includes the following security hardening:
+
+- **Strict HTTPS enforcement** via HSTS headers
+- **Content Security Policy (CSP)** headers to prevent XSS attacks
+- **Clickjacking protection** with X-Frame-Options
+- **MIME type sniffing prevention** with X-Content-Type-Options
+- **Referrer policy** for privacy
+- **Permissions policy** to restrict browser features
+
+These are configured via:
+- Next.js middleware (`src/middleware.ts`) for dynamic routes
+- Static `_headers` file (`public/_headers`) for Cloudflare Pages
+
 ### Important Notes
+
 - The app is configured for static export (`output: 'export'` in `next.config.mjs`)
 - This means no server-side rendering or API routes - purely static HTML/CSS/JS
+- All security headers are applied at the edge via Cloudflare
 - For SSR support on Cloudflare Pages, use `@cloudflare/next-on-pages` instead
+
+### Mobile-First Design
+
+The application is built with a mobile-first responsive design:
+- Uses Tailwind CSS with mobile-first breakpoints
+- Viewport configuration optimized for all devices
+- Tested across major browsers and device sizes
