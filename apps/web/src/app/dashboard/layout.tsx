@@ -21,13 +21,24 @@ export default function DashboardLayout({
     return (
         <div className="flex min-h-screen bg-[var(--bg-canvas)]">
             {/* Sidebar */}
-            <aside className="w-64 border-r border-[var(--text-secondary)]/10 p-6 flex flex-col justify-between fixed top-0 bottom-0">
-                <div>
-                    <Link href="/" className="block mb-12 font-[family-name:var(--font-eczar)] font-bold text-xl tracking-wide">
-                        OPEN MOOL
-                    </Link>
+            <aside className="w-64 border-r border-[var(--text-secondary)]/10 p-6 flex flex-col justify-between fixed top-0 bottom-0 overflow-hidden relative">
+                {/* Watermark Symbol */}
+                <div className="absolute -bottom-8 -right-4 font-[family-name:var(--font-gotu)] text-[12rem] text-[var(--accent-primary)] opacity-5 pointer-events-none select-none leading-none">
+                    म
+                </div>
 
-                    <nav className="flex flex-col gap-4">
+                <div>
+                    <div className="mb-12 pl-2">
+                        <Link href="/" className="block hover:opacity-80 transition-opacity">
+                            {/* Simple text logo for sidebar, or import Logo component if preferred */}
+                            <div className="flex flex-col">
+                                <span className="font-[family-name:var(--font-eczar)] font-bold text-2xl tracking-tight leading-none text-[var(--accent-primary)]">OPEN</span>
+                                <span className="font-[family-name:var(--font-eczar)] font-bold text-2xl tracking-tight leading-none text-[var(--text-primary)]">MOOL</span>
+                            </div>
+                        </Link>
+                    </div>
+
+                    <nav className="flex flex-col gap-2">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href;
                             return (
@@ -35,13 +46,14 @@ export default function DashboardLayout({
                                     key={item.href}
                                     href={item.href}
                                     className={`
-                                        text-sm uppercase tracking-widest font-bold py-2 border-l-2 pl-4 transition-all
+                                        text-xs uppercase tracking-[0.15em] font-bold py-3 pl-4 border-l-2 transition-all group flex items-center gap-3
                                         ${isActive
-                                            ? 'border-[var(--accent-primary)] text-[var(--text-primary)]'
-                                            : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                                            ? 'border-[var(--accent-primary)] text-[var(--text-primary)] bg-[var(--text-secondary)]/5'
+                                            : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--text-secondary)]/20'
                                         }
                                     `}
                                 >
+                                    {isActive && <div className="w-1.5 h-1.5 bg-[var(--accent-primary)] rounded-full animate-pulse" />}
                                     {item.name}
                                 </Link>
                             );
@@ -50,18 +62,34 @@ export default function DashboardLayout({
                 </div>
 
                 {user && (
-                    <div className="pt-6 border-t border-[var(--text-secondary)]/10">
-                        <div className="text-xs text-[var(--text-secondary)] mb-2 font-[family-name:var(--font-gotu)]">
-                            Signed in as
+                    <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20">
+                                {user.name?.[0] || 'G'}
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                                <div className="flex items-center gap-2">
+                                    <span className="font-bold text-sm truncate font-[family-name:var(--font-yantramanav)] text-[var(--text-primary)]">
+                                        {user.name?.split(' ')[0] || 'Guardian'}
+                                    </span>
+                                    <span className="text-[10px] bg-[var(--accent-primary)] text-white px-1.5 py-0.5 rounded-sm uppercase tracking-wider font-bold leading-none">
+                                        Scout
+                                    </span>
+                                </div>
+                                <span className="text-xs text-[var(--text-secondary)] truncate font-[family-name:var(--font-gotu)] opacity-80">
+                                    {user.email}
+                                </span>
+                            </div>
                         </div>
-                        <div className="font-bold text-sm truncate mb-4">
-                            {user.email}
-                        </div>
+
                         <a
                             href="/auth/logout"
-                            className="text-xs uppercase tracking-widest text-[var(--accent-primary)] hover:opacity-80"
+                            className="text-[10px] uppercase tracking-widest text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 pl-1"
                         >
-                            Log Out
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Disconnect
                         </a>
                     </div>
                 )}
