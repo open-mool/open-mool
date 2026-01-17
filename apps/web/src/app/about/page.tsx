@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { MoolDefinition } from "@/components/MoolDefinition";
 
 export default function About() {
     return (
@@ -15,6 +16,13 @@ export default function About() {
                 <h1 className="font-heading text-4xl mb-2 text-text-primary">The Open Mool Manifesto</h1>
                 <h2 className="text-xl text-primary font-medium mb-8">The Digital Firebreak</h2>
                 <div className="w-12 h-1 bg-primary mb-12"></div>
+
+                {/* The Hook Quote */}
+                <p className="font-human text-3xl leading-relaxed text-text-primary mb-16 italic border-l-4 border-primary pl-6 py-2">
+                    "Culture does not die in battles;<br /> it dies in silence."
+                </p>
+
+                <MoolDefinition />
 
                 {/* Section I */}
                 <section className="mb-12">
@@ -129,7 +137,7 @@ export default function About() {
                             { title: "Katyuri Dynasty (c. 700–1200 CE)", desc: "The medieval ruling dynasty of Kumaon and Garhwal, responsible for constructing hundreds of stone temples (like Baijnath and Jageshwar) that define the region's architectural history." },
                             { title: "Gorkhali Raj (1790–1815)", desc: "The period of rule by the Gorkha Kingdom of Nepal over Kumaon and Garhwal. Often remembered in oral history as Gorkhyani, a time of martial law and hardship before the British annexation." },
                             { title: "Ghost Villages (Palan)", desc: "Refers to the modern socio-economic crisis of migration (Palan) from the hills to the plains, leaving over 1,700 villages in Uttarakhand officially uninhabited ('ghost villages')." },
-                            { title: "Rajula-Malushahi", desc: "A legendary medieval love ballad of Kumaon, traditionally sung by bards over several nights, recounting the romance between Rajula (a trader's daughter) and Malushahi (a Katyuri king). " },
+                            { title: "Rajula-Malushahi", desc: "A legendary medieval love ballad of Kumaon, traditionally sung by bards over several nights, recounting the romance between Rajula (a trader's daughter) and Malushahi (a Katyuri king)." },
                             { title: "Bhotia Trade Routes", desc: "The ancient trans-Himalayan trade network maintained by the Bhotia community (Shaukas, Marchhas, Tolchhas) with Tibet. This vibrant cultural and economic exchange was severed after the 1962 Sino-Indian war." },
                             { title: "Jagar", desc: "A ritualistic form of spirit and deity worship practiced in the hills of Uttarakhand, where Jagariyas (bards) wake up local deities through ballads and drumming to seek justice or healing." },
                             { title: "Koti Banal", desc: "An indigenous architectural style of multi-story buildings found in the Yamuna valley, designed over 900 years ago to be earthquake-resistant." }
