@@ -14,6 +14,7 @@ export default function DashboardLayout({
 
     const navItems = [
         { name: 'Profile', href: '/dashboard/profile' },
+        { name: 'My Uploads', href: '/dashboard/my-uploads' },
         // Add more dashboard items here in future
     ];
 

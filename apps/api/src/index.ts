@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { auth0Webhook } from './webhooks/auth0'
 import upload from './routes/upload'
+import { getMyUploads } from './routes/media'
 
 const app = new Hono()
 
@@ -10,6 +11,7 @@ app.get('/', (c) => {
 })
 
 app.post('/webhooks/auth0', auth0Webhook)
+app.get('/media/my-uploads', getMyUploads)
 
 app.use('/*', cors())
 app.route('/upload', upload)
