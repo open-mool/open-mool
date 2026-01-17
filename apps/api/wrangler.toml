@@ -8,7 +8,7 @@ main = "src/index.ts"
 [[d1_databases]]
 binding = "DB"
 database_name = "open-mool-db"
-database_id = "open-mool-db-id"
+database_id = "b477d138-8c2c-433a-b71a-92a8520f7081"
 
 [[r2_buckets]]
 binding = "STORAGE"
