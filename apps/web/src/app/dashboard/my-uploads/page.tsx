@@ -66,7 +66,7 @@ export default async function MyUploadsPage() {
                         Start preserving the Himalayan heritage by uploading your first audio or video
                     </p>
                     <Link
-                        href="/upload"
+                        href="/dashboard/upload"
                         className="px-6 py-3 bg-[var(--accent-primary)] text-white uppercase tracking-widest text-sm font-bold hover:opacity-90 transition-opacity"
                     >
                         Upload Now
