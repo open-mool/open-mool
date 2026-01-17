@@ -1,0 +1,14 @@
+# This file defines who owns what code in the repository.
+# GitHub uses this file to automatically assign reviewers.
+
+# Default owner for everything
+* @open-mool/guardians
+
+# Frontend
+apps/web/ @open-mool/frontend-team
+
+# Backend
+apps/api/ @open-mool/backend-team
+
+# Documentation
+docs/ @open-mool/scribes

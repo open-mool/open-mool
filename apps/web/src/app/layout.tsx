@@ -27,6 +27,21 @@ const gotu = Gotu({
 export const metadata: Metadata = {
     title: "Open Mool | The Source Code of the Himalayas",
     description: "The world's first open-source, AI-ready multimodal archive for the Himalayan region.",
+    keywords: ["Himalayas", "Culture", "Archive", "Open Source", "AI", "History", "Oral Traditions"],
+    openGraph: {
+        title: "Open Mool",
+        description: "Preserving the source code of the Himalayas. Join the movement.",
+        url: "https://openmool.org",
+        siteName: "Open Mool",
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Open Mool",
+        description: "The world's first open-source, AI-ready multimodal archive for the Himalayan region.",
+        creator: "@openmool",
+    },
 };
 
 export const viewport: Viewport = {

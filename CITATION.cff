@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: "Open Mool: The Source Code of the Himalayas"
+message: "If you use this software or dataset, please cite it using the metadata from this file."
+type: software
+authors:
+  - name: "Open Mool Guardians"
+    website: "https://openmool.org"
+repository-code: "https://github.com/open-mool/open-mool"
+url: "https://openmool.org"
+abstract: "A public utility for preserving Himalayan cultural heritage. An AI-ready, open-source digital archive built on Cloudflare Edge."
+keywords:
+  - "himalayas"
+  - "digital-archive"
+  - "cultural-heritage"
+  - "artificial-intelligence"
+  - "open-source"
+license: MIT
+version: 0.1.0
+date-released: 2026-01-18

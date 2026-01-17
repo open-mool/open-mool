@@ -1,6 +1,18 @@
 {
     "name": "web",
     "version": "0.1.0",
+    "description": "The Source Code of the Himalayas. A public utility for preserving cultural heritage.",
+    "keywords": [
+        "open-source",
+        "archive",
+        "himalayas",
+        "culture",
+        "ai",
+        "cloudflare-workers",
+        "nextjs"
+    ],
+    "author": "Open Mool Guardians",
+    "license": "MIT",
     "private": true,
     "scripts": {
         "dev": "next dev",
