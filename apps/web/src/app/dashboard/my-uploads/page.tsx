@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@auth0/nextjs-auth0';
+import { auth0 } from '@/lib/auth0';
 import Link from 'next/link';
 
 interface Upload {
@@ -30,10 +30,15 @@ async function fetchMyUploads(): Promise<Upload[]> {
 }
 
 export default async function MyUploadsPage() {
-    const session = await getSession();
+    let session = null;
+    try {
+        session = await auth0.getSession();
+    } catch (error) {
+        console.error('Session error:', error);
+    }
 
     if (!session?.user) {
-        redirect('/api/auth/login');
+        redirect('/auth/login');
     }
 
     const uploads = await fetchMyUploads();

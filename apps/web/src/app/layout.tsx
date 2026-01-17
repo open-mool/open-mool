@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Eczar, Yantramanav, Gotu } from "next/font/google";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { Auth0Provider } from "@auth0/nextjs-auth0/client";
 import { Header } from "@/components/Header";
 import "./globals.css";
 
@@ -41,13 +41,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <UserProvider>
-            <html lang="en">
+        <html lang="en">
+            <Auth0Provider>
                 <body className={`${eczar.variable} ${yantramanav.variable} ${gotu.variable} font-body antialiased`}>
                     <Header />
                     {children}
                 </body>
-            </html>
-        </UserProvider>
+            </Auth0Provider>
+        </html>
     );
 }

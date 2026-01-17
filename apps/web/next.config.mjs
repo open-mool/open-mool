@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
+    // Removed 'output: export' to enable Auth0 and server-side features
 };
 
 export default nextConfig;

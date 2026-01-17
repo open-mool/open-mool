@@ -8,8 +8,10 @@ export function Header() {
     const pathname = usePathname();
     const { user, isLoading } = useUser();
     const isDashboard = pathname?.startsWith('/dashboard');
+    const isHomePage = pathname === '/';
 
-    if (isDashboard) return null; // Dashboard has its own layout
+    // Hide on dashboard (has own layout) and home page (has custom hero header)
+    if (isDashboard || isHomePage) return null;
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 p-6 flex justify-between items-center pointer-events-none mix-blend-difference text-white">
@@ -27,7 +29,7 @@ export function Header() {
                             Dashboard
                         </Link>
                     ) : (
-                        <Link href="/api/auth/login" className="hover:text-[var(--accent-primary)] transition-colors">
+                        <Link href="/auth/login?returnTo=/dashboard" className="hover:text-[var(--accent-primary)] transition-colors">
                             Login
                         </Link>
                     )

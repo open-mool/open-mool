@@ -15,7 +15,7 @@ export default function DashboardLayout({
     const navItems = [
         { name: 'Profile', href: '/dashboard/profile' },
         { name: 'My Uploads', href: '/dashboard/my-uploads' },
-        // Add more dashboard items here in future
+        { name: 'Archive a Story', href: '/upload' },
     ];
 
     return (
@@ -58,7 +58,7 @@ export default function DashboardLayout({
                             {user.email}
                         </div>
                         <a
-                            href="/api/auth/logout"
+                            href="/auth/logout"
                             className="text-xs uppercase tracking-widest text-[var(--accent-primary)] hover:opacity-80"
                         >
                             Log Out

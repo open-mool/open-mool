@@ -9,9 +9,12 @@
   --bg-dark: #121418;
 
   /* Accents */
-  --accent-primary: #D64933; /* Vermilion */
-  --accent-secondary: #FFB140; /* Marigold */
-  --accent-tech: #005F73; /* Deep Teal */
+  --accent-primary: #D64933;
+  /* Vermilion */
+  --accent-secondary: #FFB140;
+  /* Marigold */
+  --accent-tech: #005F73;
+  /* Deep Teal */
 
   /* Typography Colors */
   --text-primary: #1A1C20;
@@ -26,7 +29,8 @@ body {
 /* The Sutra (Thread) Motif - Vertical layout guide */
 .sutra-line {
   position: fixed;
-  left: 24px; /* Adjust based on container */
+  left: 24px;
+  /* Adjust based on container */
   top: 0;
   bottom: 0;
   width: 1px;
@@ -34,4 +38,114 @@ body {
   opacity: 0.2;
   z-index: 0;
   pointer-events: none;
+}
+
+/* Auth0 Components Styling */
+.button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  outline: none;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.button:focus {
+  box-shadow: 0 0 0 3px rgba(214, 73, 51, 0.3);
+}
+
+.button.login {
+  background-color: var(--accent-primary);
+  color: white;
+}
+
+.button.login:hover {
+  background-color: #B63E2C;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(214, 73, 51, 0.3);
+}
+
+.button.logout {
+  background-color: var(--text-secondary);
+  color: white;
+}
+
+.button.logout:hover {
+  background-color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.loading-state {
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.auth-status-section {
+  margin: 2rem 0;
+}
+
+.profile-card {
+  background-color: var(--bg-subtle);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(214, 73, 51, 0.1);
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-primary);
+  transition: transform 0.3s ease-in-out;
+}
+
+.profile-picture:hover {
+  transform: scale(1.05);
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.profile-email {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
 }

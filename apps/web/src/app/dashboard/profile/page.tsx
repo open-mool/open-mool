@@ -1,12 +1,17 @@
-import { getSession } from '@auth0/nextjs-auth0';
+import { auth0 } from '@/lib/auth0';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 
 export default async function ProfilePage() {
-    const session = await getSession();
+    let session = null;
+    try {
+        session = await auth0.getSession();
+    } catch (error) {
+        console.error('Session error:', error);
+    }
 
     if (!session?.user) {
-        redirect('/api/auth/login');
+        redirect('/auth/login?returnTo=/dashboard/profile');
     }
 
     const { user } = session;
@@ -79,7 +84,7 @@ export default async function ProfilePage() {
                 </div>
 
                 <div className="mt-8 flex gap-4">
-                    <a href="/api/auth/logout" className="px-6 py-2 border border-[var(--text-secondary)]/30 hover:border-[var(--accent-primary)] transition-colors text-sm uppercase tracking-wider font-bold">
+                    <a href="/auth/logout" className="px-6 py-2 border border-[var(--text-secondary)]/30 hover:border-[var(--accent-primary)] transition-colors text-sm uppercase tracking-wider font-bold">
                         Disconnect
                     </a>
                 </div>
