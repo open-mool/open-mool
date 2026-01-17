@@ -1,12 +1,15 @@
 {
+  "pages_build_output_dir": ".vercel/output/static",
   "build": {
-    "command": "pnpm install && pnpm --filter web run build",
+    "command": "pnpm install && pnpm --filter web run pages:build",
     "cwd": "/",
-    "destination_dir": "apps/web/out"
+    "destination_dir": ".vercel/output/static"
   },
   "deployment": {
     "compatibility_date": "2024-12-01",
-    "compatibility_flags": ["nodejs_compat"]
+    "compatibility_flags": [
+      "nodejs_compat"
+    ]
   },
   "preview": {
     "always_use_latest_compatibility_date": false
