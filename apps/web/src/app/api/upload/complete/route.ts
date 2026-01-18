@@ -38,8 +38,22 @@ export async function POST(request: NextRequest) {
 
         const data = await response.json();
         return NextResponse.json(data, { status: response.status });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Upload complete error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+
+        let status = 500;
+        let message = 'Internal Server Error';
+
+        if (error instanceof SyntaxError) {
+            // Likely JSON parsing error from request.json()
+            status = 400;
+            message = 'Invalid JSON in request body';
+        } else if (error instanceof TypeError) {
+            // Likely network error when calling the backend API
+            status = 502;
+            message = 'Network error while contacting backend service';
+        }
+
+        return NextResponse.json({ error: message }, { status });
     }
 }
