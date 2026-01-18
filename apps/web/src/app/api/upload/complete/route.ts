@@ -3,7 +3,7 @@ import { auth0 } from '@/lib/auth0';
 
 export const runtime = 'edge';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
 export async function POST(request: NextRequest) {
     try {
