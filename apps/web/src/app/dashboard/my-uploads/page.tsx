@@ -13,11 +13,15 @@ interface Upload {
     processed: boolean;
 }
 
-async function fetchMyUploads(): Promise<Upload[]> {
+async function fetchMyUploads(userSub: string): Promise<Upload[]> {
     try {
-        // Call proxied API endpoint which handles authentication server-side
-        const response = await fetch('/api/media/my-uploads', {
+        // Call backend API directly from server component with authenticated user ID
+        const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+        const response = await fetch(`${apiUrl}/api/media/my-uploads`, {
             cache: 'no-store',
+            headers: {
+                'x-user-id': userSub,
+            },
         });
 
         if (!response.ok) {
@@ -45,7 +49,7 @@ export default async function MyUploadsPage() {
         redirect('/auth/login');
     }
 
-    const uploads = await fetchMyUploads();
+    const uploads = await fetchMyUploads(session.user.sub);
 
     return (
         <div className="min-h-screen bg-[var(--bg-canvas)] p-8">
