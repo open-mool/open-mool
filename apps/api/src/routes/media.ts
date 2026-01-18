@@ -25,10 +25,10 @@ export const getMyUploads = async (c: Context<{ Bindings: Env }>) => {
 
         // Select only necessary columns for performance
         const { results } = await c.env.DB.prepare(
-            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id 
-             FROM media 
-             WHERE user_id = ? 
-             ORDER BY created_at DESC 
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id
+             FROM media
+             WHERE user_id = ?
+             ORDER BY created_at DESC
              LIMIT 50`
         ).bind(userId).all()
 
