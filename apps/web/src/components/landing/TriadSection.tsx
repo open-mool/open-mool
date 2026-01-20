@@ -15,7 +15,7 @@ const pillars = [
         icon: Code,
         title: 'Code',
         hindi: 'कोडीकरण',
-        description: 'Transform oral tradition into searchable, AI-ready data.',
+        description: 'Transform oral tradition into searchable, accessible data.',
         color: 'var(--accent-tech)',
     },
     {

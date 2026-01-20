@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FloatingBackground, ScrollIndicator } from './Background';
 import { FadeIn } from './AnimatedText';
@@ -8,34 +9,33 @@ import { FadeIn } from './AnimatedText';
 const words = ['stories', 'songs', 'rituals', 'dialects', 'wisdom'];
 
 function RotatingWord() {
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prev) => (prev + 1) % words.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <span className="inline-block relative h-[1.2em] overflow-hidden align-bottom">
-            <motion.span
-                className="block"
-                animate={{
-                    y: words.map((_, i) => `-${i * 100}%`),
-                }}
-                transition={{
-                    y: {
-                        duration: words.length * 2.5,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                        times: words.map((_, i) => i / words.length),
-                    },
-                }}
-            >
-                {words.map((word, i) => (
-                    <span
-                        key={word}
-                        className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-tech"
-                    >
-                        {word}
-                    </span>
-                ))}
-            </motion.span>
+        <span className="inline-block relative w-[4.5em] h-[1.15em] overflow-hidden align-bottom">
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={words[index]}
+                    className="absolute inset-0 text-primary"
+                    initial={{ y: '100%', opacity: 0 }}
+                    animate={{ y: '0%', opacity: 1 }}
+                    exit={{ y: '-100%', opacity: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                >
+                    {words[index]}
+                </motion.span>
+            </AnimatePresence>
         </span>
     );
 }
+
 
 export function HeroSection() {
     return (
@@ -76,7 +76,7 @@ export function HeroSection() {
                         transition={{ duration: 0.7, delay: 0.5 }}
                     >
                         Every elder is a library. We're building the infrastructure
-                        to ensure their knowledge survives—searchable, AI-ready, and forever open.
+                        to ensure their knowledge survives - searchable, accessible, and forever open.
                     </motion.p>
                 </div>
 
