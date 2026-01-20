@@ -3,103 +3,135 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { FloatingBackground, ScrollIndicator } from './Background';
-import { AnimatedHeadline, FadeIn } from './AnimatedText';
+import { FadeIn } from './AnimatedText';
+
+const words = ['stories', 'songs', 'rituals', 'dialects', 'wisdom'];
+
+function RotatingWord() {
+    return (
+        <span className="inline-block relative h-[1.2em] overflow-hidden align-bottom">
+            <motion.span
+                className="block"
+                animate={{
+                    y: words.map((_, i) => `-${i * 100}%`),
+                }}
+                transition={{
+                    y: {
+                        duration: words.length * 2.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        times: words.map((_, i) => i / words.length),
+                    },
+                }}
+            >
+                {words.map((word, i) => (
+                    <span
+                        key={word}
+                        className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-tech"
+                    >
+                        {word}
+                    </span>
+                ))}
+            </motion.span>
+        </span>
+    );
+}
 
 export function HeroSection() {
     return (
         <section className="relative min-h-screen flex flex-col items-center justify-center px-8 overflow-hidden">
             <FloatingBackground />
 
-            <div className="relative z-10 max-w-5xl w-full flex flex-col gap-8 text-center md:text-left">
-                {/* Headline */}
-                <div className="space-y-6">
-                    <h1 className="font-heading text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.95] text-text-primary tracking-tight">
-                        <AnimatedHeadline>
-                            The Source Code
-                        </AnimatedHeadline>
-                        <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-tech">
-                            <AnimatedHeadline delay={0.5}>
-                                of the Himalayas.
-                            </AnimatedHeadline>
-                        </span>
-                    </h1>
+            <div className="relative z-10 max-w-5xl w-full flex flex-col gap-10 text-center">
+                {/* Eyebrow */}
+                <motion.div
+                    className="flex justify-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-text-secondary/70 border border-gray-200 px-4 py-2 rounded-full">
+                        Open Source Cultural Archive
+                    </span>
+                </motion.div>
 
-                    <FadeIn delay={1.2}>
-                        <p className="font-body text-lg md:text-xl lg:text-2xl text-text-secondary max-w-2xl leading-relaxed">
-                            We are building the sovereign digital infrastructure to capture, code, and immortalize Himalayan heritage.
-                        </p>
-                    </FadeIn>
+                {/* Main Headline */}
+                <div className="space-y-4">
+                    <motion.h1
+                        className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-text-primary tracking-tight"
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                    >
+                        Before the last voice fades,
+                        <br />
+                        <span className="inline">we capture </span>
+                        <RotatingWord />
+                    </motion.h1>
+
+                    <motion.p
+                        className="font-body text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, delay: 0.5 }}
+                    >
+                        Every elder is a library. We're building the infrastructure
+                        to ensure their knowledge survives—searchable, AI-ready, and forever open.
+                    </motion.p>
                 </div>
 
                 {/* CTA Row */}
-                <FadeIn delay={1.5} className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center md:items-start">
-                    {/* Status Pill */}
-                    <motion.div
-                        className="flex flex-col gap-2"
-                        whileHover={{ scale: 1.02 }}
-                    >
-                        <span className="text-xs font-bold font-body text-text-secondary uppercase tracking-widest">
-                            Status
-                        </span>
-                        <div className="flex items-center gap-2 px-4 py-2 border border-primary/20 bg-primary/5 rounded-full">
-                            <motion.div
-                                className="w-2 h-2 bg-primary rounded-full"
-                                animate={{ opacity: [1, 0.4, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                            <span className="text-primary font-body font-medium text-sm">
-                                Building The Vault
-                            </span>
-                        </div>
-                    </motion.div>
-
-                    <div className="w-px h-12 bg-gray-200 hidden sm:block" />
-
-                    {/* Primary CTA */}
-                    <Link href="/about">
+                <FadeIn delay={0.8} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <Link href="/auth/login">
                         <motion.button
-                            className="group flex items-center gap-3 px-6 py-3 bg-text-primary text-canvas rounded font-body font-medium shadow-xl shadow-black/5 hover:bg-primary transition-colors duration-300"
+                            className="group flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-lg font-body font-semibold text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300"
                             whileHover={{ scale: 1.02, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            Read the Manifesto
-                            <motion.svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="group-hover:translate-x-1 transition-transform"
+                            Start Recording
+                            <motion.span
+                                className="inline-block"
+                                animate={{ x: [0, 4, 0] }}
+                                transition={{ duration: 1.5, repeat: Infinity }}
                             >
-                                <path d="M5 12h14" />
-                                <path d="m12 5 7 7-7 7" />
-                            </motion.svg>
+                                →
+                            </motion.span>
                         </motion.button>
                     </Link>
 
-                    {/* Secondary CTA */}
-                    <Link href="/how-it-works">
+                    <Link href="/about">
                         <motion.button
-                            className="flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 text-text-primary rounded font-body font-medium hover:border-primary/50 hover:text-primary transition-all duration-300"
+                            className="flex items-center gap-3 px-8 py-4 bg-white/80 backdrop-blur border border-gray-200 text-text-primary rounded-lg font-body font-medium text-lg hover:border-primary/50 hover:bg-white transition-all duration-300"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            How It Works
+                            Read the Manifesto
                         </motion.button>
                     </Link>
                 </FadeIn>
 
-                {/* Quote teaser */}
-                <FadeIn delay={2} className="mt-8 md:mt-12">
-                    <blockquote className="font-human text-xl md:text-2xl text-text-secondary/70 italic border-l-2 border-primary/30 pl-4 max-w-xl">
-                        "Culture does not die in battles; it dies in silence."
-                    </blockquote>
-                </FadeIn>
+                {/* Social Proof / Stats Teaser */}
+                <motion.div
+                    className="flex flex-wrap justify-center gap-8 md:gap-12 pt-8 border-t border-gray-100 mt-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.2, duration: 0.8 }}
+                >
+                    {[
+                        { value: '127+', label: 'Elders' },
+                        { value: '48h', label: 'Audio' },
+                        { value: '5', label: 'Dialects' },
+                    ].map((stat) => (
+                        <div key={stat.label} className="text-center">
+                            <div className="font-heading text-2xl md:text-3xl text-primary font-bold">
+                                {stat.value}
+                            </div>
+                            <div className="font-body text-xs uppercase tracking-wider text-text-secondary/60">
+                                {stat.label}
+                            </div>
+                        </div>
+                    ))}
+                </motion.div>
             </div>
 
             <ScrollIndicator />
