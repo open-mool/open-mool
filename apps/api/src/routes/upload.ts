@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { authMiddleware, getAuthUserId } from '../middleware/auth'
 
 type Bindings = {
     DB: D1Database
@@ -8,9 +9,13 @@ type Bindings = {
     R2_ACCOUNT_ID: string
     R2_ACCESS_KEY_ID: string
     R2_SECRET_ACCESS_KEY: string
+    AUTH0_DOMAIN: string
+    AUTH0_AUDIENCE: string
 }
 
 const upload = new Hono<{ Bindings: Bindings }>()
+
+upload.use('/complete', authMiddleware())
 
 // Generate Presigned URL
 upload.post('/presigned', async (c) => {
@@ -60,9 +65,14 @@ upload.post('/complete', async (c) => {
         return c.json({ error: 'Missing required fields' }, 400)
     }
 
+    const userId = getAuthUserId(c)
+    if (!userId) {
+        return c.json({ error: 'Unauthorized' }, 401)
+    }
+
     try {
         const { success } = await c.env.DB.prepare(
-            `INSERT INTO media (key, title, description, language, location_lat, location_lng, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`
+            `INSERT INTO media (key, title, description, language, location_lat, location_lng, created_at, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
         ).bind(
             key,
             title,
@@ -70,7 +80,8 @@ upload.post('/complete', async (c) => {
             language,
             location?.lat || null,
             location?.lng || null,
-            new Date().toISOString()
+            new Date().toISOString(),
+            userId
         ).run()
 
         if (!success) {
