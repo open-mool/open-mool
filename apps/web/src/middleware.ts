@@ -8,8 +8,9 @@ export async function middleware(request: NextRequest) {
     } catch (error) {
         // If there's a session decryption error (JWEInvalid), clear the corrupted cookie
         if (error instanceof Error && error.message.includes('JWE')) {
-            console.error('Session decryption error, clearing cookie:', error.message);
-            const response = NextResponse.redirect(request.url);
+            console.warn('Session decryption error, clearing cookie:', error.message);
+            // Use next() instead of redirect to prevent redirect loops
+            const response = NextResponse.next();
             response.cookies.delete('appSession');
             return response;
         }

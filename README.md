@@ -38,7 +38,7 @@
 
 **Open Mool** is an open-source "Digital Vault" for the Himalayan region. We aggregate audio, video, and text data - preserving folklore, dialects, rituals, and oral history before it is lost to time and modernization.
 
-We are not just a storage solution; we are an **accessible archival system** that makes cultural data searchable, translatable, and accessible to the future.
+We are not just a storage solution; we are an **AI-native archival system** that makes cultural data searchable, translatable, and accessible to the future.
 
 > *"We are building the Source Code of the Himalayas."*
 
