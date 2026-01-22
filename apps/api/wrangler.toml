@@ -21,9 +21,9 @@ bucket_name = "open-mool-storage"
 name = "open-mool-api-staging"
 [[env.staging.d1_databases]]
 binding = "DB"
-database_name = "open-mool-db"
-database_id = "b477d138-8c2c-433a-b71a-92a8520f7081"
+database_name = "open-mool-db-staging"
+database_id = "e0142def-0e78-44f9-bceb-d4a9229a6d58"
 
 [[env.staging.r2_buckets]]
 binding = "STORAGE"
-bucket_name = "open-mool-storage"
+bucket_name = "open-mool-storage-staging"
