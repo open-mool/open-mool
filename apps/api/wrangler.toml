@@ -4,6 +4,7 @@ main = "src/index.ts"
 
 [vars]
 # Environment variables
+R2_BUCKET_NAME = "open-mool-storage"
 
 [[d1_databases]]
 binding = "DB"
@@ -19,14 +20,18 @@ bucket_name = "open-mool-storage"
 
 [env.staging]
 name = "open-mool-api-staging"
+[env.staging.vars]
+R2_BUCKET_NAME = "open-mool-storage-staging"
 [[env.staging.d1_databases]]
 binding = "DB"
 database_name = "open-mool-db-staging"
 database_id = "e0142def-0e78-44f9-bceb-d4a9229a6d58"
+preview_database_id = "e0142def-0e78-44f9-bceb-d4a9229a6d58"
 
 [[env.staging.r2_buckets]]
 binding = "STORAGE"
 bucket_name = "open-mool-storage-staging"
+preview_bucket_name = "open-mool-storage-staging"
 
 [observability]
 enabled = true
