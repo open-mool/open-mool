@@ -22,7 +22,22 @@ const nextConfig = {
     },
     webpack: (config, { isServer, nextRuntime }) => {
         if (nextRuntime === 'edge') {
-            config.externals.push('crypto');
+            const existingExternals = config.externals;
+
+            if (Array.isArray(existingExternals)) {
+                config.externals = [...existingExternals, 'crypto'];
+            } else if (typeof existingExternals === 'function') {
+                const originalExternalsFn = existingExternals;
+                config.externals = async (...args) => {
+                    const result = await originalExternalsFn(...args);
+                    if (Array.isArray(result)) {
+                        return [...result, 'crypto'];
+                    }
+                    return result;
+                };
+            } else {
+                config.externals = ['crypto'];
+            }
         }
         return config;
     },
