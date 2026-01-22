@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface AnimatedTextProps {
@@ -12,7 +12,7 @@ interface AnimatedTextProps {
 export function AnimatedHeadline({ children, className = '', delay = 0 }: AnimatedTextProps) {
     const words = children.split(' ');
 
-    const container = {
+    const container: Variants = {
         hidden: { opacity: 0 },
         visible: (i = 1) => ({
             opacity: 1,
@@ -20,7 +20,7 @@ export function AnimatedHeadline({ children, className = '', delay = 0 }: Animat
         }),
     };
 
-    const child = {
+    const child: Variants = {
         hidden: {
             opacity: 0,
             y: 50,

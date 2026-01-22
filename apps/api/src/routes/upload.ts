@@ -8,6 +8,7 @@ type Bindings = {
     R2_ACCOUNT_ID: string
     R2_ACCESS_KEY_ID: string
     R2_SECRET_ACCESS_KEY: string
+    R2_BUCKET_NAME: string
 }
 
 const upload = new Hono<{ Bindings: Bindings }>()
@@ -41,7 +42,7 @@ upload.post('/presigned', async (c) => {
     const key = `${crypto.randomUUID()}-${filename}`
 
     const command = new PutObjectCommand({
-        Bucket: 'open-mool-storage',
+        Bucket: c.env.R2_BUCKET_NAME,
         Key: key,
         ContentType: contentType,
     })

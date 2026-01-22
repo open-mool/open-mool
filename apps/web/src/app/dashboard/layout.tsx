@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -30,7 +31,7 @@ export default function DashboardLayout({
                 <div className="w-full">
                     <div className="mb-12 pl-2">
                         <Link href="/" className="block hover:opacity-80 transition-opacity">
-                            <img src="/brand/logo.svg" alt="Open Mool" className="h-10 w-auto" />
+                            <Image src="/brand/logo.svg" alt="Open Mool" width={40} height={40} className="h-10 w-auto" />
                         </Link>
                     </div>
 
@@ -62,9 +63,11 @@ export default function DashboardLayout({
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20 overflow-hidden relative">
                                 {user.picture ? (
-                                    <img
+                                    <Image
                                         src={user.picture}
                                         alt={user.name || 'User'}
+                                        width={40}
+                                        height={40}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (

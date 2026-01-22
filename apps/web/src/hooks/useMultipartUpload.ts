@@ -24,21 +24,12 @@ export function useMultipartUpload() {
     const [isPaused, setIsPaused] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
-    const saveState = (state: UploadState) => {
-        localStorage.setItem('multipart-upload-state', JSON.stringify(state));
-    };
-
-    const loadState = (): UploadState | null => {
-        const saved = localStorage.getItem('multipart-upload-state');
-        return saved ? JSON.parse(saved) : null;
-    };
-
-    const clearState = () => {
+    const clearState = useCallback(() => {
         localStorage.removeItem('multipart-upload-state');
         setUploadState(null);
-    };
+    }, []);
 
-    const initiateUpload = async (file: File): Promise<{ uploadId: string; key: string }> => {
+    const initiateUpload = useCallback(async (file: File): Promise<{ uploadId: string; key: string }> => {
         const { data } = await axios.post(`${API_URL}/upload/multipart/create`, {
             filename: file.name,
             contentType: file.type,
@@ -55,44 +46,7 @@ export function useMultipartUpload() {
         saveState(state);
 
         return data;
-    };
-
-    const uploadChunk = async (
-        file: File,
-        partNumber: number,
-        uploadId: string,
-        key: string
-    ): Promise<string> => {
-        const start = (partNumber - 1) * CHUNK_SIZE;
-        const end = Math.min(start + CHUNK_SIZE, file.size);
-        const chunk = file.slice(start, end);
-
-        const { data } = await axios.put(
-            `${API_URL}/upload/multipart/${uploadId}/part`,
-            chunk,
-            {
-                headers: {
-                    'Content-Type': 'application/octet-stream',
-                },
-                params: { partNumber, key },
-            }
-        );
-
-        return data.etag;
-    };
-
-    const completeUpload = async (uploadId: string, key: string, parts: UploadPart[]) => {
-        await axios.post(`${API_URL}/upload/multipart/${uploadId}/complete`, {
-            key,
-            parts,
-        });
-    };
-
-    const abortUpload = async (uploadId: string, key: string) => {
-        await axios.delete(`${API_URL}/upload/multipart/${uploadId}/abort`, {
-            data: { key },
-        });
-    };
+    }, []);
 
     const startUpload = useCallback(async (file: File) => {
         setIsUploading(true);
@@ -138,19 +92,19 @@ export function useMultipartUpload() {
             setIsUploading(false);
             throw error;
         }
-    }, [isPaused]);
+    }, [isPaused, initiateUpload, clearState]);
 
-    const pauseUpload = () => {
+    const pauseUpload = useCallback(() => {
         setIsPaused(true);
         setIsUploading(false);
-    };
+    }, []);
 
-    const resumeUpload = (file: File) => {
+    const resumeUpload = useCallback((file: File) => {
         setIsPaused(false);
         return startUpload(file);
-    };
+    }, [startUpload]);
 
-    const cancelUpload = async () => {
+    const cancelUpload = useCallback(async () => {
         const state = uploadState || loadState();
         if (state) {
             await abortUpload(state.uploadId, state.key);
@@ -159,7 +113,7 @@ export function useMultipartUpload() {
         setIsUploading(false);
         setIsPaused(false);
         setProgress(0);
-    };
+    }, [uploadState, clearState]);
 
     return {
         startUpload,
@@ -172,3 +126,50 @@ export function useMultipartUpload() {
         uploadState,
     };
 }
+
+// Helper functions moved outside the hook to keep them stable and lint-free
+const saveState = (state: UploadState) => {
+    localStorage.setItem('multipart-upload-state', JSON.stringify(state));
+};
+
+const loadState = (): UploadState | null => {
+    const saved = localStorage.getItem('multipart-upload-state');
+    return saved ? JSON.parse(saved) : null;
+};
+
+const uploadChunk = async (
+    file: File,
+    partNumber: number,
+    uploadId: string,
+    key: string
+): Promise<string> => {
+    const start = (partNumber - 1) * CHUNK_SIZE;
+    const end = Math.min(start + CHUNK_SIZE, file.size);
+    const chunk = file.slice(start, end);
+
+    const { data } = await axios.put(
+        `${API_URL}/upload/multipart/${uploadId}/part`,
+        chunk,
+        {
+            headers: {
+                'Content-Type': 'application/octet-stream',
+            },
+            params: { partNumber, key },
+        }
+    );
+
+    return data.etag;
+};
+
+const completeUpload = async (uploadId: string, key: string, parts: UploadPart[]) => {
+    await axios.post(`${API_URL}/upload/multipart/${uploadId}/complete`, {
+        key,
+        parts,
+    });
+};
+
+const abortUpload = async (uploadId: string, key: string) => {
+    await axios.delete(`${API_URL}/upload/multipart/${uploadId}/abort`, {
+        data: { key },
+    });
+};

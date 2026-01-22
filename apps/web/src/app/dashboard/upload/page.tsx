@@ -34,20 +34,7 @@ export default function UploadPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionComplete, setSubmissionComplete] = useState(false);
 
-    useEffect(() => {
-        if (file && status === 'idle') {
-            const fileSizeInMB = file.size / (1024 * 1024);
-            const isLarge = fileSizeInMB > 100;
-            setIsLargeFile(isLarge);
-            if (isLarge) {
-                startMultipartUpload(file);
-            } else {
-                startUpload(file);
-            }
-        }
-    }, [file]);
-
-    const startUpload = async (fileToUpload: File) => {
+    const startUpload = React.useCallback(async (fileToUpload: File) => {
         setStatus('uploading');
         setProgress(0);
         setError('');
@@ -76,9 +63,9 @@ export default function UploadPage() {
             setError('Upload failed. Please try again.');
             setStatus('error');
         }
-    };
+    }, []);
 
-    const startMultipartUpload = async (fileToUpload: File) => {
+    const startMultipartUpload = React.useCallback(async (fileToUpload: File) => {
         setStatus('uploading');
         setError('');
         try {
@@ -92,7 +79,20 @@ export default function UploadPage() {
             setError('Multipart upload failed.');
             setStatus('error');
         }
-    };
+    }, [multipart.startUpload]);
+
+    useEffect(() => {
+        if (file && status === 'idle') {
+            const fileSizeInMB = file.size / (1024 * 1024);
+            const isLarge = fileSizeInMB > 100;
+            setIsLargeFile(isLarge);
+            if (isLarge) {
+                startMultipartUpload(file);
+            } else {
+                startUpload(file);
+            }
+        }
+    }, [file, status, startUpload, startMultipartUpload]);
 
     useEffect(() => {
         if (isLargeFile && multipart.isUploading) {

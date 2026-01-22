@@ -151,7 +151,7 @@ export default function About() {
                 </section>
 
                 <div className="mt-12 text-center">
-                    <a href="mailto:hello@openmool.org" className="inline-block px-6 py-3 bg-primary text-white font-medium rounded hover:bg-red-700 transition-colors">
+                    <a href="mailto:team@openmool.org" className="inline-block px-6 py-3 bg-primary text-white font-medium rounded hover:bg-red-700 transition-colors">
                         Contact the Archive &rarr;
                     </a>
                 </div>

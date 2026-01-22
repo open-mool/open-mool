@@ -1,0 +1,57 @@
+name: CI Checks
+
+on:
+  pull_request:
+    branches: [ master, dev ]
+  push:
+    branches: [ master, dev ]
+
+jobs:
+  check-web:
+    name: Web App Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Lint Web
+        working-directory: apps/web
+        run: pnpm lint
+
+      - name: Build Web (Validation)
+        working-directory: apps/web
+        run: pnpm run build
+
+  check-api:
+    name: API Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Typecheck API
+        working-directory: apps/api
+        # Assuming tsc is available or running build as a check
+        run: pnpm run build
