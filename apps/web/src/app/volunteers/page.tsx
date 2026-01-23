@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import {
     VolunteerHero,
+    ArtifactShowcase,
     DataFlowVisualization,
     ArchitectureDiagram,
     AIPipelineSection,
@@ -29,6 +30,9 @@ export default function VolunteersPage() {
         <main className="min-h-screen bg-canvas">
             {/* Hero - Mission Overview */}
             <VolunteerHero />
+
+            {/* Artifact Showcase */}
+            <ArtifactShowcase />
 
             {/* How It Works - Data Flow */}
             <DataFlowVisualization />

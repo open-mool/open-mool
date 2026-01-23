@@ -56,34 +56,12 @@ export function VolunteerHero() {
                     </span>
                 </motion.div>
 
-                {/* Main Headline */}
-                <motion.h1
-                    className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-text-primary tracking-tight"
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                    Welcome to the Mission
-                </motion.h1>
-
-                {/* Subheadline */}
-                <motion.p
-                    className="font-body text-lg md:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.4 }}
-                >
-                    You&apos;re about to help build the <span className="text-primary font-semibold">Source Code of the Himalayas</span> –
-                    an open-source digital vault preserving folklore, dialects, rituals, and oral history
-                    before they&apos;re lost to time.
-                </motion.p>
-
                 {/* Stats Row */}
                 <motion.div
                     className="flex flex-wrap justify-center gap-8 mt-4"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.6 }}
+                    transition={{ duration: 0.7, delay: 0.2 }}
                 >
                     {[
                         { value: '1,700+', label: 'Ghost Villages' },
@@ -96,6 +74,30 @@ export function VolunteerHero() {
                         </div>
                     ))}
                 </motion.div>
+
+                {/* Main Headline */}
+                <motion.h1
+                    className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] text-text-primary tracking-tight"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                    Welcome to the Mission
+                </motion.h1>
+
+                {/* Subheadline */}
+                <motion.p
+                    className="font-body text-lg md:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.6 }}
+                >
+                    You&apos;re about to help build the <span className="text-primary font-semibold">Source Code of the Himalayas</span> –
+                    an open-source digital vault preserving folklore, dialects, rituals, and oral history
+                    before they&apos;re lost to time.
+                </motion.p>
+
+
 
                 {/* Quick Links */}
                 <motion.div

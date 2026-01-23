@@ -3,6 +3,7 @@ export { VolunteerHero } from './VolunteerHero';
 export { DataFlowVisualization } from './DataFlowVisualization';
 export { ArchitectureDiagram } from './ArchitectureDiagram';
 export { AIPipelineSection } from './AIPipelineSection';
+export { ArtifactShowcase } from './ArtifactShowcase';
 export { RoleCards } from './RoleCards';
 export { TechStackGrid } from './TechStackGrid';
 export { ContributionCards } from './ContributionCards';

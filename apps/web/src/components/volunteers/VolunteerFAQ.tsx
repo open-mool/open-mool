@@ -22,7 +22,7 @@ const faqs = [
     },
     {
         question: 'What languages and dialects are supported?',
-        answer: 'We prioritize Hindi, English, and Pahadi dialects (Kumaoni, Garhwali, Jaunsari, etc.). Our AI transcription works best with Hindi and English. For dialects, community translators help improve accuracy. We\'re constantly expanding language support.',
+        answer: "We prioritize Hindi, English, and Pahadi dialects (Kumaoni, Garhwali, Jaunsari, etc.). Our AI transcription works best with Hindi and English. For dialects, community translators help improve accuracy. We're constantly expanding language support.",
     },
     {
         question: 'Can I use the archive for research or academic work?',
@@ -33,8 +33,16 @@ const faqs = [
         answer: 'Karma is our reputation system: +10 for each upload, +25 for verifying content as a Guardian, +50 for curating collections as an Archivist. Karma unlocks badges and recognition. After 5 verified uploads, Scouts can be promoted to Guardian.',
     },
     {
-        question: 'Is my personal information protected?',
-        answer: 'Yes. We use Auth0 for secure authentication. Your personal data is never sold. Uploaded content may include geolocation and contributor attribution (you can opt out of public attribution). See our Privacy Policy for full details.',
+        question: 'What happens with my personal data once I upload it?',
+        answer: 'The system is built to organize and segregate the data so it becomes easier for others to access. And if you ever feel like taking your contribution back, you can do so at any time. All shared material will only be used for educational and historical purposes.',
+    },
+    {
+        question: 'What if I donʼt have such information to share right now?',
+        answer: 'It is completely okay if you donʼt have any information right now. Let this be your sign of encouragement. The next time you visit your village or come across something meaningful, document it and upload it here. This is a collective community effort. We all need to take this initiative together to safeguard our culture.',
+    },
+    {
+        question: 'Can I share my personal thoughts or opinions?',
+        answer: 'No, you cannot do that. All information or knowledge shared must remain neutral, factual, and presented exactly as it is. Personal opinions or prejudices are not allowed, as perspectives can differ from person to person. Any form of hate speech, abuse, or discrimination will not be tolerated. If found, the account will be permanently banned.',
     },
 ];
 
