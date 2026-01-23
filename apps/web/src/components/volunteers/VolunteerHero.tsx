@@ -73,9 +73,9 @@ export function VolunteerHero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.4 }}
                 >
-                    You're about to help build the <span className="text-primary font-semibold">Source Code of the Himalayas</span> –
+                    You&apos;re about to help build the <span className="text-primary font-semibold">Source Code of the Himalayas</span> –
                     an open-source digital vault preserving folklore, dialects, rituals, and oral history
-                    before they're lost to time.
+                    before they&apos;re lost to time.
                 </motion.p>
 
                 {/* Stats Row */}

@@ -57,7 +57,7 @@ export function VolunteerFAQ() {
                         FAQ
                     </h2>
                     <p className="font-body text-lg text-text-secondary max-w-2xl mx-auto mt-4">
-                        Got questions? We've got answers.
+                        Got questions? We&apos;ve got answers.
                     </p>
                 </motion.div>
 

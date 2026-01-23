@@ -61,7 +61,7 @@ export function DataFlowVisualization() {
                         From Voice to Vault
                     </h2>
                     <p className="font-body text-lg text-text-secondary max-w-2xl mx-auto mt-4">
-                        Every story follows this journey — from a village elder's voice to an immortal digital archive.
+                        Every story follows this journey — from a village elder&apos;s voice to an immortal digital archive.
                     </p>
                 </motion.div>
 

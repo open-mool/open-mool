@@ -9,7 +9,7 @@ const pipelineSteps = [
         phase: 'इनपुट (Input)',
         title: 'The Artifact + Context',
         icon: '📦',
-        description: 'Every submission has two parts: the raw media artifact AND the volunteer\'s explanation providing cultural context.',
+        description: 'Every submission has two parts: the raw media artifact AND the volunteer&apos;s explanation providing cultural context.',
         details: [
             {
                 label: 'Raw Artifact',
@@ -103,7 +103,7 @@ export function AIPipelineSection() {
                     <p className="font-body text-lg text-text-secondary max-w-3xl mx-auto mt-4">
                         Every upload passes through our AI pipeline that <strong>listens</strong>, <strong>watches</strong>,
                         and <strong>understands</strong> — but always with human verification.
-                        The artifact and the volunteer's context work together to preserve meaning.
+                        The artifact and the volunteer&apos;s context work together to preserve meaning.
                     </p>
                 </motion.div>
 
@@ -115,8 +115,8 @@ export function AIPipelineSection() {
                             <motion.button
                                 key={step.id}
                                 className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${activeStep === step.id
-                                        ? `${step.color} bg-white shadow-lg`
-                                        : 'border-gray-100 bg-white/50 hover:border-gray-200'
+                                    ? `${step.color} bg-white shadow-lg`
+                                    : 'border-gray-100 bg-white/50 hover:border-gray-200'
                                     }`}
                                 onClick={() => setActiveStep(step.id)}
                                 initial={{ opacity: 0, x: -20 }}
@@ -266,7 +266,7 @@ export function AIPipelineSection() {
                     transition={{ delay: 0.3 }}
                 >
                     <p className="font-body text-text-secondary">
-                        💡 <strong className="text-text-primary">Key Insight:</strong> The volunteer's explanation is just as important as the media itself.
+                        💡 <strong className="text-text-primary">Key Insight:</strong> The volunteer&apos;s explanation is just as important as the media itself.
                         AI helps us <em>scale</em>, but human context gives the archive its <em>soul</em>.
                     </p>
                 </motion.div>

@@ -114,7 +114,7 @@ export function RoadmapTimeline() {
                         The Path Ahead
                     </h2>
                     <p className="font-body text-lg text-text-secondary max-w-2xl mx-auto mt-4">
-                        From the first upload to a decentralized cultural archive — here's where we're going.
+                        From the first upload to a decentralized cultural archive — here&apos;s where we&apos;re going.
                     </p>
                 </motion.div>
 

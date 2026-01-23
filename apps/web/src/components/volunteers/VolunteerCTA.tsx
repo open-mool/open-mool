@@ -45,7 +45,7 @@ export function VolunteerCTA() {
 
                         <p className="font-body text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8">
                             Every contribution matters. Whether you write code, record stories, or verify content —
-                            you're helping preserve a civilization's memory.
+                            you&apos;re helping preserve a civilization&apos;s memory.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -83,7 +83,7 @@ export function VolunteerCTA() {
                             transition={{ delay: 0.5 }}
                         >
                             <p className="font-human text-lg italic text-white/80">
-                                "Every time an elder passes away without sharing their story, a library burns to the ground."
+                                &ldquo;Every time an elder passes away without sharing their story, a library burns to the ground.&rdquo;
                             </p>
                             <cite className="font-mono text-sm text-white/60 mt-2 block">
                                 — The Open Mool Manifesto

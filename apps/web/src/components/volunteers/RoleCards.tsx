@@ -73,7 +73,7 @@ export function RoleCards() {
                         Find Your Role
                     </h2>
                     <p className="font-body text-lg text-text-secondary max-w-2xl mx-auto mt-4">
-                        Everyone has a place in the movement. Whether you're in the field or at a desk,
+                        Everyone has a place in the movement. Whether you&apos;re in the field or at a desk,
                         your contribution matters.
                     </p>
                 </motion.div>
@@ -107,7 +107,7 @@ export function RoleCards() {
                             {/* Responsibilities */}
                             <div className="mb-6">
                                 <h4 className="font-body text-xs uppercase tracking-wider text-text-secondary mb-3">
-                                    What You'll Do
+                                    What You&apos;ll Do
                                 </h4>
                                 <ul className="space-y-2">
                                     {role.responsibilities.map((resp, i) => (
