@@ -7,8 +7,8 @@ const steps = [
     {
         id: 'capture',
         icon: '📱',
-        title: 'Capture',
-        subtitle: 'The Field',
+        title: 'संग्रह (Capture)',
+        subtitle: 'क्षेत्र में',
         description: 'Scouts visit villages and record elders — songs, stories, rituals, and memories — using just a smartphone.',
         color: 'bg-secondary/20 border-secondary',
         techNote: 'Mobile upload with geolocation tagging',
@@ -16,8 +16,8 @@ const steps = [
     {
         id: 'upload',
         icon: '📤',
-        title: 'Upload',
-        subtitle: 'The Gateway',
+        title: 'अपलोड (Upload)',
+        subtitle: 'द्वार पर',
         description: 'Files are uploaded through our web platform with rich metadata — who, where, what language, and context.',
         color: 'bg-primary/20 border-primary',
         techNote: 'Presigned URLs → Cloudflare R2 (raw bucket)',
@@ -25,8 +25,8 @@ const steps = [
     {
         id: 'process',
         icon: '🤖',
-        title: 'Process',
-        subtitle: 'The Refinery',
+        title: 'शोधन (Process)',
+        subtitle: 'शोधनी में',
         description: 'AI automatically transcribes audio, translates dialects, extracts entities (names, places, festivals), and tags content.',
         color: 'bg-tech/20 border-tech',
         techNote: 'Whisper AI + LLM → Cloudflare Workers AI',
@@ -34,8 +34,8 @@ const steps = [
     {
         id: 'preserve',
         icon: '🏛️',
-        title: 'Preserve',
-        subtitle: 'The Vault',
+        title: 'संरक्षण (Preserve)',
+        subtitle: 'कोष में',
         description: 'Verified content enters the permanent archive — searchable, browsable, and forever open to researchers and descendants.',
         color: 'bg-gray-100 border-gray-400',
         techNote: 'D1 Database + R2 Storage + Vector Embeddings',
