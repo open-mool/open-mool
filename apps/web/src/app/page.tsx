@@ -66,6 +66,18 @@ export default async function Home() {
                         >
                             GitHub
                         </a>
+                        <Link
+                            href="/privacy"
+                            className="font-body text-sm text-text-secondary hover:text-primary transition-colors"
+                        >
+                            Privacy
+                        </Link>
+                        <Link
+                            href="/terms"
+                            className="font-body text-sm text-text-secondary hover:text-primary transition-colors"
+                        >
+                            Terms
+                        </Link>
                     </div>
                     <div className="text-xs text-text-secondary/60 font-mono">
                         v0.1.0-alpha
