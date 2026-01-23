@@ -73,7 +73,7 @@ const phases = [
         timeline: 'Mar 20 - Apr 10, 2026',
         items: [
             '"Mool Nodes" federation',
-            'Content Trust licensing',
+            'Creative Commons (NC) licensing',
             'IPFS/Arweave backup',
             'Pahadi LLM development',
             'Multi-region resilience',

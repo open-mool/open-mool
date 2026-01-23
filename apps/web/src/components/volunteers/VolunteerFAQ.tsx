@@ -6,7 +6,7 @@ import { useState } from 'react';
 const faqs = [
     {
         question: 'Who owns the data that gets uploaded?',
-        answer: 'The content belongs to the community and heritage it represents. The code is MIT licensed (open source), but the cultural content is held in trust by the Open Mool Foundation. Non-commercial and educational use is free. Commercial use requires a revenue-share with the original communities.',
+        answer: 'The content belongs to the community and heritage it represents. The code is MIT licensed (open source), and the cultural content is licensed under Creative Commons Attribution-NonCommercial (CC BY-NC). This ensures it remains free for educational use while preventing commercial exploitation without permission.',
     },
     {
         question: 'Do I need special equipment to be a Scout?',
@@ -26,7 +26,7 @@ const faqs = [
     },
     {
         question: 'Can I use the archive for research or academic work?',
-        answer: 'Absolutely! The archive is open for non-commercial research and education. We ask that you cite Open Mool and the original contributors. For commercial research or dataset licensing, please contact us for a revenue-share agreement.',
+        answer: 'Absolutely! The archive is open for non-commercial research and education under the Creative Commons Attribution-NonCommercial (CC BY-NC) license. We ask that you cite the original contributors and Open Mool. For commercial use, please contact us.',
     },
     {
         question: 'How do I earn Karma points?',
