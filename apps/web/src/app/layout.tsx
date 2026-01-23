@@ -57,7 +57,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <Auth0Provider>
                 <ThemeProvider defaultTheme="system">
                     <body className={`${eczar.variable} ${yantramanav.variable} ${gotu.variable} font-body antialiased`}>
