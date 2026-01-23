@@ -5,21 +5,21 @@ import { useState } from 'react';
 
 const components = {
     platform: {
-        title: 'The Platform',
+        title: 'मंच (The Platform)',
         icon: '🌐',
         color: '#D64933',
         items: ['Next.js Web App', 'Auth0 Authentication', 'Dashboard & Upload UI'],
         description: 'The public-facing interface where Scouts and Guardians interact with the archive.',
     },
     vault: {
-        title: 'The Vault',
+        title: 'कोष (The Vault)',
         icon: '🗄️',
         color: '#005F73',
         items: ['Cloudflare R2 Storage', 'D1 SQLite Database', 'Raw & Processed Buckets'],
         description: 'Zero-egress object storage for all media, with a relational database for metadata.',
     },
     refinery: {
-        title: 'The Refinery',
+        title: 'शोधनी (The Refinery)',
         icon: '🤖',
         color: '#FFB140',
         items: ['Workers AI Pipeline', 'Whisper Transcription', 'LLM Entity Extraction'],
