@@ -1,6 +1,7 @@
 name = "open-mool-api"
 compatibility_date = "2024-01-01"
 main = "src/index.ts"
+account_id = "230954685943e3c5f646e7d2d53f828a"
 
 [vars]
 # Environment variables
