@@ -1,7 +1,8 @@
 import { Auth0Client } from '@auth0/nextjs-auth0/server';
 import { MockAuth0Client } from './mock-auth0';
 
-const isMockAuth = process.env.NEXT_PUBLIC_MOCK_LOGIN === 'true';
+// SECURITY: Only allow mock login in non-production environments
+const isMockAuth = process.env.NEXT_PUBLIC_MOCK_LOGIN === 'true' && process.env.NODE_ENV !== 'production';
 
 export const auth0 = isMockAuth
     ? (new MockAuth0Client({}) as unknown as Auth0Client)
