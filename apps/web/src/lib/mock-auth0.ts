@@ -38,10 +38,6 @@ export class MockAuth0Client {
 
         // /auth/login
         if (pathname.endsWith('/login')) {
-            // Effectively skip the provider login and just set the session
-            // In a real app, this goes to Auth0 Universal Login. 
-            // Here we just set our mock cookie and redirect to the callback (or direct to dashboard)
-            // Let's redirect to dashboard directly.
             const res = NextResponse.redirect(new URL(returnTo, req.url));
             res.cookies.set(SESSION_COOKIE_NAME, 'mock-session-token', {
                 path: '/',
@@ -59,20 +55,27 @@ export class MockAuth0Client {
             return res;
         }
 
-        // /auth/me - consumed by client-side useUser hook
-        if (pathname.endsWith('/me')) {
+        // /auth/me or /auth/profile
+        if (pathname.endsWith('/me') || pathname.endsWith('/profile')) {
             const sessionCookie = req.cookies.get(SESSION_COOKIE_NAME);
             if (sessionCookie?.value === 'mock-session-token') {
                 return NextResponse.json(MOCK_USER);
             }
-            // Return 204 or null content to indicate no user, rather than 401 which might cause errors in client
             return new NextResponse(null, { status: 204 });
         }
 
-        // /auth/callback - used if we did a redirect flow
+        // /auth/callback
         if (pathname.endsWith('/callback')) {
             const res = NextResponse.redirect(new URL(returnTo, req.url));
             return res;
+        }
+
+        // /auth/access-token
+        if (pathname.endsWith('/access-token')) {
+            return NextResponse.json({
+                accessToken: "mock-access-token",
+                expiresIn: 3600
+            });
         }
 
         // For all other routes, just pass through
