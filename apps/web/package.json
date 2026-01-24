@@ -16,6 +16,7 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
+        "dev:remote": "next dev",
         "build": "next build",
         "pages:build": "npx @cloudflare/next-on-pages",
         "start": "next start",

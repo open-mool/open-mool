@@ -5,7 +5,8 @@
     "types": "./src/index.ts",
     "scripts": {
         "generate": "drizzle-kit generate",
-        "push": "drizzle-kit push"
+        "push": "drizzle-kit push",
+        "db:push:local": "cd ../../apps/api && wrangler d1 migrations apply DB --local"
     },
     "dependencies": {
         "drizzle-orm": "^0.30.0"

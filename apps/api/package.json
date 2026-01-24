@@ -6,7 +6,8 @@
         "build": "wrangler deploy --dry-run",
         "type-check": "tsc --noEmit",
         "deploy": "wrangler deploy",
-        "dev": "wrangler dev --env staging --remote",
+        "dev": "wrangler dev",
+        "dev:remote": "wrangler dev --env staging --remote",
         "start": "wrangler dev"
     },
     "dependencies": {
