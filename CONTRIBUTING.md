@@ -28,29 +28,26 @@ If you just want to work on the UI, you don't need any secrets or complex setup.
     ```
     *   **Open:** [http://localhost:3000](http://localhost:3000)
     *   **Login:** Click "Join" to auto-login as a mock user.
-    *   **Database:** If you need the DB, run `cd packages/db && pnpm db:push:local` in a new terminal.
+
+4.  **(Optional) Backend Setup:**
+    If you need to modify the API or database schema, initialize the local database emulator:
+    ```bash
+    cd packages/db && pnpm db:push:local
+    ```
 
 ---
 
-### Advanced Setup (For Backend / Full Integration)
+### 🌐 Connecting to Staging (Optional)
 
-If you are working on the API or need real staging data:
+**Typically not required.** Do this only if you need to test against real infrastructure.
+*Ask the team for access if you don't have credentials.*
 
-#### Local Database (D1) Setup
-The backend uses Cloudflare D1. To set up your local emulator:
-```bash
-# Initialize local D1 database schema
-cd packages/db
-pnpm db:push:local
-```
-
-#### Running Against Staging
-To connect your local app to the **Remote Staging Infrastructure** (Requires access rights):
 ```bash
 pnpm dev:remote
 ```
-*   This skips the local emulator and connects directly to Cloudflare Staging.
-*   You will be asked to authenticate via `wrangler login` if not already logged in.
+*   Skips the local emulator.
+*   Connects directly to Cloudflare Staging (D1 & R2).
+*   Requires `wrangler login`.
 
 ---
 
