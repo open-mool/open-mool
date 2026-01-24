@@ -14,11 +14,11 @@ const MOCK_USER = {
 const SESSION_COOKIE_NAME = 'appSession';
 
 export class MockAuth0Client {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(config: any) { }
+    // eslint-disable-next-line
+    constructor(_config: any) { }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getSession(req?: any, res?: any) {
+    // eslint-disable-next-line
+    async getSession(_req?: any, _res?: any) {
         // Use dynamic import to avoid bundling issues in edge/client if incorrectly imported
         const { cookies } = await import('next/headers');
         const cookieStore = cookies();
