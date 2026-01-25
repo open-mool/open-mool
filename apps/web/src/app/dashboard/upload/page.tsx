@@ -126,21 +126,25 @@ export default function UploadPage() {
     }, [multipart.progress, multipart.isUploading, isLargeFile]);
 
     const handleSubmit = async () => {
-        if (!uploadKey || !metadata.title) return;
-        setIsSubmitting(true);
-        try {
-            await axios.post(`${API_URL}/upload/complete`, {
-                key: uploadKey,
-                ...metadata
-            });
-            setSubmissionComplete(true);
-        } catch (err) {
-            console.error(err);
-            setError('Failed to save metadata. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    if (!uploadKey || !metadata.title) return;
+
+    setIsSubmitting(true);
+    setError(''); // clear previous errors
+
+    try {
+        await axios.post(`${API_URL}/upload/complete`, {
+            key: uploadKey,
+            ...metadata
+        });
+
+        setSubmissionComplete(true);
+    } catch (err) {
+        console.error('Failed to save metadata:', err);
+        setError('Failed to save metadata. Please try again.');
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
     /* ---------- Success State ---------- */
     if (submissionComplete) {
