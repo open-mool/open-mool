@@ -34,27 +34,6 @@ export default function UploadPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionComplete, setSubmissionComplete] = useState(false);
 
-    // 🔑 Keyboard-accessible dropzone support
-    const dropzoneRef = React.useRef<HTMLDivElement>(null);
-
-    const handleDropzoneKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            dropzoneRef.current
-                ?.querySelector<HTMLInputElement>('input[type="file"]')
-                ?.click();
-        }
-
-        if (e.key === 'Escape') {
-            multipart.cancelUpload();
-            setFile(null);
-            setStatus('idle');
-            setUploadKey(null);
-            setError('');
-            setProgress(0);
-        }
-    };
-
     const startUpload = React.useCallback(async (fileToUpload: File) => {
         setStatus('uploading');
         setProgress(0);
@@ -191,6 +170,19 @@ export default function UploadPage() {
             <div className="sutra-line" />
 
             <div className="max-w-5xl mx-auto px-8 py-16">
+                {/* Header */}
+                <div className="mb-16">
+                    <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary)] font-bold mb-4">
+                        The Vault
+                    </p>
+                    <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-eczar)] font-bold mb-4 tracking-tight">
+                        Archive a Story
+                    </h1>
+                    <p className="text-[var(--text-secondary)] text-lg max-w-xl">
+                        Preserve audio and video from the Himalayan heritage. Every upload adds to our collective memory.
+                    </p>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <div className="lg:col-span-5 space-y-8">
                         <div className="bg-[var(--bg-subtle)] p-8 border border-[var(--accent-primary)]/10">
@@ -198,29 +190,29 @@ export default function UploadPage() {
                                 <Upload className="w-4 h-4" /> Source File
                             </h3>
 
-                            {/* ✅ Keyboard-accessible wrapper */}
-                            <div
-                                ref={dropzoneRef}
-                                tabIndex={0}
-                                role="button"
-                                aria-label="Upload media file"
-                                onKeyDown={handleDropzoneKeyDown}
-                                className="focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]"
-                            >
-                                <FileUploader
-                                    file={file}
-                                    setFile={setFile}
-                                    progress={progress}
-                                    status={status}
-                                    error={error}
-                                />
-                            </div>
+                            <FileUploader
+                                file={file}
+                                setFile={setFile}
+                                progress={progress}
+                                status={status}
+                                error={error}
+                            />
                         </div>
 
                         {file && status === 'success' &&
                             (file.type.startsWith('audio')
                                 ? <AudioPreview file={file} />
                                 : <VideoPreview file={file} />)}
+
+                        {/* Upload Tip */}
+                        <div className="p-6 bg-[var(--accent-tech)]/5 border-l-2 border-[var(--accent-tech)] text-sm">
+                            <p className="font-bold text-[var(--accent-tech)] mb-1 uppercase tracking-widest text-xs">
+                                Preservation Note
+                            </p>
+                            <p className="text-[var(--text-secondary)]">
+                                Files are stored directly at the edge. Large files (up to 500MB) are fully supported. Please ensure high-quality recordings.
+                            </p>
+                        </div>
                     </div>
 
                     <div className="lg:col-span-7">
@@ -230,6 +222,36 @@ export default function UploadPage() {
                                 onChange={setMetadata}
                                 disabled={isSubmitting}
                             />
+
+                            {/* Multipart Controls */}
+                            {isLargeFile && status === 'uploading' && (
+                                <div className="mt-6 flex justify-center gap-3">
+                                    {multipart.isUploading ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => multipart.pauseUpload()}
+                                            className="px-4 py-2 bg-[var(--accent-secondary)] text-[var(--text-primary)] text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition"
+                                        >
+                                            <Pause className="w-4 h-4" /> Pause
+                                        </button>
+                                    ) : multipart.isPaused ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => file && multipart.resumeUpload(file)}
+                                            className="px-4 py-2 bg-green-500 text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition"
+                                        >
+                                            <Play className="w-4 h-4" /> Resume
+                                        </button>
+                                    ) : null}
+                                    <button
+                                        type="button"
+                                        onClick={() => multipart.cancelUpload()}
+                                        className="px-4 py-2 bg-[var(--accent-primary)] text-white text-xs font-bold uppercase tracking-widest hover:opacity-90 transition"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
 
                             <div className="mt-10 flex justify-end">
                                 <button

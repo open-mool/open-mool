@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Globe, Type, AlignLeft, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';;
+import { cn } from '@/lib/utils';
 
 export interface Metadata {
     title: string;
@@ -51,10 +51,14 @@ export function MetadataForm({ data, onChange, disabled }: MetadataFormProps) {
         <div className="space-y-6">
             {/* Title */}
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                <label 
+                    htmlFor="story-title"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2"
+                >
                     <Type className="w-4 h-4" /> Title
                 </label>
                 <input
+                    id="story-title"
                     type="text"
                     value={data.title}
                     onChange={(e) => handleChange('title', e.target.value)}
@@ -66,10 +70,14 @@ export function MetadataForm({ data, onChange, disabled }: MetadataFormProps) {
 
             {/* Description */}
             <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                <label 
+                    htmlFor="story-description"
+                    className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2"
+                >
                     <AlignLeft className="w-4 h-4" /> Description
                 </label>
                 <textarea
+                    id="story-description"
                     value={data.description}
                     onChange={(e) => handleChange('description', e.target.value)}
                     disabled={disabled}
@@ -82,10 +90,14 @@ export function MetadataForm({ data, onChange, disabled }: MetadataFormProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Language */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <label 
+                        htmlFor="story-language"
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2"
+                    >
                         <Globe className="w-4 h-4" /> Language/Dialect
                     </label>
                     <input
+                        id="story-language"
                         list="languages"
                         type="text"
                         value={data.language}
@@ -103,13 +115,17 @@ export function MetadataForm({ data, onChange, disabled }: MetadataFormProps) {
 
                 {/* Location */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <label 
+                        className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2"
+                    >
                         <MapPin className="w-4 h-4" /> Location
                     </label>
                     <div className="flex gap-2">
                         <button
+                            type="button"
                             onClick={getLocation}
                             disabled={disabled || loadingLocation}
+                            aria-label={data.location ? "Update current location" : "Use current location"}
                             className={cn(
                                 "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 font-medium text-sm transition-all",
                                 "hover:bg-slate-50 dark:hover:bg-slate-900 active:scale-[0.98]",

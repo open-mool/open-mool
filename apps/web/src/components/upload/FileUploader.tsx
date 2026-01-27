@@ -63,10 +63,13 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
     return (
         <div className="w-full space-y-4">
             <div
-                {...getRootProps()}
+                {...getRootProps({
+                    role: 'button',
+                    'aria-label': file ? `Selected file: ${file.name}` : 'Upload media file',
+                })}
                 className={cn(
-                    "relative group border-2 border-dashed rounded-xl p-8 transition-all duration-300 ease-out cursor-pointer overflow-hidden",
-                    "hover:border-blue-500/50 hover:bg-blue-500/5",
+                    "relative group border-2 border-dashed rounded-xl p-8 transition-all duration-300 ease-out cursor-pointer overflow-hidden outline-none",
+                    "hover:border-blue-500/50 hover:bg-blue-500/5 focus-visible:ring-2 focus-visible:ring-blue-500",
                     isDragActive ? "border-blue-500 bg-blue-500/10 scale-[1.01]" : "border-slate-200 dark:border-slate-800",
                     status === 'error' && "border-red-500 bg-red-500/5",
                     status === 'success' && "border-green-500 bg-green-500/5",
@@ -119,7 +122,9 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
 
                             {status === 'idle' && (
                                 <button
+                                    type="button"
                                     onClick={removeFile}
+                                    aria-label="Remove file"
                                     className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-red-500"
                                 >
                                     <X className="w-5 h-5" />
@@ -127,7 +132,7 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
                             )}
 
                             {status === 'success' && (
-                                <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                                <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" aria-label="Upload successful" />
                             )}
                         </motion.div>
                     )}
@@ -146,32 +151,34 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
                 )}
             </div>
 
-            {status === 'uploading' && (
-                <motion.p
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="text-xs text-center text-slate-500 font-medium font-mono"
-                >
-                    UPLOADING... {Math.round(progress)}%
-                </motion.p>
-            )}
+            <div aria-live="polite">
+                {status === 'uploading' && (
+                    <motion.p
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                        className="text-xs text-center text-slate-500 font-medium font-mono"
+                    >
+                        UPLOADING... {Math.round(progress)}%
+                    </motion.p>
+                )}
 
-            {error && (
-                <motion.p
-                    initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-                    className="text-sm text-red-500 text-center"
-                >
-                    {error}
-                </motion.p>
-            )}
+                {error && (
+                    <motion.p
+                        initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+                        className="text-sm text-red-500 text-center"
+                    >
+                        {error}
+                    </motion.p>
+                )}
 
-            {validationError && (
-                <motion.p
-                    initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
-                    className="text-sm text-red-500 text-center font-medium"
-                >
-                    ⚠️ {validationError}
-                </motion.p>
-            )}
+                {validationError && (
+                    <motion.p
+                        initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
+                        className="text-sm text-red-500 text-center font-medium"
+                    >
+                        ⚠️ {validationError}
+                    </motion.p>
+                )}
+            </div>
         </div>
     );
 }
