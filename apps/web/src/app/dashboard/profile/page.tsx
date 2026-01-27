@@ -7,7 +7,7 @@ export const runtime = 'edge';
 async function getContributionCount(userId: string): Promise<number> {
     try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
-        const response = await fetch(`${apiUrl}/media/count?userId=${encodeURIComponent(userId)}`);
+        const response = await fetch(`${apiUrl}/media/count?userId=${encodeURIComponent(userId)}`, { cache: 'no-store' });
         if (!response.ok) {
             return 0;
         }

@@ -41,6 +41,7 @@ export const getMediaCount = async (c: Context<{ Bindings: Env }>) => {
 
         return c.json({ count: result.count })
     } catch (error) {
+        console.error('Failed to fetch media count:', error)
         return c.json({ error: 'Internal Server Error' }, 500)
     }
 }
