@@ -45,7 +45,7 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
                 setValidationError(`File too large, sad. Maximum file size is ${limitMB}MB. Your file is ${sizeMB}MB.`);
             } 
             
-            //Reject unsupported formats early.(UX-level validation)
+            //reject unsupported formats early. (UX-level validation)
             else if (errorCode === 'file-invalid-type') {
                 setValidationError(`Invalid file type. Please upload MP3, WAV, MP4, or MOV files only`);
             } 
@@ -58,13 +58,16 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
         }
 
 
-        //even accepted files are valdiated again to protect against future config changes/manual invocation of this component
+        //even accepted files are validated again to protect against future config changes/manual invocation of this component
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
 
             if(file.size > MAX_FILE_SIZE) {
-                const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-                setValidationError(`Hey, File too large. Maximum file size is 500MB. Your file is ${sizeMB}MB. Try in parts or reduce the size.`);
+                const rawSizeMB = file.size / (1024 * 1024);
+                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1); //to display decimal values only when needed.
+                const limitMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
+
+                setValidationError(`Hey, File too large. Maximum file size is ${limitMB}MB. Your file is ${sizeMB}MB. Try in parts or reduce the size.`);
                 
                 //do not allow invalid files into application state
                 return;
