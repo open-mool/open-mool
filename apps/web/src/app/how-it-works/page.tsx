@@ -116,7 +116,7 @@ function StepCard({ step, index }: { step: any, index: number }) {
         >
             {/* Node / Icon */}
             <div className="absolute left-0 top-0 md:left-1/2 md:-translate-x-1/2 w-20 h-20 flex items-center justify-center bg-bg-canvas z-10">
-                <div className="w-16 h-16 bg-white border border-primary/20 rounded-2xl shadow-lg flex items-center justify-center text-primary transform transition-transform hover:scale-110 duration-300">
+                <div className="w-16 h-16 bg-white dark:bg-subtle border border-primary/20 rounded-2xl shadow-lg flex items-center justify-center text-primary transform transition-transform hover:scale-110 duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         {step.icon}
                     </svg>

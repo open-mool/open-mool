@@ -19,6 +19,7 @@
   /* Typography Colors */
   --text-primary: #1A1C20;
   --text-secondary: #6B7280;
+  --border-subtle: #E5E7EB;
 }
 
 .dark {
@@ -32,6 +33,7 @@
 
   --text-primary: #E5E7EB;
   --text-secondary: #9CA3AF;
+  --border-subtle: #2D2D33;
 }
 
 body {

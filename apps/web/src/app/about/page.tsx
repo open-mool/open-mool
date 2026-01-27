@@ -129,7 +129,7 @@ export default function About() {
                 </section>
 
                 {/* Section VI - Context */}
-                <section className="mt-16 pt-8 border-t border-gray-100 bg-subtle/50 p-6 rounded-xl">
+                <section className="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 bg-subtle/50 p-6 rounded-xl">
                     <h3 className="font-heading text-xl text-text-primary mb-6">VI. Historical References & Context</h3>
                     <dl className="grid gap-6 text-sm">
                         {[

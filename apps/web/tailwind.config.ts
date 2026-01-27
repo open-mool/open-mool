@@ -17,6 +17,7 @@ const config: Config = {
                 tech: "var(--accent-tech)",
                 "text-primary": "var(--text-primary)",
                 "text-secondary": "var(--text-secondary)",
+                "border-subtle": "var(--border-subtle)",
             },
             fontFamily: {
                 heading: ["var(--font-eczar)", "serif"],
