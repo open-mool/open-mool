@@ -21,6 +21,19 @@
   --text-secondary: #6B7280;
 }
 
+.dark {
+  --bg-canvas: #121418;
+  --bg-subtle: #1F1F23;
+  --bg-dark: #0F1113;
+
+  --accent-primary: #FF6B5C;
+  --accent-secondary: #FFD57E;
+  --accent-tech: #00A1B3;
+
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+}
+
 body {
   background-color: var(--bg-canvas);
   color: var(--text-primary);
