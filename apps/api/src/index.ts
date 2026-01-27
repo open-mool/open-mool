@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { auth0Webhook } from './webhooks/auth0'
 import upload from './routes/upload'
-import { getMyUploads } from './routes/media'
+import { getMyUploads, getMediaCount } from './routes/media'
 
 type Bindings = {
   R2_BUCKET_NAME: string
@@ -23,6 +23,7 @@ app.get('/', (c) => {
 
 app.post('/webhooks/auth0', auth0Webhook)
 app.get('/media/my-uploads', getMyUploads)
+app.get('/media/count', getMediaCount)
 
 app.use('/*', cors())
 app.route('/upload', upload)
