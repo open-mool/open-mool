@@ -34,6 +34,10 @@
   --text-secondary: #9CA3AF;
 }
 
+.bg-canvas-80 {
+  background-color: color-mix(in srgb, var(--bg-canvas), transparent 20%);
+}
+
 body {
   background-color: var(--bg-canvas);
   color: var(--text-primary);

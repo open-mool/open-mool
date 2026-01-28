@@ -6,24 +6,28 @@ import { useTheme } from "next-themes"
 
 export function ThemeToggle() {
     const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = React.useState(false)
 
+    // Wait until mounted on client to avoid hydration mismatch
     React.useEffect(() => {
-        const storedTheme = localStorage.getItem("theme")
-        if (storedTheme) {
-            setTheme(storedTheme)
-        }
+        setMounted(true)
     }, [])
 
+    if (!mounted) {
+        return <div className="size-5" /> // Placeholder to avoid layout shift
+    }
+
     const toggleTheme = () => {
-        const newTheme = theme === "dark" ? "light" : "dark"
-        setTheme(newTheme)
-        localStorage.setItem("theme", newTheme)
+        setTheme(theme === "dark" ? "light" : "dark")
     }
 
     return (
-        <button onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === "light" ? <Moon className="size-5" /> : <Sun className="size-5" />}
+        <button 
+            onClick={toggleTheme} 
+            aria-label="Toggle theme"
+            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-2 hover:bg-[var(--bg-subtle)] rounded-full flex items-center justify-center"
+        >
+            {theme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </button>
     )
 }
-
