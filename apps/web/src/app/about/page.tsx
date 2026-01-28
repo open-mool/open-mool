@@ -54,12 +54,12 @@ export default function About() {
                         But today, we face a threat that no invasion could accomplish: <strong>Amnesia</strong>.
                     </p>
                     <p className="mb-4">
-                        The mountains are being hollowed out—physically and culturally. The cedars are falling to the axe, and the mountains are being tunneled for power. We see the landslides on the news, but we miss the invisible landslide of our heritage.
+                        The mountains are being hollowed out - physically and culturally. The cedars are falling to the axe, and the mountains are being tunneled for power. We see the landslides on the news, but we miss the invisible landslide of our heritage.
                     </p>
                     <ul className="list-disc pl-6 space-y-2 mb-4">
                         <li>The <strong>Ghost Villages (Palan)</strong> are emptying, leaving behind homes where the hearth fires have gone cold.</li>
                         <li>The epic ballads of <strong>Rajula-Malushahi</strong>, once sung through the night, are shrinking into soundbites.</li>
-                        <li>The intricate knowledge of the <strong>Bhotia trade routes</strong>—a web of commerce and culture that spanned nations—is fading into myth.</li>
+                        <li>The intricate knowledge of the <strong>Bhotia trade routes</strong> - a web of commerce and culture that spanned nations - is fading into myth.</li>
                     </ul>
                     <p>
                         We are losing the software of our civilization while we argue over the hardware.
@@ -73,12 +73,12 @@ export default function About() {
                         <strong>Open Mool is the resistance against this silence.</strong>
                     </p>
                     <p className="mb-4">
-                        We are a collective of engineers, historians, and hill-folk building the sovereign digital infrastructure to protect Himalayan heritage. We are building a &quot;Firebreak&quot;—a permanent, indestructible line of defense against the erosion of memory.
+                        We are a collective of engineers, historians, and hill-folk building the sovereign digital infrastructure to protect Himalayan heritage. We are building a &quot;Firebreak&quot; - a permanent, indestructible line of defense against the erosion of memory.
                     </p>
                     <ul className="list-disc pl-6 space-y-2 mb-4">
                         <li><strong>We are not a startup.</strong> We do not sell data; we steward it.</li>
                         <li><strong>We are not a museum.</strong> Museums are where culture goes to retire. We are an archive where culture goes to be reborn.</li>
-                        <li><strong>We are not just for Uttarakhand.</strong> While our roots are in the Doon valley, our branches cover the entire Himalayan belt—from the saffron fields of Kashmir to the orchards of Himachal and the peaks of the North East.</li>
+                        <li><strong>We are not just for Uttarakhand.</strong> While our roots are in the Doon valley, our branches cover the entire Himalayan belt - from the saffron fields of Kashmir to the orchards of Himachal and the peaks of the North East.</li>
                     </ul>
                 </section>
 
@@ -89,7 +89,7 @@ export default function About() {
                         <strong>We are building the Source Code of the Himalayas.</strong>
                     </p>
                     <p className="mb-4">
-                        We use technology—Artificial Intelligence, Vector Search, and Open Source protocols—not to replace tradition, but to amplify it.
+                        We use technology - Artificial Intelligence, Vector Search, and Open Source protocols - not to replace tradition, but to amplify it.
                     </p>
                     <ul className="list-disc pl-6 space-y-2 mb-4">
                         <li>When an elder speaks a forgotten dialect, our AI learns to transcribe it, ensuring the language finds a place in the digital future.</li>
@@ -151,7 +151,7 @@ export default function About() {
                 </section>
 
                 <div className="mt-12 text-center">
-                    <a href="mailto:hello@openmool.org" className="inline-block px-6 py-3 bg-primary text-white font-medium rounded hover:bg-red-700 transition-colors">
+                    <a href="mailto:team@openmool.org" className="inline-block px-6 py-3 bg-primary text-white font-medium rounded hover:bg-red-700 transition-colors">
                         Contact the Archive &rarr;
                     </a>
                 </div>

@@ -3,6 +3,7 @@ import { Eczar, Yantramanav, Gotu } from "next/font/google";
 import { Auth0Provider } from "@auth0/nextjs-auth0/client";
 import { Header } from "@/components/Header";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const eczar = Eczar({
     subsets: ["latin", "devanagari"],
@@ -26,7 +27,7 @@ const gotu = Gotu({
 
 export const metadata: Metadata = {
     title: "Open Mool | The Source Code of the Himalayas",
-    description: "The world's first open-source, AI-ready multimodal archive for the Himalayan region.",
+    description: "The world's first open-source, accessible multimodal archive for the Himalayan region.",
     keywords: ["Himalayas", "Culture", "Archive", "Open Source", "AI", "History", "Oral Traditions"],
     openGraph: {
         title: "Open Mool",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Open Mool",
-        description: "The world's first open-source, AI-ready multimodal archive for the Himalayan region.",
+        description: "The world's first open-source, accessible multimodal archive for the Himalayan region.",
         creator: "@openmool",
     },
 };
@@ -56,11 +57,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <Auth0Provider>
                 <body className={`${eczar.variable} ${yantramanav.variable} ${gotu.variable} font-body antialiased`}>
-                    <Header />
-                    {children}
+                    <ThemeProvider defaultTheme="system">
+                        <Header />
+                        {children}
+                    </ThemeProvider>
                 </body>
             </Auth0Provider>
         </html>

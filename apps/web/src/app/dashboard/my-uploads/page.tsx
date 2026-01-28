@@ -11,23 +11,41 @@ interface Upload {
     language: string | null;
     created_at: string;
     processed: boolean;
+    transcription: string | null;
 }
 
-async function fetchMyUploads(): Promise<Upload[]> {
+async function fetchMyUploads(userSub: string): Promise<Upload[] | null> {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787'}/media/my-uploads`, {
+        // Call backend API directly from server component with authenticated user ID
+        const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+        const apiSecret = process.env.API_SECRET;
+        
+        const headers: Record<string, string> = {
+            'x-user-id': userSub,
+        };
+        
+        // Add API secret for authentication if configured
+        if (apiSecret) {
+            headers['x-api-secret'] = apiSecret;
+        }
+        
+        const response = await fetch(`${apiUrl}/api/media/my-uploads`, {
             cache: 'no-store',
+            headers,
         });
 
         if (!response.ok) {
-            return [];
+            console.error(`Failed to fetch uploads: ${response.status} ${response.statusText}`);
+            // Return null to distinguish from "no uploads" (empty array)
+            return null;
         }
 
         const data = await response.json();
         return data.uploads || [];
     } catch (error) {
         console.error('Failed to fetch uploads:', error);
-        return [];
+        // Return null to indicate error state
+        return null;
     }
 }
 
@@ -43,7 +61,40 @@ export default async function MyUploadsPage() {
         redirect('/auth/login');
     }
 
-    const uploads = await fetchMyUploads();
+    const uploads = await fetchMyUploads(session.user.sub);
+
+    // Handle error state when fetch fails
+    if (uploads === null) {
+        return (
+            <div className="min-h-screen bg-[var(--bg-canvas)] p-8">
+                <header className="mb-8">
+                    <h1 className="text-4xl font-[family-name:var(--font-eczar)] font-bold mb-2">
+                        My Uploads
+                    </h1>
+                    <p className="text-[var(--text-secondary)] font-[family-name:var(--font-gotu)]">
+                        All your contributions to the archive
+                    </p>
+                </header>
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="w-24 h-24 rounded-full bg-red-100 flex items-center justify-center mb-6">
+                        <svg className="w-12 h-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 className="text-2xl font-[family-name:var(--font-eczar)] mb-2 text-red-900">Failed to load uploads</h2>
+                    <p className="text-[var(--text-secondary)] mb-6 max-w-md">
+                        There was an error loading your uploads. Please try refreshing the page.
+                    </p>
+                    <Link
+                        href="/dashboard/my-uploads"
+                        className="px-6 py-3 bg-[var(--accent-primary)] text-white uppercase tracking-widest text-sm font-bold hover:opacity-90 transition-opacity inline-block"
+                    >
+                        Refresh Page
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[var(--bg-canvas)] p-8">
@@ -101,6 +152,17 @@ export default async function MyUploadsPage() {
                                 <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-3">
                                     {upload.description}
                                 </p>
+                            )}
+
+                            {upload.transcription && (
+                                <div className="mb-4">
+                                    <span className="text-[10px] uppercase tracking-widest text-[var(--accent-primary)] font-bold block mb-1">
+                                        Transcription Snippet
+                                    </span>
+                                    <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2">
+                                        "{upload.transcription}"
+                                    </p>
+                                </div>
                             )}
 
                             <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">

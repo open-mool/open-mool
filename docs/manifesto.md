@@ -20,11 +20,11 @@ From the temple-builders of the **Katyuri Dynasty** to the trans-Himalayan trade
 
 But today, we face a threat that no invasion could accomplish: **Amnesia**.
 
-The mountains are being hollowed out—physically and culturally. The cedars are falling to the axe, and the mountains are being tunneled for power. We see the landslides on the news, but we miss the invisible landslide of our heritage.
+The mountains are being hollowed out - physically and culturally. The cedars are falling to the axe, and the mountains are being tunneled for power. We see the landslides on the news, but we miss the invisible landslide of our heritage.
 
 - The **Ghost Villages (Palan)** are emptying, leaving behind homes where the hearth fires have gone cold.
 - The epic ballads of **Rajula-Malushahi**, once sung through the night, are shrinking into soundbites.
-- The intricate knowledge of the **Bhotia trade routes**—a web of commerce and culture that spanned nations—is fading into myth.
+- The intricate knowledge of the **Bhotia trade routes** - a web of commerce and culture that spanned nations - is fading into myth.
 
 We are losing the software of our civilization while we argue over the hardware.
 
@@ -34,11 +34,11 @@ We are losing the software of our civilization while we argue over the hardware.
 
 **Open Mool is the resistance against this silence.**
 
-We are a collective of engineers, historians, and hill-folk building the sovereign digital infrastructure to protect Himalayan heritage. We are building a "Firebreak"—a permanent, indestructible line of defense against the erosion of memory.
+We are a collective of engineers, historians, and hill-folk building the sovereign digital infrastructure to protect Himalayan heritage. We are building a "Firebreak" - a permanent, indestructible line of defense against the erosion of memory.
 
 - **We are not a startup.** We do not sell data; we steward it.
 - **We are not a museum.** Museums are where culture goes to retire. We are an archive where culture goes to be reborn.
-- **We are not just for Uttarakhand.** While our roots are in the Doon valley, our branches cover the entire Himalayan belt—from the saffron fields of Kashmir to the orchards of Himachal and the peaks of the North East.
+- **We are not just for Uttarakhand.** While our roots are in the Doon valley, our branches cover the entire Himalayan belt - from the saffron fields of Kashmir to the orchards of Himachal and the peaks of the North East.
 
 ---
 
@@ -46,7 +46,7 @@ We are a collective of engineers, historians, and hill-folk building the soverei
 
 **We are building the Source Code of the Himalayas.**
 
-We use technology—Artificial Intelligence, Vector Search, and Open Source protocols—not to replace tradition, but to amplify it.
+We use technology - Artificial Intelligence, Vector Search, and Open Source protocols - not to replace tradition, but to amplify it.
 
 - When an elder speaks a forgotten dialect, our AI learns to transcribe it, ensuring the language finds a place in the digital future.
 - When a **Jagar** is recorded, we tag and contextualize it, so a researcher in Tokyo or a student in Almora can understand its meaning.

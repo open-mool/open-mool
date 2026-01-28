@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 
 export const users = sqliteTable("users", {
@@ -11,4 +11,18 @@ export const users = sqliteTable("users", {
     createdAt: integer("created_at", { mode: "timestamp" })
         .default(sql`(unixepoch())`)
         .notNull(),
+});
+
+export const media = sqliteTable("media", {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    key: text("key").notNull().unique(),
+    title: text("title").notNull(),
+    description: text("description"),
+    language: text("language"),
+    locationLat: real("location_lat"),
+    locationLng: real("location_lng"),
+    createdAt: text("created_at").notNull(),
+    processed: integer("processed", { mode: "boolean" }).default(false),
+    userId: text("user_id"),
+    transcription: text("transcription"),
 });

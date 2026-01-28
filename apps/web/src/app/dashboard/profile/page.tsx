@@ -4,6 +4,35 @@ import Image from 'next/image';
 
 export const runtime = 'edge';
 
+async function getContributionCount(userId: string): Promise<number> {
+    try {
+        const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+        const apiSecret = process.env.API_SECRET;
+        
+        const headers: Record<string, string> = {
+            'x-user-id': userId,
+        };
+        
+        if (apiSecret) {
+            headers['x-api-secret'] = apiSecret;
+        }
+
+        const response = await fetch(`${apiUrl}/api/media/count`, { 
+            headers,
+            cache: 'no-store' 
+        });
+
+        if (!response.ok) {
+            return 0;
+        }
+        const data = await response.json() as { count: number };
+        return data.count;
+    } catch (error) {
+        console.error('Failed to fetch contribution count:', error);
+        return 0;
+    }
+}
+
 export default async function ProfilePage() {
     let session = null;
     try {
@@ -17,6 +46,7 @@ export default async function ProfilePage() {
     }
 
     const { user } = session;
+    const contributionCount = await getContributionCount(user.sub);
 
     return (
         <div className="min-h-screen bg-[var(--bg-canvas)] p-8 font-[family-name:var(--font-yantramanav)] text-[var(--text-primary)]">
@@ -67,8 +97,8 @@ export default async function ProfilePage() {
 
                             <div className="grid grid-cols-2 gap-4 border-t border-[var(--accent-primary)]/10 pt-4">
                                 <div>
-                                    <div className="text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-1">Reputation</div>
-                                    <div className="text-3xl font-[family-name:var(--font-eczar)] text-[var(--accent-tech)]">0</div>
+                                    <div className="text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-1">Contributions</div>
+                                    <div className="text-3xl font-[family-name:var(--font-eczar)] text-[var(--accent-tech)]">{contributionCount}</div>
                                 </div>
                                 <div>
                                     <div className="text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-1">Joined</div>

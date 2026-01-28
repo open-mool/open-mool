@@ -5,7 +5,8 @@
                 "origins": [
                     "http://localhost:3000",
                     "https://open-mool.pages.dev",
-                    "https://openmool.org"
+                    "https://openmool.org",
+                    "https://dev.openmool.org"
                 ],
                 "methods": [
                     "GET",

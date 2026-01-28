@@ -24,13 +24,13 @@ We are building the "Digital Ark" for the Himalayas. Our brand voice must balanc
 
 ### C. The Open Commons (Saajha)
 - **Concept:** This belongs to no one and everyone. Like Wikipedia or Linux.
-- **Application:** We always credit the source. We champion "Data Sovereignty"—the idea that the culture belongs to the people who lived it, not the platform that hosts it.
+- **Application:** We always credit the source. We champion "Data Sovereignty" - the idea that the culture belongs to the people who lived it, not the platform that hosts it.
 
 ## 3. Scope & Ambition (The "Pan-Himalayan" Lens)
 **We are not just a state archive; we are a civilizational archive.**
 
 - **The Scope:** While operations begin in Uttarakhand, our brand narrative encompasses the entire Himalayan range (including Himachal Pradesh, Ladakh, Nepal, and the North East).
-- **The Common Thread:** We focus on the shared "Pahadi" identity—the resilience of mountain life, the oral traditions of nature worship, and the specific dialects of high-altitude communities.
+- **The Common Thread:** We focus on the shared "Pahadi" identity - the resilience of mountain life, the oral traditions of nature worship, and the specific dialects of high-altitude communities.
 - **Why this matters:** A broader scope attracts global researchers and funding, positioning us as the definitive diverse dataset for the region, not just a local project.
 
 ## 4. Tone of Voice

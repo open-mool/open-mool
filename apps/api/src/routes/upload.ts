@@ -2,15 +2,21 @@ import { Hono } from 'hono'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { authMiddleware, getAuthUserId } from '../middleware/auth'
+import { getGeminiEmbedding } from '../lib/embeddings'
 
 type Bindings = {
     DB: D1Database
     STORAGE: R2Bucket
+    VECTOR_INDEX: VectorizeIndex
+    AI: any
     R2_ACCOUNT_ID: string
     R2_ACCESS_KEY_ID: string
     R2_SECRET_ACCESS_KEY: string
     AUTH0_DOMAIN: string
     AUTH0_AUDIENCE: string
+    R2_BUCKET_NAME: string
+    API_SECRET?: string
+    GEMINI_API_KEY?: string
 }
 
 const upload = new Hono<{ Bindings: Bindings }>()
@@ -46,7 +52,7 @@ upload.post('/presigned', async (c) => {
     const key = `${crypto.randomUUID()}-${filename}`
 
     const command = new PutObjectCommand({
-        Bucket: 'open-mool-storage',
+        Bucket: c.env.R2_BUCKET_NAME,
         Key: key,
         ContentType: contentType,
     })
@@ -71,8 +77,10 @@ upload.post('/complete', async (c) => {
     }
 
     try {
-        const { success } = await c.env.DB.prepare(
-            `INSERT INTO media (key, title, description, language, location_lat, location_lng, created_at, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+        const mediaRecord = await c.env.DB.prepare(
+            `INSERT INTO media (key, title, description, language, location_lat, location_lng, user_id, created_at) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+             RETURNING id`
         ).bind(
             key,
             title,
@@ -80,15 +88,77 @@ upload.post('/complete', async (c) => {
             language,
             location?.lat || null,
             location?.lng || null,
-            new Date().toISOString(),
-            userId
-        ).run()
+            userId,
+            new Date().toISOString()
+        ).first<{ id: number }>()
 
-        if (!success) {
+        if (!mediaRecord) {
             return c.json({ error: 'Failed to save metadata' }, 500)
         }
 
-        return c.json({ success: true })
+        // --- THE REFINERY: AI Processing Pipeline ---
+        
+        let transcription = '';
+        
+        // 1. Transcription with Whisper
+        try {
+            const object = await c.env.STORAGE.get(key);
+            if (object) {
+                // Check if it's likely an audio/video file based on extension or metadata
+                const isMedia = key.match(/\.(mp3|wav|ogg|m4a|mp4|webm|mov|avi|flv)$/i);
+                
+                if (isMedia) {
+                    const blob = await object.arrayBuffer();
+                    
+                    // Limit file size for transcription (Workers AI has limits, typically 25MB)
+                    if (blob.byteLength < 25 * 1024 * 1024) {
+                        const aiResponse = await c.env.AI.run('@cf/openai/whisper', {
+                            audio: [...new Uint8Array(blob)]
+                        });
+                        
+                        if (aiResponse && aiResponse.text) {
+                            transcription = aiResponse.text;
+                            
+                            // Save transcription to DB
+                            await c.env.DB.prepare(
+                                `UPDATE media SET transcription = ? WHERE id = ?`
+                            ).bind(transcription, mediaRecord.id).run();
+                        }
+                    } else {
+                        console.warn(`File ${key} too large for transcription (${blob.byteLength} bytes)`);
+                    }
+                }
+            }
+        } catch (whisperError) {
+            console.error('Whisper transcription failed:', whisperError);
+        }
+
+        // 2. Generate and save embedding
+        const geminiApiKey = c.env.GEMINI_API_KEY
+        if (geminiApiKey) {
+            try {
+                // Include transcription in the embedding for better search
+                const textToEmbed = `${title} ${description || ''} ${transcription}`.trim()
+                const embedding = await getGeminiEmbedding(textToEmbed, geminiApiKey)
+                
+                await c.env.VECTOR_INDEX.upsert([
+                    {
+                        id: mediaRecord.id.toString(),
+                        values: embedding,
+                        metadata: { title, userId, transcription: transcription.substring(0, 100) }
+                    }
+                ])
+                
+                // Mark as processed in DB
+                await c.env.DB.prepare(
+                    `UPDATE media SET processed = 1 WHERE id = ?`
+                ).bind(mediaRecord.id).run()
+            } catch (embedError) {
+                console.error('Failed to generate/save embedding:', embedError)
+            }
+        }
+
+        return c.json({ success: true, id: mediaRecord.id, transcription: transcription || undefined })
     } catch (e) {
         console.error(e)
         return c.json({ error: 'Database error' }, 500)
@@ -120,7 +190,14 @@ upload.post('/multipart/create', async (c) => {
 // Multipart Upload: Upload Part
 upload.put('/multipart/:uploadId/part', async (c) => {
     const { uploadId } = c.req.param()
-    const { partNumber, key } = await c.req.json()
+    const partNumber = parseInt(c.req.query('partNumber') || '0', 10)
+    const key = c.req.query('key')
+
+    // Check if metadata is valid
+    if (!partNumber || !key) {
+        return c.json({ error: 'Missing partNumber or key in query params' }, 400)
+    }
+
     const body = await c.req.arrayBuffer()
 
     if (!body || body.byteLength === 0) {

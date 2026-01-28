@@ -1,7 +1,7 @@
 # Design & UI/UX Specifications: Open Mool
 
 ## Design Philosophy: "Himalayan Minimalism"
-The aesthetic is a modern interpretation of Himalayan art—clean lines, high contrast, and ample white space, punctuated by sharp, intentional cultural accents. We avoid heavy textures and cluttered elements in favor of a breathable, gallery-like experience that lets the content (the stories) take center stage.
+The aesthetic is a modern interpretation of Himalayan art - clean lines, high contrast, and ample white space, punctuated by sharp, intentional cultural accents. We avoid heavy textures and cluttered elements in favor of a breathable, gallery-like experience that lets the content (the stories) take center stage.
 
 ## 1. Visual Identity & Palette
 
@@ -27,7 +27,7 @@ We move to a clean, light-first foundation inspired by snow and blank parchment,
 
 ### Texture & Depth
 - **Clean Slate:** No heavy noise or stone textures. Depth is achieved through super-subtle, large, soft shadows (`box-shadow: 0 20px 40px rgba(0,0,0,0.04)`) that make elements feel like they are floating on air.
-- **The "Sutra" (Thread) Motif:** Use a single, thin Vermilion line (`1px solid --accent-primary`) that guides the user down the page—connecting sections like a timeline or a mountain path.
+- **The "Sutra" (Thread) Motif:** Use a single, thin Vermilion line (`1px solid --accent-primary`) that guides the user down the page - connecting sections like a timeline or a mountain path.
 
 ## 2. Typography (Bilingual & Modern)
 
@@ -73,7 +73,7 @@ Standard icons feel too generic. We customize them.
 ### B. The "Upload Node" (Submission Interface)
 - **Vibe:** A modern "Digital Shrine."
 - **Interaction:** The central button is a clean circle. On press, it gives a snappy `scale(0.95)` feedback.
-- **Success State:** A "Marigold Garland" animation—a golden ring spins around the button and settles as a glowing border.
+- **Success State:** A "Marigold Garland" animation - a golden ring spins around the button and settles as a glowing border.
 
 ### C. Navigation
 - **Desktop:** A minimalist sidebar. The active tab isn't just highlighted; it's connected to the content area by the "Sutra" (Vermilion line).

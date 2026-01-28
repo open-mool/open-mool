@@ -5,9 +5,9 @@
 
 ### 1. Abstract
 
-**Open Mool** is an open-source initiative to build the definitive "Digital Vault" for the Himalayan region. We are capturing the source code of a civilization—folklore, dialects, rituals, and oral history—before it is lost to time and modernization.
+**Open Mool** is an open-source initiative to build the definitive "Digital Vault" for the Himalayan region. We are capturing the source code of a civilization - folklore, dialects, rituals, and oral history - before it is lost to time and modernization.
 
-Unlike traditional archives which are static and siloed, Open Mool is **AI-ready, community-driven, and decentralized**. We combine modern cloud-native architecture (Edge Computing, Vector Search, Generative AI) with a grassroots community model to create a living, breathing dataset that belongs to history.
+Unlike traditional archives which are static and siloed, Open Mool is **accessible, community-driven, and decentralized**. We combine modern cloud-native architecture (Edge Computing, Vector Search, Generative AI) with a grassroots community model to create a living, breathing dataset that belongs to history.
 
 This document outlines our mission, our technology, and how individuals and organizations can join the movement.
 
@@ -17,7 +17,7 @@ This document outlines our mission, our technology, and how individuals and orga
 
 The Himalayas are home to thousands of micro-cultures. As connectivity increases, these oral traditions are fading.
 - **Data Fragmentation:** Archives exist in personal hard drives, dusty university libraries, and disconnected servers.
-- **Technological Gap:** Cultural data is rarely machine-readable or AI-ready.
+- **Technological Gap:** Cultural data is rarely machine-readable or accessible.
 - **Accessibility:** The native communities often cannot access their own digitized heritage.
 
 ### 3. The Solution: A Public Utility for Culture
@@ -62,7 +62,7 @@ While the code is MIT Licensed (Open Source), the **Content License** is held by
 
 ### 6. Roadmap: The Path to the Pahadi LLM
 
-Our ultimate technical goal is the **Pahadi LLM**—a language model fine-tuned on the dialects and context of the Himalayas, preserving languages that Big Tech will never prioritize.
+Our ultimate technical goal is the **Pahadi LLM** - a language model fine-tuned on the dialects and context of the Himalayas, preserving languages that Big Tech will never prioritize.
 
 1.  **The Trident (Current):** Upload, Transcribe, Search.
 2.  **The Community:** Reputation systems and NGO onboarding.

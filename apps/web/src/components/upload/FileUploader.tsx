@@ -18,6 +18,10 @@ interface FileUploaderProps {
     error?: string;
 }
 
+// Upper bound for uploads (500MB)
+// Defined once to avoid magic numbers and keep client validation consistent
+const MAX_FILE_SIZE = 500 * 1024 * 1024;
+
 export function FileUploader({ file, setFile, progress, status, error }: FileUploaderProps) {
     const [validationError, setValidationError] = React.useState<string | null>(null);
 
@@ -25,21 +29,50 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
         // Clear previous errors
         setValidationError(null);
 
-        // Handle rejections
+        // Handle rejections before they enter the upload pipeline
         if (fileRejections.length > 0) {
             const rejection = fileRejections[0];
-            if (rejection.errors[0]?.code === 'file-too-large') {
-                setValidationError('File size exceeds 500MB limit');
-            } else if (rejection.errors[0]?.code === 'file-invalid-type') {
-                setValidationError('Invalid file type. Please upload MP3, WAV, MP4, or MOV files only');
-            } else {
-                setValidationError('Failed to upload file. Please try again');
+
+            const errorCode = rejection.errors[0]?.code;
+            
+            // Explicit handling for oversized files with size feedback.
+            if (errorCode === 'file-too-large') {
+                const file = rejection.file;
+                const rawSizeMB = file.size / (1024 * 1024);
+                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1); //to display decimal values only when needed.
+                const limitMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
+
+                setValidationError(`File too large, sad. Maximum file size is ${limitMB}MB. Your file is ${sizeMB}MB.`);
+            } 
+            
+            //reject unsupported formats early. (UX-level validation)
+            else if (errorCode === 'file-invalid-type') {
+                setValidationError(`Invalid file type. Please upload MP3, WAV, MP4, or MOV files only`);
+            } 
+            
+            //fallback for unknown rejection cases
+            else {
+                setValidationError(`Failed to upload file. Please try again`);
             }
             return;
         }
 
+
+        //even accepted files are validated again to protect against future config changes/manual invocation of this component
         if (acceptedFiles.length > 0) {
-            setFile(acceptedFiles[0]);
+            const file = acceptedFiles[0];
+
+            if(file.size > MAX_FILE_SIZE) {
+                const rawSizeMB = file.size / (1024 * 1024);
+                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1); //to display decimal values only when needed.
+                const limitMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
+
+                setValidationError(`Hey, File too large. Maximum file size is ${limitMB}MB. Your file is ${sizeMB}MB. Try in parts or reduce the size.`);
+                
+                //do not allow invalid files into application state
+                return;
+            }
+            setFile(file);
         }
     }, [setFile]);
 

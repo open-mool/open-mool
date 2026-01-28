@@ -4,7 +4,7 @@ Use these prompts to spin up parallel development tracks with other AI agents. E
 
 ---
 
-## 🤖 Agent A: "The Linker" (API User Integration) — **PRIORITY 1**
+## 🤖 Agent A: "The Linker" (API User Integration)  -  **PRIORITY 1**
 **Role:** Backend Engineer
 **Context:** Connect uploaded media to authenticated users.
 
@@ -37,7 +37,7 @@ Start by showing the updated `POST /upload/complete` handler.
 
 ---
 
-## 🤖 Agent B: "The Refinery" (AI Transcription) — **PRIORITY 2**
+## 🤖 Agent B: "The Refinery" (AI Transcription)  -  **PRIORITY 2**
 **Role:** AI/ML Engineer
 **Context:** Auto-transcribe uploaded audio/video files.
 
@@ -67,7 +67,7 @@ Start by outlining the architecture (trigger mechanism, queue vs. direct invocat
 
 ---
 
-## 🤖 Agent C: "The Oracle" (Discovery & Search) — **PRIORITY 3**
+## 🤖 Agent C: "The Oracle" (Discovery & Search)  -  **PRIORITY 3**
 **Role:** Full Stack Engineer
 **Context:** Building the public gallery and search experience.
 
@@ -102,7 +102,7 @@ Start by designing the `/explore` page layout.
 
 ---
 
-## 🤖 Agent D: "The Cartographer" (Map View) — **PRIORITY 3b**
+## 🤖 Agent D: "The Cartographer" (Map View)  -  **PRIORITY 3b**
 **Role:** Frontend/GIS Engineer
 **Context:** Building the geographic visualization of the archive.
 

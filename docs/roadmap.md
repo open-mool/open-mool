@@ -1,6 +1,6 @@
 # Open Mool Technical Roadmap
 
-**Mission:** Build the "Source Code of the Himalayas" — a sovereign, AI-ready digital archive.
+**Mission:** Build the "Source Code of the Himalayas"  -  a sovereign, accessible digital archive.
 
 ---
 
