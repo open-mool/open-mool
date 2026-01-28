@@ -6,29 +6,14 @@ export const runtime = 'edge';
 
 async function getContributionCount(userId: string): Promise<number> {
     try {
-        const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
-        const apiSecret = process.env.API_SECRET;
-        
-        const headers: Record<string, string> = {
-            'x-user-id': userId,
-        };
-        
-        if (apiSecret) {
-            headers['x-api-secret'] = apiSecret;
-        }
-
-        const response = await fetch(`${apiUrl}/api/media/count`, { 
-            headers,
-            cache: 'no-store' 
-        });
-
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+        const response = await fetch(`${apiUrl}/media/count?userId=${encodeURIComponent(userId)}`, { cache: 'no-store' });
         if (!response.ok) {
             return 0;
         }
         const data = await response.json() as { count: number };
         return data.count;
-    } catch (error) {
-        console.error('Failed to fetch contribution count:', error);
+    } catch {
         return 0;
     }
 }

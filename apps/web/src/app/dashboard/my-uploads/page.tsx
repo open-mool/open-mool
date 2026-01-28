@@ -12,6 +12,9 @@ interface Upload {
     created_at: string;
     processed: boolean;
     transcription: string | null;
+    deities: string | null;
+    places: string | null;
+    botanicals: string | null;
 }
 
 async function fetchMyUploads(userSub: string): Promise<Upload[] | null> {
@@ -162,6 +165,51 @@ export default async function MyUploadsPage() {
                                     <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2">
                                         "{upload.transcription}"
                                     </p>
+                                </div>
+                            )}
+
+                            {upload.deities && JSON.parse(upload.deities).length > 0 && (
+                                <div className="mb-2">
+                                    <span className="text-[10px] uppercase tracking-widest text-amber-600 font-bold block mb-1">
+                                        Deities
+                                    </span>
+                                    <div className="flex flex-wrap gap-1">
+                                        {JSON.parse(upload.deities).map((d: string, i: number) => (
+                                            <span key={i} className="text-[10px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200">
+                                                {d}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {upload.places && JSON.parse(upload.places).length > 0 && (
+                                <div className="mb-2">
+                                    <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block mb-1">
+                                        Places
+                                    </span>
+                                    <div className="flex flex-wrap gap-1">
+                                        {JSON.parse(upload.places).map((p: string, i: number) => (
+                                            <span key={i} className="text-[10px] bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded border border-blue-200">
+                                                {p}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {upload.botanicals && JSON.parse(upload.botanicals).length > 0 && (
+                                <div className="mb-4">
+                                    <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block mb-1">
+                                        Botanicals
+                                    </span>
+                                    <div className="flex flex-wrap gap-1">
+                                        {JSON.parse(upload.botanicals).map((b: string, i: number) => (
+                                            <span key={i} className="text-[10px] bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200">
+                                                {b}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
