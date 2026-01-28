@@ -2,6 +2,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { auth0 } from "./lib/auth0";
 
+// Ensure this middleware runs in the Node.js runtime (Auth0 SDK requires Node APIs)
+export const runtime = "nodejs";
+
 export async function middleware(request: NextRequest) {
     try {
         const response = await auth0.middleware(request);

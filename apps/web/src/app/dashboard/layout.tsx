@@ -17,6 +17,7 @@ export default function DashboardLayout({
         { name: 'Profile', href: '/dashboard/profile' },
         { name: 'My Uploads', href: '/dashboard/my-uploads' },
         { name: 'Archive a Story', href: '/dashboard/upload' },
+        { name: 'The Oracle', href: '/explore' },
     ];
 
     return (

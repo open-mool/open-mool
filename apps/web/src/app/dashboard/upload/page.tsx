@@ -103,7 +103,7 @@ export default function UploadPage() {
             setError('Multipart upload failed.');
             setStatus('error');
         }
-    }, [multipart.startUpload]);
+    }, [multipart]);
 
     const handleRetry = React.useCallback(async () => {
         setStatus('uploading');

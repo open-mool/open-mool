@@ -3,6 +3,7 @@ import { getGeminiEmbedding } from '../lib/embeddings'
 
 interface Env {
     DB: D1Database
+    STORAGE: R2Bucket
     VECTOR_INDEX: VectorizeIndex
     AI: any
     API_SECRET?: string
@@ -29,7 +30,7 @@ export const getMyUploads = async (c: Context<{ Bindings: Env }>) => {
 
         // Select only necessary columns for performance
         const { results } = await c.env.DB.prepare(
-            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription, deities, places, botanicals
              FROM media
              WHERE user_id = ?
              ORDER BY created_at DESC
@@ -48,19 +49,10 @@ export const getMyUploads = async (c: Context<{ Bindings: Env }>) => {
 
 export const getMediaCount = async (c: Context<{ Bindings: Env }>) => {
     try {
-        const userId = c.req.header('x-user-id')
+        const userId = c.req.query('userId')
 
         if (!userId) {
-            return c.json({ error: 'x-user-id header is required' }, 400)
-        }
-
-        // Validate API secret to ensure request is from trusted Next.js proxy/server
-        const apiSecret = c.req.header('x-api-secret')
-        const expectedSecret = c.env.API_SECRET
-        
-        if (expectedSecret && apiSecret !== expectedSecret) {
-            console.warn('API secret mismatch or missing for media count')
-            return c.json({ error: 'Unauthorized' }, 401)
+            return c.json({ error: 'userId is required' }, 400)
         }
 
         const result = await c.env.DB.prepare(
@@ -125,6 +117,55 @@ export const searchMedia = async (c: Context<{ Bindings: Env }>) => {
         })
     } catch (error) {
         console.error('Search failed:', error)
+        return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}
+
+export const getPublicMedia = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        // Fetch processed media for the public gallery
+        // In the future, we could add a 'curated' flag to the schema
+        const { results } = await c.env.DB.prepare(
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription, deities, places, botanicals
+             FROM media
+             WHERE processed = 1
+             ORDER BY created_at DESC
+             LIMIT 40`
+        ).all()
+
+        return c.json({
+            media: results,
+            count: results.length,
+        })
+    } catch (error) {
+        console.error('Failed to fetch public media:', error)
+        return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}
+
+export const serveMedia = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        const key = c.req.param('key')
+        if (!key) {
+            return c.json({ error: 'Key is required' }, 400)
+        }
+
+        const object = await c.env.STORAGE.get(key)
+
+        if (!object) {
+            return c.json({ error: 'Media not found' }, 404)
+        }
+
+        const headers = new Headers()
+        object.writeHttpMetadata(headers)
+        headers.set('etag', object.httpEtag)
+        headers.set('Cache-Control', 'public, max-age=31536000') // Cache for 1 year
+
+        return new Response(object.body, {
+            headers,
+        })
+    } catch (error) {
+        console.error('Failed to serve media:', error)
         return c.json({ error: 'Internal Server Error' }, 500)
     }
 }

@@ -58,6 +58,12 @@ export default async function Home() {
                         >
                             How It Works
                         </Link>
+                        <Link
+                            href="/explore"
+                            className="font-body text-sm text-text-secondary hover:text-primary transition-colors"
+                        >
+                            The Oracle
+                        </Link>
                         <a
                             href="https://github.com/open-mool/open-mool"
                             target="_blank"

@@ -43,6 +43,7 @@ export function Header() {
                         <ThemeToggle />
                         <Link href="/about" className="hover:text-[var(--text-primary)] transition-colors">About</Link>
                         <Link href="/how-it-works" className="hover:text-[var(--text-primary)] transition-colors">How it Works</Link>
+                        <Link href="/explore" className="hover:text-[var(--text-primary)] transition-colors">The Oracle</Link>
                     </div>
 
                     <div className="flex items-center gap-4">
