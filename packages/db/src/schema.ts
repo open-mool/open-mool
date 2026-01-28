@@ -25,4 +25,7 @@ export const media = sqliteTable("media", {
     processed: integer("processed", { mode: "boolean" }).default(false),
     userId: text("user_id"),
     transcription: text("transcription"),
+    deities: text("deities"), // JSON array of extracted deities
+    places: text("places"),   // JSON array of extracted places
+    botanicals: text("botanicals"), // JSON array of extracted botanicals
 });
