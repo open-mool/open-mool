@@ -1,6 +1,8 @@
 import { auth0 } from '@/lib/auth0';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 export const POST = async (req: Request) => {
   try {
     const session = await auth0.getSession();
