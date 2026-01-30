@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { authMiddleware, getAuthUserId } from '../middleware/auth'
-import { getGeminiEmbedding } from '../lib/embeddings'
+import { processMedia } from '../lib/refinery'
 
 type Bindings = {
     DB: D1Database
@@ -96,69 +96,26 @@ upload.post('/complete', async (c) => {
             return c.json({ error: 'Failed to save metadata' }, 500)
         }
 
-        // --- THE REFINERY: AI Processing Pipeline ---
-        
-        let transcription = '';
-        
-        // 1. Transcription with Whisper
-        try {
-            const object = await c.env.STORAGE.get(key);
-            if (object) {
-                // Check if it's likely an audio/video file based on extension or metadata
-                const isMedia = key.match(/\.(mp3|wav|ogg|m4a|mp4|webm|mov|avi|flv)$/i);
-                
-                if (isMedia) {
-                    const blob = await object.arrayBuffer();
-                    
-                    // Limit file size for transcription (Workers AI has limits, typically 25MB)
-                    if (blob.byteLength < 25 * 1024 * 1024) {
-                        const aiResponse = await c.env.AI.run('@cf/openai/whisper', {
-                            audio: [...new Uint8Array(blob)]
-                        });
-                        
-                        if (aiResponse && aiResponse.text) {
-                            transcription = aiResponse.text;
-                            
-                            // Save transcription to DB
-                            await c.env.DB.prepare(
-                                `UPDATE media SET transcription = ? WHERE id = ?`
-                            ).bind(transcription, mediaRecord.id).run();
-                        }
-                    } else {
-                        console.warn(`File ${key} too large for transcription (${blob.byteLength} bytes)`);
-                    }
+        // --- THE REFINERY: Background AI Processing Pipeline ---
+        // Trigger background processing and return early
+        c.executionCtx.waitUntil(
+            processMedia(
+                mediaRecord.id,
+                key,
+                title,
+                description,
+                userId,
+                {
+                    DB: c.env.DB,
+                    STORAGE: c.env.STORAGE,
+                    VECTOR_INDEX: c.env.VECTOR_INDEX,
+                    AI: c.env.AI,
+                    GEMINI_API_KEY: c.env.GEMINI_API_KEY
                 }
-            }
-        } catch (whisperError) {
-            console.error('Whisper transcription failed:', whisperError);
-        }
+            )
+        )
 
-        // 2. Generate and save embedding
-        const geminiApiKey = c.env.GEMINI_API_KEY
-        if (geminiApiKey) {
-            try {
-                // Include transcription in the embedding for better search
-                const textToEmbed = `${title} ${description || ''} ${transcription}`.trim()
-                const embedding = await getGeminiEmbedding(textToEmbed, geminiApiKey)
-                
-                await c.env.VECTOR_INDEX.upsert([
-                    {
-                        id: mediaRecord.id.toString(),
-                        values: embedding,
-                        metadata: { title, userId, transcription: transcription.substring(0, 100) }
-                    }
-                ])
-                
-                // Mark as processed in DB
-                await c.env.DB.prepare(
-                    `UPDATE media SET processed = 1 WHERE id = ?`
-                ).bind(mediaRecord.id).run()
-            } catch (embedError) {
-                console.error('Failed to generate/save embedding:', embedError)
-            }
-        }
-
-        return c.json({ success: true, id: mediaRecord.id, transcription: transcription || undefined })
+        return c.json({ success: true, id: mediaRecord.id })
     } catch (e) {
         console.error(e)
         return c.json({ error: 'Database error' }, 500)

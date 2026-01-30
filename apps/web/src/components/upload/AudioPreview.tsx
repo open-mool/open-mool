@@ -5,6 +5,7 @@ import { Play, Pause, Volume2 } from 'lucide-react';
 
 interface AudioPreviewProps {
     file: File;
+    onRemove?: () => void | Promise<void>;
 }
 
 export function AudioPreview({ file }: AudioPreviewProps) {
