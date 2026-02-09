@@ -11,17 +11,21 @@ The following secrets must be configured in the GitHub Repository settings for C
 - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
 
 ### 2. Application Secrets (Runtime)
-Secrets for the running application (e.g., Database keys, Auth0 secrets) are managed via Cloudflare's encrypted environment variables.
+Secrets for the running application (e.g., database keys, Clerk secrets) are managed via Cloudflare's encrypted environment variables.
 
 #### API Secrets
-To set a secret for **Production**:
+To set required API secrets for **Production**:
 ```bash
-npx wrangler secret put AUTH0_SECRET --env production
+npx wrangler secret put CLERK_ISSUER --env production
+npx wrangler secret put CLERK_JWKS_URL --env production
+npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET --env production
 ```
 
-To set a secret for **Staging**:
+To set required API secrets for **Staging**:
 ```bash
-npx wrangler secret put AUTH0_SECRET --env staging
+npx wrangler secret put CLERK_ISSUER --env staging
+npx wrangler secret put CLERK_JWKS_URL --env staging
+npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET --env staging
 ```
 
 **Never** put actual secret values in `wrangler.toml`. Use `wrangler secret` commands.
@@ -31,7 +35,9 @@ For local dev, creates a `.dev.vars` file in `apps/api`. **This file is git-igno
 
 ```ini
 # apps/api/.dev.vars
-AUTH0_SECRET=...
+CLERK_ISSUER=...
+CLERK_JWKS_URL=...
+INTERNAL_PROXY_SIGNING_SECRET=...
 R2_ACCESS_KEY_ID=...
 ```
 
@@ -44,8 +50,9 @@ The Web App (`apps/web`) is a client-side application.
 
 ## Authentication & Access Control
 
-- **Auth0**: We use Auth0 for user management. Ensure the `AUTH0_SECRET` is rotated periodically.
-- **Edge Compatibility**: We use the Edge Runtime. We rely on `crypto` polyfills (configured in webpack) to ensure secure random number generation works at the edge.
+- **Clerk**: We use Clerk for user management and token issuance.
+- **Hybrid API Auth**: API requests are authenticated by Clerk JWT verification or signed internal proxy headers.
+- **Key Rotation**: Rotate `CLERK_SECRET_KEY` and `INTERNAL_PROXY_SIGNING_SECRET` on a regular schedule.
 
 ## Reporting Vulnerabilities
 

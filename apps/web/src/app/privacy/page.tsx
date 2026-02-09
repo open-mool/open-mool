@@ -41,7 +41,7 @@ export default function PrivacyPolicy() {
 
                     <h3 className="font-heading text-xl text-text-primary mb-3">2.1 Information You Provide</h3>
                     <ul className="list-disc pl-6 space-y-2 mb-6">
-                        <li><strong>Account Information:</strong> When you register via Auth0, we collect your email address, name, and authentication credentials. We do not store passwords directly.</li>
+                        <li><strong>Account Information:</strong> When you register via Clerk, we collect your email address, name, and authentication credentials. We do not store passwords directly.</li>
                         <li><strong>Profile Data:</strong> Optional information you provide such as your affiliation (researcher, guardian, institution), location, and areas of cultural expertise.</li>
                         <li><strong>Uploaded Content:</strong> Audio recordings, video files, images, documents, and associated metadata (geolocation, timestamps, cultural context, transcriptions) that you contribute to the archive.</li>
                         <li><strong>Communications:</strong> Any messages, feedback, or correspondence you send to us.</li>
@@ -56,7 +56,7 @@ export default function PrivacyPolicy() {
 
                     <h3 className="font-heading text-xl text-text-primary mb-3">2.3 Information from Third Parties</h3>
                     <ul className="list-disc pl-6 space-y-2 mb-4">
-                        <li><strong>Authentication Provider (Auth0):</strong> Basic profile information from your identity provider (e.g., Google, email) when you log in.</li>
+                        <li><strong>Authentication Provider (Clerk):</strong> Basic profile information from your identity provider (e.g., Google, email) when you log in.</li>
                         <li><strong>Institutional Partners:</strong> Metadata about collections when partnering organizations bulk-upload archives.</li>
                     </ul>
                 </section>

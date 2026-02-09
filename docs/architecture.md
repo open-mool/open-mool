@@ -17,12 +17,12 @@ To ensure maximum security and separation of concerns:
 ### **Frontend (`apps/web`)**
 *   **Role**: UI, Client-side Auth handling, Visuals.
 *   **Tech**: Next.js 14+ (App Router).
-*   **Security**: ZERO access to Database/Storage bindings. Talks only to `apps/api` and Auth0.
+*   **Security**: ZERO access to Database/Storage bindings. Talks only to `apps/api` and Clerk.
 
 ### **Backend (`apps/api`)**
 *   **Role**: Business Logic, Database Access, File Signing, AI Orchestration.
 *   **Tech**: Cloudflare Workers (Hono.js framework recommended for routing).
-*   **Security**: Holds all D1 (DB), R2 (Storage), and AI bindings. Validates Auth0 tokens on every request.
+*   **Security**: Holds all D1 (DB), R2 (Storage), and AI bindings. Validates Clerk tokens on every request.
 
 ---
 
@@ -30,7 +30,7 @@ To ensure maximum security and separation of concerns:
 
 ### A. Users (`users` table)
 *The "Trust" Layer*
-- `id` (String): Primary Key (Auth0 User ID).
+- `id` (String): Primary Key (Clerk User ID).
 - `username` (String): Unique handle.
 - `role` (String): `scout`, `guardian`, `archivist`.
 - `karma` (Integer): Reputation points.
@@ -67,18 +67,18 @@ To ensure maximum security and separation of concerns:
 
 ### Frontend (`apps/web`) -> Cloudflare Pages
 - **Build**: `next build` (Static Export or `next-on-pages` without bindings).
-- **Env**: Public API URL, Auth0 Client ID.
+- **Env**: Public API URL, Clerk publishable key.
 
 ### Backend (`apps/api`) -> Cloudflare Workers
 - **Framework**: Hono.
 - **Bindings**: `D1`, `R2`, `AI`.
-- **Secrets**: `AUTH0_DOMAIN`, `AUTH0_AUDIENCE`.
+- **Secrets**: `CLERK_ISSUER`, `CLERK_JWKS_URL`, `INTERNAL_PROXY_SIGNING_SECRET`.
 
 
 ### Environment Variables
-- `AUTH0_SECRET`, `AUTH0_BASE_URL`, `AUTH0_ISSUER_BASE_URL`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`.
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `INTERNAL_PROXY_SIGNING_SECRET`.
 
 ## 6. Security (The "Gatekeeper")
-- **Authentication:** Handled by Auth0. Session validation on Edge.
+- **Authentication:** Handled by Clerk. Session validation on Edge.
 - **D1 Security:** Access solely via bound Workers/Pages functions. No public database exposure.
 - **R2 Security:** Signed URLs for uploads. Public bucket for read-only gallery assets.

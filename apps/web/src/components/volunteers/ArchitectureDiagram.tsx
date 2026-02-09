@@ -8,7 +8,7 @@ const components = {
         title: 'मंच (The Platform)',
         icon: '🌐',
         color: '#D64933',
-        items: ['Next.js Web App', 'Auth0 Authentication', 'Dashboard & Upload UI'],
+        items: ['Next.js Web App', 'Clerk Authentication', 'Dashboard & Upload UI'],
         description: 'The public-facing interface where Scouts and Guardians interact with the archive.',
     },
     vault: {
@@ -132,7 +132,7 @@ export function ArchitectureDiagram() {
                                 fontSize="11"
                                 fill={activeComponent === 'platform' ? 'rgba(255,255,255,0.8)' : '#6B7280'}
                             >
-                                Next.js + Auth0
+                                Next.js + Clerk
                             </text>
                         </motion.g>
 

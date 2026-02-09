@@ -37,7 +37,7 @@ const techStack = [
         category: 'Auth & Security',
         color: 'bg-gray-100 border-gray-300',
         items: [
-            { name: 'Auth0', icon: '🔐', description: 'Universal login & identity' },
+            { name: 'Clerk', icon: '🔐', description: 'Universal login & identity' },
             { name: 'Signed URLs', icon: '🔑', description: 'Secure file uploads' },
             { name: 'JWT Tokens', icon: '🎫', description: 'API authentication' },
             { name: 'Edge Validation', icon: '🛡️', description: 'Request validation at edge' },

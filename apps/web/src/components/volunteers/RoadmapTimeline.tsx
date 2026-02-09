@@ -14,7 +14,7 @@ const phases = [
         items: [
             'Platform design & branding',
             'Landing page with "Scrollventure"',
-            'Auth0 integration & user roles',
+            'Clerk integration & user roles',
             'Upload system with R2 storage',
             'Dashboard with upload history',
         ],
