@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import upload from './routes/upload'
-import { getMyUploads, getMediaCount, searchMedia } from './routes/media'
+import { getExploreMedia, getMyUploads, getMediaCount, searchMedia } from './routes/media'
 import { authMiddleware } from './middleware/auth'
 
 type Bindings = {
@@ -30,6 +30,9 @@ app.get('/', (c) => {
     bucket: c.env.R2_BUCKET_NAME
   })
 })
+
+// Public discovery endpoints
+app.get('/media/explore', getExploreMedia)
 
 // Protected API routes
 app.use('/api/*', authMiddleware())

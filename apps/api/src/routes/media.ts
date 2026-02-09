@@ -1,5 +1,7 @@
 import { Context } from 'hono'
 import { getGeminiEmbedding } from '../lib/embeddings'
+import { getAuthUserId } from '../middleware/auth'
+import { parseArchiveMetadata } from '../lib/parser'
 
 interface Env {
     DB: D1Database
@@ -9,36 +11,57 @@ interface Env {
     GEMINI_API_KEY?: string
 }
 
+type MediaRow = {
+    id: number
+    key: string
+    title: string
+    description: string | null
+    language: string | null
+    location_lat: number | null
+    location_lng: number | null
+    created_at: string
+    processed: number | boolean
+    user_id: string | null
+    transcription: string | null
+}
+
+const enrichMediaRow = (row: MediaRow) => {
+    const ai = parseArchiveMetadata({
+        key: row.key,
+        title: row.title,
+        description: row.description,
+        transcription: row.transcription,
+        language: row.language,
+    })
+
+    return {
+        ...row,
+        processed: Boolean(row.processed),
+        ai,
+    }
+}
+
 export const getMyUploads = async (c: Context<{ Bindings: Env }>) => {
     try {
-        // Extract user ID from custom header
-        const userId = c.req.header('x-user-id')
+        const userId = getAuthUserId(c)
 
         if (!userId) {
             return c.json({ error: 'Unauthorized' }, 401)
         }
 
-        // Validate API secret to ensure request is from trusted Next.js proxy
-        const apiSecret = c.req.header('x-api-secret')
-        const expectedSecret = c.env.API_SECRET
-        
-        if (expectedSecret && apiSecret !== expectedSecret) {
-            console.warn('API secret mismatch or missing for my-uploads')
-            return c.json({ error: 'Unauthorized' }, 401)
-        }
-
-        // Select only necessary columns for performance
         const { results } = await c.env.DB.prepare(
             `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription
              FROM media
              WHERE user_id = ?
              ORDER BY created_at DESC
              LIMIT 50`
-        ).bind(userId).all()
+        ).bind(userId).all<MediaRow>()
+
+        const uploads = (results || []).map(enrichMediaRow)
 
         return c.json({
-            uploads: results,
-            count: results.length,
+            uploads,
+            count: uploads.length,
         })
     } catch (error) {
         console.error('Failed to fetch uploads:', error)
@@ -48,18 +71,9 @@ export const getMyUploads = async (c: Context<{ Bindings: Env }>) => {
 
 export const getMediaCount = async (c: Context<{ Bindings: Env }>) => {
     try {
-        const userId = c.req.header('x-user-id')
+        const userId = getAuthUserId(c)
 
         if (!userId) {
-            return c.json({ error: 'x-user-id header is required' }, 400)
-        }
-
-        // Validate API secret to ensure request is from trusted Next.js proxy/server
-        const apiSecret = c.req.header('x-api-secret')
-        const expectedSecret = c.env.API_SECRET
-        
-        if (expectedSecret && apiSecret !== expectedSecret) {
-            console.warn('API secret mismatch or missing for media count')
             return c.json({ error: 'Unauthorized' }, 401)
         }
 
@@ -90,41 +104,93 @@ export const searchMedia = async (c: Context<{ Bindings: Env }>) => {
             return c.json({ error: 'Search is currently unavailable' }, 503)
         }
 
-        // Generate embedding for the query
         const embedding = await getGeminiEmbedding(query, geminiApiKey)
 
-        // Search vector index
         const vectorResults = await c.env.VECTOR_INDEX.query(embedding, {
             topK: 10,
             returnValues: false,
-            returnMetadata: true
+            returnMetadata: true,
         })
 
         if (vectorResults.matches.length === 0) {
             return c.json({ results: [] })
         }
 
-        // Fetch full metadata from D1
-        const ids = vectorResults.matches.map(m => parseInt(m.id))
+        const ids = vectorResults.matches.map((match) => Number.parseInt(match.id, 10))
         const placeholders = ids.map(() => '?').join(',')
-        
-        const { results } = await c.env.DB.prepare(
-            `SELECT * FROM media WHERE id IN (${placeholders})`
-        ).bind(...ids).all()
 
-        // Sort results by similarity score from vector search
-        const sortedResults = results.sort((a: any, b: any) => {
-            const scoreA = vectorResults.matches.find(m => parseInt(m.id) === a.id)?.score || 0
-            const scoreB = vectorResults.matches.find(m => parseInt(m.id) === b.id)?.score || 0
+        const { results } = await c.env.DB.prepare(
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription
+             FROM media
+             WHERE id IN (${placeholders})`
+        ).bind(...ids).all<MediaRow>()
+
+        const sortedResults = (results || []).sort((left, right) => {
+            const scoreA = vectorResults.matches.find((match) => Number.parseInt(match.id, 10) === left.id)?.score || 0
+            const scoreB = vectorResults.matches.find((match) => Number.parseInt(match.id, 10) === right.id)?.score || 0
             return scoreB - scoreA
-        })
+        }).map(enrichMediaRow)
 
         return c.json({
             results: sortedResults,
-            count: sortedResults.length
+            count: sortedResults.length,
         })
     } catch (error) {
         console.error('Search failed:', error)
+        return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}
+
+export const getExploreMedia = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        const query = (c.req.query('q') || '').trim()
+        const language = (c.req.query('language') || '').trim().toLowerCase()
+        const mediaType = (c.req.query('mediaType') || '').trim().toLowerCase()
+        const page = Math.max(1, Number.parseInt(c.req.query('page') || '1', 10) || 1)
+        const limit = Math.min(48, Math.max(1, Number.parseInt(c.req.query('limit') || '24', 10) || 24))
+
+        const params: Array<string | number> = []
+        const whereClauses: string[] = []
+
+        if (language) {
+            whereClauses.push('LOWER(language) = ?')
+            params.push(language)
+        }
+
+        if (query) {
+            whereClauses.push('(LOWER(title) LIKE ? OR LOWER(COALESCE(description, \"\")) LIKE ? OR LOWER(COALESCE(transcription, \"\")) LIKE ?)')
+            const likeQuery = `%${query.toLowerCase()}%`
+            params.push(likeQuery, likeQuery, likeQuery)
+        }
+
+        const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : ''
+        const offset = (page - 1) * limit
+
+        const { results } = await c.env.DB.prepare(
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription
+             FROM media
+             ${whereSql}
+             ORDER BY created_at DESC
+             LIMIT ? OFFSET ?`
+        ).bind(...params, limit + 12, offset).all<MediaRow>()
+
+        let enrichedResults = (results || []).map(enrichMediaRow)
+
+        if (mediaType) {
+            enrichedResults = enrichedResults.filter((item) => item.ai.mediaType === mediaType)
+        }
+
+        const finalResults = enrichedResults.slice(0, limit)
+
+        return c.json({
+            results: finalResults,
+            page,
+            limit,
+            hasMore: enrichedResults.length > limit,
+            count: finalResults.length,
+        })
+    } catch (error) {
+        console.error('Explore fetch failed:', error)
         return c.json({ error: 'Internal Server Error' }, 500)
     }
 }

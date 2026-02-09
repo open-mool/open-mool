@@ -3,6 +3,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { authMiddleware, getAuthUserId } from '../middleware/auth'
 import { getGeminiEmbedding } from '../lib/embeddings'
+import { parseArchiveMetadata } from '../lib/parser'
 
 type Bindings = {
     DB: D1Database
@@ -161,7 +162,26 @@ upload.post('/complete', async (c) => {
             }
         }
 
-        return c.json({ success: true, id: mediaRecord.id, transcription: transcription || undefined })
+        const parsed = parseArchiveMetadata({
+            key,
+            title,
+            description,
+            transcription,
+            language,
+        })
+
+        if (!language && parsed.detectedLanguage) {
+            await c.env.DB.prepare(
+                `UPDATE media SET language = ? WHERE id = ?`
+            ).bind(parsed.detectedLanguage, mediaRecord.id).run()
+        }
+
+        return c.json({
+            success: true,
+            id: mediaRecord.id,
+            transcription: transcription || undefined,
+            ai: parsed,
+        })
     } catch (e) {
         console.error(e)
         return c.json({ error: 'Database error' }, 500)
