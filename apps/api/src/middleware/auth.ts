@@ -1,40 +1,106 @@
-import { jwk } from 'hono/jwk'
+import { createRemoteJWKSet, jwtVerify } from 'jose'
 import type { Context } from 'hono'
+import { verifyInternalAuthHeader } from '../lib/internalAuth'
 
 interface AuthEnv {
-    AUTH0_DOMAIN: string
-    AUTH0_AUDIENCE: string
+    CLERK_JWKS_URL?: string
+    CLERK_ISSUER?: string
+    CLERK_AUDIENCE?: string
+    INTERNAL_PROXY_SIGNING_SECRET?: string
+    API_SECRET?: string
 }
 
-const normalizeAuth0Domain = (domain: string) => {
-    const trimmed = domain.trim().replace(/\/+$/, '')
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-        return trimmed
+type AuthVariables = {
+    jwtPayload: { sub?: string }
+}
+
+type AuthContext = Context<{ Bindings: AuthEnv; Variables: AuthVariables }>
+
+const parseAudience = (audience: string | undefined) => {
+    if (!audience) {
+        return undefined
     }
-    return `https://${trimmed}`
+
+    const values = audience
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean)
+
+    if (values.length === 0) {
+        return undefined
+    }
+
+    return values.length === 1 ? values[0] : values
+}
+
+const getBearerToken = (authorizationHeader: string | undefined) => {
+    if (!authorizationHeader) {
+        return null
+    }
+
+    const [scheme, token] = authorizationHeader.split(' ')
+    if (scheme !== 'Bearer' || !token) {
+        return null
+    }
+
+    return token
 }
 
 export const authMiddleware = () => {
-    return async (c: Context<{ Bindings: AuthEnv }>, next: () => Promise<void>) => {
-        if (!c.env.AUTH0_DOMAIN || !c.env.AUTH0_AUDIENCE) {
+    return async (c: AuthContext, next: () => Promise<void>) => {
+        const userId = c.req.header('x-user-id')
+        const internalAuthHeader = c.req.header('x-internal-auth')
+
+        if (userId && internalAuthHeader && c.env.INTERNAL_PROXY_SIGNING_SECRET) {
+            const isValid = await verifyInternalAuthHeader({
+                userId,
+                headerValue: internalAuthHeader,
+                secret: c.env.INTERNAL_PROXY_SIGNING_SECRET,
+            })
+
+            if (isValid) {
+                c.set('jwtPayload', { sub: userId })
+                return next()
+            }
+        }
+
+        // Legacy fallback for deployments that have not switched to signed headers yet.
+        const legacySecret = c.req.header('x-api-secret')
+        if (userId && legacySecret && c.env.API_SECRET && legacySecret === c.env.API_SECRET) {
+            c.set('jwtPayload', { sub: userId })
+            return next()
+        }
+
+        const token = getBearerToken(c.req.header('authorization'))
+        if (!token) {
+            return c.json({ error: 'Unauthorized' }, 401)
+        }
+
+        if (!c.env.CLERK_JWKS_URL || !c.env.CLERK_ISSUER) {
             return c.json({ error: 'Auth configuration missing' }, 500)
         }
 
-        const domain = normalizeAuth0Domain(c.env.AUTH0_DOMAIN)
-        const handler = jwk({
-            jwks_uri: `${domain}/.well-known/jwks.json`,
-            alg: ['RS256'],
-            verification: {
-                iss: `${domain}/`,
-                aud: c.env.AUTH0_AUDIENCE,
-            },
-        })
+        try {
+            const jwks = createRemoteJWKSet(new URL(c.env.CLERK_JWKS_URL))
+            const { payload } = await jwtVerify(token, jwks, {
+                issuer: c.env.CLERK_ISSUER,
+                audience: parseAudience(c.env.CLERK_AUDIENCE),
+            })
 
-        return handler(c, next)
+            if (!payload.sub) {
+                return c.json({ error: 'Unauthorized' }, 401)
+            }
+
+            c.set('jwtPayload', payload as { sub: string })
+            return next()
+        } catch {
+            return c.json({ error: 'Unauthorized' }, 401)
+        }
     }
 }
 
 export const getAuthUserId = (c: Context) => {
-    const payload = c.get('jwtPayload') as { sub?: string } | undefined
+    const context = c as Context<{ Variables: AuthVariables }>
+    const payload = context.get('jwtPayload')
     return payload?.sub || null
 }

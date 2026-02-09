@@ -12,8 +12,10 @@ type Bindings = {
     R2_ACCOUNT_ID: string
     R2_ACCESS_KEY_ID: string
     R2_SECRET_ACCESS_KEY: string
-    AUTH0_DOMAIN: string
-    AUTH0_AUDIENCE: string
+    INTERNAL_PROXY_SIGNING_SECRET?: string
+    CLERK_JWKS_URL?: string
+    CLERK_ISSUER?: string
+    CLERK_AUDIENCE?: string
     R2_BUCKET_NAME: string
     API_SECRET?: string
     GEMINI_API_KEY?: string
@@ -21,7 +23,8 @@ type Bindings = {
 
 const upload = new Hono<{ Bindings: Bindings }>()
 
-upload.use('/complete', authMiddleware())
+// Apply auth to all routes
+upload.use('*', authMiddleware())
 
 // Generate Presigned URL
 upload.post('/presigned', async (c) => {
@@ -113,7 +116,7 @@ upload.post('/complete', async (c) => {
                     // Limit file size for transcription (Workers AI has limits, typically 25MB)
                     if (blob.byteLength < 25 * 1024 * 1024) {
                         const aiResponse = await c.env.AI.run('@cf/openai/whisper', {
-                            audio: [...new Uint8Array(blob)]
+                            audio: new Uint8Array(blob)
                         });
                         
                         if (aiResponse && aiResponse.text) {
