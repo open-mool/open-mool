@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 
 interface VideoPreviewProps {
     file: File;
+    onRemove?: () => Promise<void> | void;
 }
 
 export function VideoPreview({ file }: VideoPreviewProps) {
