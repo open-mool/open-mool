@@ -15,10 +15,12 @@
         "@aws-sdk/s3-request-presigner": "^3.971.0",
         "@open-mool/db": "workspace:*",
         "drizzle-orm": "^0.30.0",
-        "hono": "^4.0.0"
+        "hono": "^4.0.0",
+        "jose": "^5.10.0"
     },
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20240101.0",
+        "typescript": "^5.9.2",
         "wrangler": "^3.0.0"
     }
 }
