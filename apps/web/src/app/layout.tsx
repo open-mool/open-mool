@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Eczar, Yantramanav, Gotu } from "next/font/google";
-import { Auth0Provider } from "@auth0/nextjs-auth0/client";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Header } from "@/components/Header";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -51,6 +51,10 @@ export const viewport: Viewport = {
     maximumScale: 5,
 };
 
+const clerkPublishableKey =
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+    'pk_test_YXJ0aXN0aWMtYnVubnktNzAuY2xlcmsuYWNjb3VudHMuZGV2JA';
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -58,14 +62,14 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <Auth0Provider>
+            <ClerkProvider publishableKey={clerkPublishableKey}>
                 <body className={`${eczar.variable} ${yantramanav.variable} ${gotu.variable} font-body antialiased`}>
                     <ThemeProvider defaultTheme="system">
                         <Header />
                         {children}
                     </ThemeProvider>
                 </body>
-            </Auth0Provider>
+            </ClerkProvider>
         </html>
     );
 }

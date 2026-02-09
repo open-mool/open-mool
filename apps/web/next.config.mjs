@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // Removed 'output: export' to enable Auth0 and server-side features
+    // Dynamic runtime config for Clerk auth and server-side API proxies
     images: {
         remotePatterns: [
             {
@@ -15,7 +15,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'cdn.auth0.com',
+                hostname: 'images.clerk.dev',
                 pathname: '/**',
             },
         ],

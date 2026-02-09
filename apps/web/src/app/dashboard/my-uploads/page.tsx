@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { auth0 } from '@/lib/auth0';
 import Link from 'next/link';
+import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 
 export const runtime = 'edge';
 
@@ -18,16 +19,7 @@ async function fetchMyUploads(userSub: string): Promise<Upload[] | null> {
     try {
         // Call backend API directly from server component with authenticated user ID
         const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
-        const apiSecret = process.env.API_SECRET;
-        
-        const headers: Record<string, string> = {
-            'x-user-id': userSub,
-        };
-        
-        // Add API secret for authentication if configured
-        if (apiSecret) {
-            headers['x-api-secret'] = apiSecret;
-        }
+        const headers = await buildInternalApiHeaders(userSub);
         
         const response = await fetch(`${apiUrl}/api/media/my-uploads`, {
             cache: 'no-store',
@@ -58,7 +50,7 @@ export default async function MyUploadsPage() {
     }
 
     if (!session?.user) {
-        redirect('/auth/login');
+        redirect('/sign-in?redirect_url=/dashboard/my-uploads');
     }
 
     const uploads = await fetchMyUploads(session.user.sub);
@@ -160,7 +152,7 @@ export default async function MyUploadsPage() {
                                         Transcription Snippet
                                     </span>
                                     <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2">
-                                        "{upload.transcription}"
+                                        {`"${upload.transcription}"`}
                                     </p>
                                 </div>
                             )}

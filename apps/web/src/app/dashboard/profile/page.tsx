@@ -1,21 +1,14 @@
 import { auth0 } from '@/lib/auth0';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
+import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 
 export const runtime = 'edge';
 
 async function getContributionCount(userId: string): Promise<number> {
     try {
         const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
-        const apiSecret = process.env.API_SECRET;
-        
-        const headers: Record<string, string> = {
-            'x-user-id': userId,
-        };
-        
-        if (apiSecret) {
-            headers['x-api-secret'] = apiSecret;
-        }
+        const headers = await buildInternalApiHeaders(userId);
 
         const response = await fetch(`${apiUrl}/api/media/count`, { 
             headers,
@@ -42,7 +35,7 @@ export default async function ProfilePage() {
     }
 
     if (!session?.user) {
-        redirect('/auth/login?returnTo=/dashboard/profile');
+        redirect('/sign-in?redirect_url=/dashboard/profile');
     }
 
     const { user } = session;

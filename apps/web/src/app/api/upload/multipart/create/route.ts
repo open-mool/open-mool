@@ -13,7 +13,7 @@ export const POST = async (req: Request) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
     const authHeaders = await buildInternalApiHeaders(session.user.sub);
 
-    const response = await fetch(`${apiUrl}/upload/complete`, {
+    const response = await fetch(`${apiUrl}/upload/multipart/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

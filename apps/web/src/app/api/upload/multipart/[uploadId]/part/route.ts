@@ -2,24 +2,29 @@ import { auth0 } from '@/lib/auth0';
 import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 import { NextResponse } from 'next/server';
 
-export const POST = async (req: Request) => {
+export const PUT = async (req: Request, { params }: { params: { uploadId: string } }) => {
   try {
     const session = await auth0.getSession();
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
+    const { uploadId } = params;
+    const url = new URL(req.url);
+    const partNumber = url.searchParams.get('partNumber');
+    const key = url.searchParams.get('key');
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
     const authHeaders = await buildInternalApiHeaders(session.user.sub);
 
-    const response = await fetch(`${apiUrl}/upload/complete`, {
-      method: 'POST',
+    const body = await req.arrayBuffer();
+
+    const response = await fetch(`${apiUrl}/upload/multipart/${uploadId}/part?partNumber=${partNumber}&key=${key}`, {
+      method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
         ...authHeaders,
       },
-      body: JSON.stringify(body),
+      body,
     });
 
     const data = await response.json();

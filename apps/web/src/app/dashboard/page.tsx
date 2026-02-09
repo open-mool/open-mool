@@ -13,7 +13,7 @@ export default async function DashboardPage() {
     }
 
     if (!session?.user) {
-        redirect('/auth/login?returnTo=/dashboard');
+        redirect('/sign-in?redirect_url=/dashboard');
     }
 
     const user = session.user;

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUser } from "@/lib/client-auth";
 
 export default function Profile() {
     const { user, isLoading } = useUser();
