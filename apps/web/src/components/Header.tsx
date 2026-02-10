@@ -37,14 +37,13 @@ export function Header() {
                     <Logo />
                 </Link>
 
-                <nav className="flex items-center gap-4 md:gap-6">
-                    <ThemeToggle />
+                <nav className="flex items-center gap-6">
                     {/* Navigation Links - Hidden on mobile, visible on desktop */}
                     <div className="hidden md:flex items-center gap-6 font-[family-name:var(--font-yantramanav)] uppercase text-xs tracking-[0.2em] font-bold text-[var(--text-secondary)]">
-                        <Link href="/explore" className="hover:text-[var(--text-primary)] transition-colors">Explore</Link>
+                        <ThemeToggle />
                         <Link href="/about" className="hover:text-[var(--text-primary)] transition-colors">About</Link>
                         <Link href="/how-it-works" className="hover:text-[var(--text-primary)] transition-colors">How it Works</Link>
-                        <Link href="/explore" className="hover:text-[var(--text-primary)] transition-colors">The Oracle</Link>
+                        <Link href="/explore" className="hover:text-[var(--text-primary)] transition-colors">Explore</Link>
                     </div>
 
                     <div className="flex items-center gap-4">

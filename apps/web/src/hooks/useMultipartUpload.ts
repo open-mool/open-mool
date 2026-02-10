@@ -3,8 +3,10 @@
 import { useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
+
+// Using relative path for the internal Next.js proxy to ensure auth
+const MULTIPART_BASE_URL = '/api/upload/multipart';
 
 interface UploadPart {
     partNumber: number;
@@ -31,7 +33,7 @@ export function useMultipartUpload() {
     }, []);
 
     const initiateUpload = useCallback(async (file: File): Promise<{ uploadId: string; key: string }> => {
-        const { data } = await axios.post(`${API_URL}/upload/multipart/create`, {
+        const { data } = await axios.post(`${MULTIPART_BASE_URL}/create`, {
             filename: file.name,
             contentType: file.type,
         });
@@ -157,7 +159,7 @@ const uploadChunk = async (
     const chunk = file.slice(start, end);
 
     const { data } = await axios.put(
-        `${API_URL}/upload/multipart/${uploadId}/part`,
+        `${MULTIPART_BASE_URL}/${uploadId}/part`,
         chunk,
         {
             headers: {
@@ -176,14 +178,14 @@ const uploadChunk = async (
 };
 
 const completeUpload = async (uploadId: string, key: string, parts: UploadPart[]) => {
-    await axios.post(`${API_URL}/upload/multipart/${uploadId}/complete`, {
+    await axios.post(`${MULTIPART_BASE_URL}/${uploadId}/complete`, {
         key,
         parts,
     });
 };
 
 const abortUpload = async (uploadId: string, key: string) => {
-    await axios.delete(`${API_URL}/upload/multipart/${uploadId}/abort`, {
+    await axios.delete(`${MULTIPART_BASE_URL}/${uploadId}/abort`, {
         data: { key },
     });
 };
