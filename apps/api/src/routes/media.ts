@@ -5,6 +5,7 @@ import { parseArchiveMetadata } from '../lib/parser'
 
 interface Env {
     DB: D1Database
+    STORAGE: R2Bucket
     VECTOR_INDEX: VectorizeIndex
     AI: any
     API_SECRET?: string
@@ -50,7 +51,7 @@ export const getMyUploads = async (c: Context<{ Bindings: Env }>) => {
         }
 
         const { results } = await c.env.DB.prepare(
-            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription, deities, places, botanicals
              FROM media
              WHERE user_id = ?
              ORDER BY created_at DESC
@@ -158,7 +159,7 @@ export const getExploreMedia = async (c: Context<{ Bindings: Env }>) => {
         }
 
         if (query) {
-            whereClauses.push('(LOWER(title) LIKE ? OR LOWER(COALESCE(description, \"\")) LIKE ? OR LOWER(COALESCE(transcription, \"\")) LIKE ?)')
+            whereClauses.push('(LOWER(title) LIKE ? OR LOWER(COALESCE(description, "")) LIKE ? OR LOWER(COALESCE(transcription, "")) LIKE ?)')
             const likeQuery = `%${query.toLowerCase()}%`
             params.push(likeQuery, likeQuery, likeQuery)
         }
@@ -191,6 +192,53 @@ export const getExploreMedia = async (c: Context<{ Bindings: Env }>) => {
         })
     } catch (error) {
         console.error('Explore fetch failed:', error)
+        return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}
+
+export const getPublicMedia = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        const { results } = await c.env.DB.prepare(
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription, deities, places, botanicals
+             FROM media
+             WHERE processed = 1
+             ORDER BY created_at DESC
+             LIMIT 40`
+        ).all()
+
+        return c.json({
+            media: results,
+            count: results.length,
+        })
+    } catch (error) {
+        console.error('Failed to fetch public media:', error)
+        return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}
+
+export const serveMedia = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        const key = c.req.param('key')
+        if (!key) {
+            return c.json({ error: 'Key is required' }, 400)
+        }
+
+        const object = await c.env.STORAGE.get(key)
+
+        if (!object) {
+            return c.json({ error: 'Media not found' }, 404)
+        }
+
+        const headers = new Headers()
+        object.writeHttpMetadata(headers)
+        headers.set('etag', object.httpEtag)
+        headers.set('Cache-Control', 'public, max-age=31536000')
+
+        return new Response(object.body, {
+            headers,
+        })
+    } catch (error) {
+        console.error('Failed to serve media:', error)
         return c.json({ error: 'Internal Server Error' }, 500)
     }
 }

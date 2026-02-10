@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
+    "eslint-config-prettier": "^10.1.8",
     "prettier": "latest",
     "turbo": "latest"
   },

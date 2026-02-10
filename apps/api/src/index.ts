@@ -1,12 +1,13 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import upload from './routes/upload'
-import { getExploreMedia, getMyUploads, getMediaCount, searchMedia } from './routes/media'
+import { getExploreMedia, getMyUploads, getMediaCount, searchMedia, getPublicMedia, serveMedia } from './routes/media'
 import { authMiddleware } from './middleware/auth'
 
 type Bindings = {
   R2_BUCKET_NAME: string
   DB: D1Database
+  STORAGE: R2Bucket
   VECTOR_INDEX: VectorizeIndex
   AI: any
   GEMINI_API_KEY?: string
@@ -33,6 +34,8 @@ app.get('/', (c) => {
 
 // Public discovery endpoints
 app.get('/media/explore', getExploreMedia)
+app.get('/api/media/explore', getPublicMedia)
+app.get('/api/media/file/:key', serveMedia)
 
 // Protected API routes
 app.use('/api/*', authMiddleware())

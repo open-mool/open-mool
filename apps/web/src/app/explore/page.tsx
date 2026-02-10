@@ -1,181 +1,258 @@
 import Link from 'next/link';
-import { MoolDefinition } from "@/components/landing/MoolDefinition";
+import { OracleSearch } from '@/components/search/OracleSearch';
 
 export const runtime = 'edge';
 
-interface Artifact {
+interface ExploreMedia {
     id: number;
+    key: string;
     title: string;
     description: string | null;
     language: string | null;
     created_at: string;
-    type?: 'audio' | 'video' | 'image';
-    region?: string;
+    processed: boolean;
+    transcription: string | null;
+    deities: string | null;
+    places: string | null;
+    botanicals: string | null;
 }
 
-// Fallback mock data to ensure the gallery looks good during development
-const MOCK_ARTIFACTS: Artifact[] = [
-    {
-        id: 101,
-        title: "Jagar of the Rain God",
-        description: "A 15-minute recording of the invocation ceremony performed in Kumaon during the monsoon delay. The drummer uses a specific rhythm known as 'Ghangali'.",
-        language: "Kumaoni",
-        created_at: new Date().toISOString(),
-        type: 'audio',
-        region: 'Almora'
-    },
-    {
-        id: 102,
-        title: "Traditional Aipan Patterns",
-        description: "Photographs of doorstep art created during Diwali. Shows the specific geometric patterns used by the Shah family for generations.",
-        language: "N/A",
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-        type: 'image',
-        region: 'Nainital'
-    },
-    {
-        id: 103,
-        title: "Oral History: The Chipko Movement",
-        description: "Interview with an elder who participated in the 1973 protests. She details the songs they sang while hugging the trees.",
-        language: "Garhwali",
-        created_at: new Date(Date.now() - 172800000).toISOString(),
-        type: 'audio',
-        region: 'Chamoli'
-    },
-    {
-        id: 104,
-        title: "Rongpa Wedding Songs",
-        description: "Collection of ceremonial songs sung during the departure of the bride. These songs map the geography of the trade routes.",
-        language: "Rongpa",
-        created_at: new Date(Date.now() - 259200000).toISOString(),
-        type: 'video',
-        region: 'Pithoragarh'
-    },
-    {
-        id: 105,
-        title: "Medicinal Herbs of Valley of Flowers",
-        description: "Documentation of local names and uses for 50+ alpine species, narrated by a local shepherd.",
-        language: "Hindi/Garhwali",
-        created_at: new Date(Date.now() - 345600000).toISOString(),
-        type: 'image',
-        region: 'Chamoli'
-    }
-];
+const getMediaType = (key: string): 'audio' | 'video' | 'unknown' => {
+    const lowerKey = key.toLowerCase();
+    if (/(mp3|wav|ogg|m4a)$/.test(lowerKey)) return 'audio';
+    if (/(mp4|webm|mov|avi|flv)$/.test(lowerKey)) return 'video';
+    return 'unknown';
+};
 
-async function getPublicArtifacts(): Promise<Artifact[]> {
+const parseTags = (raw: string | null): string[] => {
+    if (!raw) return [];
     try {
-        // In the future, this should point to a dedicated public feed endpoint
-        // For now, we reuse the existing endpoint or fall back to mock data
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
-        const res = await fetch(`${apiUrl}/media/my-uploads`, { 
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+};
+
+async function fetchExploreMedia(): Promise<ExploreMedia[] | null> {
+    try {
+        const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+        const response = await fetch(`${apiUrl}/api/media/explore`, {
             next: { revalidate: 60 },
-            headers: { 'Content-Type': 'application/json' }
         });
-        
-        if (!res.ok) throw new Error('Failed to fetch');
-        
-        const data = await res.json();
-        
-        // If DB is empty, return mocks so the page isn't sad
-        if (!data.uploads || data.uploads.length === 0) {
-            return MOCK_ARTIFACTS;
+
+        if (!response.ok) {
+            console.error(`Failed to fetch explore media: ${response.status} ${response.statusText}`);
+            return null;
         }
 
-        return data.uploads;
-    } catch (e) {
-        console.error("Error fetching artifacts:", e);
-        return MOCK_ARTIFACTS;
+        const data = await response.json();
+        return data.media || [];
+    } catch (error) {
+        console.error('Failed to fetch explore media:', error);
+        return null;
     }
 }
 
 export default async function ExplorePage() {
-    const artifacts = await getPublicArtifacts();
+    const media = await fetchExploreMedia();
+    const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
     return (
-        <main className="min-h-screen bg-[var(--bg-canvas)]">
-            {/* Header Spacer */}
-            <div className="h-24"></div>
-
-            {/* Hero / Title Section */}
-            <section className="px-6 md:px-12 mb-16">
-                <div className="max-w-7xl mx-auto">
-                    <span className="font-[family-name:var(--font-yantramanav)] text-[var(--accent-primary)] text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
-                        The Public Archive
-                    </span>
-                    <h1 className="font-[family-name:var(--font-eczar)] text-5xl md:text-7xl font-bold text-[var(--text-primary)] mb-6 leading-[0.9]">
-                        Explore the <br />
-                        <span className="italic font-light text-[var(--text-secondary)]">Living Heritage.</span>
+        <div className="min-h-screen bg-[var(--bg-canvas)] px-6 md:px-12 py-24">
+            <div className="max-w-6xl mx-auto">
+                <header className="mb-10 text-center">
+                    <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary)] font-bold">The Oracle</p>
+                    <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-eczar)] font-bold mt-3 mb-4">
+                        Discover the Himalayan Archive
                     </h1>
-                    <p className="font-[family-name:var(--font-yantramanav)] text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
-                        Discover the songs, stories, and wisdom of the Himalayas, preserved by the community, for the future.
+                    <p className="text-[var(--text-secondary)] font-[family-name:var(--font-gotu)] max-w-2xl mx-auto">
+                        Ask our semantic engine to find whispers of folklore, ancient rituals, or hidden valleys preserved across the mountains.
                     </p>
+                </header>
+
+                <div className="mb-16">
+                    <OracleSearch apiUrl={apiUrl} />
                 </div>
-            </section>
 
-            {/* Gallery Grid */}
-            <section className="px-6 md:px-12 pb-24">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {artifacts.map((item) => (
-                            <Link href={`/artifact/${item.id}`} key={item.id} className="group block h-full">
-                                <article className="bg-white/50 backdrop-blur-sm border border-[var(--text-primary)]/10 p-8 h-full rounded-lg transition-all duration-300 hover:border-[var(--accent-primary)]/40 hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between">
-                                    <div>
-                                        <div className="flex justify-between items-start mb-4">
-                                            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[var(--bg-subtle)] text-lg">
-                                                {item.type === 'audio' ? '🎵' : item.type === 'video' ? '🎥' : item.type === 'image' ? '🖼️' : '📄'}
-                                            </span>
-                                            {item.region && (
-                                                <span className="font-mono text-xs uppercase tracking-wider text-[var(--text-secondary)] border border-[var(--text-primary)]/20 px-2 py-1 rounded-full">
-                                                    {item.region}
-                                                </span>
-                                            )}
-                                        </div>
-                                        
-                                        <h3 className="font-[family-name:var(--font-eczar)] text-2xl font-bold text-[var(--text-primary)] mb-3 leading-tight group-hover:text-[var(--accent-primary)] transition-colors">
-                                            {item.title}
-                                        </h3>
-                                        
-                                        <p className="font-[family-name:var(--font-yantramanav)] text-[var(--text-secondary)] text-sm leading-relaxed mb-6 line-clamp-3">
-                                            {item.description || "No description provided."}
-                                        </p>
-                                    </div>
+                <div className="border-t border-[var(--accent-primary)]/10 pt-16">
+                    <header className="mb-10">
+                        <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary)] font-bold">Recent Discoveries</p>
+                        <h2 className="text-3xl font-[family-name:var(--font-eczar)] font-bold mt-2">Public Gallery</h2>
+                    </header>
 
-                                    <div className="pt-6 border-t border-[var(--text-primary)]/5 flex items-center justify-between text-xs font-[family-name:var(--font-yantramanav)] uppercase tracking-wider text-[var(--text-secondary)]">
-                                        <span>{item.language || "Unknown Language"}</span>
-                                        <span>
-                                            {new Date(item.created_at).toLocaleDateString('en-US', {
-                                                year: 'numeric',
-                                                month: 'short',
-                                                day: 'numeric'
-                                            })}
-                                        </span>
-                                    </div>
-                                </article>
+                    {media === null ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
+                                <svg className="w-10 h-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-[family-name:var(--font-eczar)] mb-2 text-red-900">Gallery unavailable</h2>
+                            <p className="text-[var(--text-secondary)] mb-6 max-w-md">
+                                We could not load the public gallery right now. Please try again soon.
+                            </p>
+                            <Link
+                                href="/explore"
+                                className="px-6 py-3 bg-[var(--accent-primary)] text-white uppercase tracking-widest text-sm font-bold hover:opacity-90 transition-opacity inline-block"
+                            >
+                                Refresh
                             </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                        </div>
+                    ) : media.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center">
+                            <div className="w-20 h-20 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center mb-6">
+                                <svg className="w-10 h-10 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-[family-name:var(--font-eczar)] mb-2">No public media yet</h2>
+                            <p className="text-[var(--text-secondary)] mb-6 max-w-md">
+                                The guardians are still curating. Check back soon as new recordings are verified.
+                            </p>
+                            <Link
+                                href="/dashboard/upload"
+                                className="px-6 py-3 bg-[var(--accent-primary)] text-white uppercase tracking-widest text-sm font-bold hover:opacity-90 transition-opacity"
+                            >
+                                Contribute an Upload
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {media.map((item) => {
+                                const mediaType = getMediaType(item.key);
+                                const deities = parseTags(item.deities);
+                                const places = parseTags(item.places);
+                                const botanicals = parseTags(item.botanicals);
+                                const mediaUrl = `${apiUrl}/api/media/file/${encodeURIComponent(item.key)}`;
 
-            {/* Footer Callout */}
-            <section className="px-6 md:px-12 pb-24 border-t border-[var(--text-primary)]/10 pt-24">
-                <div className="max-w-4xl mx-auto text-center space-y-8">
-                    <h2 className="font-[family-name:var(--font-eczar)] text-3xl font-bold">
-                        Have something to contribute?
-                    </h2>
-                    <p className="text-[var(--text-secondary)]">
-                        Your memories are the source code of our future.
-                    </p>
-                    <div className="flex justify-center">
-                        <Link 
-                            href="/dashboard/upload" 
-                            className="px-8 py-4 bg-[var(--accent-primary)] text-white font-[family-name:var(--font-yantramanav)] uppercase tracking-[0.2em] text-xs font-bold rounded-sm hover:opacity-90 transition-opacity"
-                        >
-                            Contribute to the Archive
-                        </Link>
-                    </div>
+                                return (
+                                    <div
+                                        key={item.id}
+                                        className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-6 hover:border-[var(--accent-primary)]/30 transition-all"
+                                    >
+                                        <div className="flex items-start justify-between gap-4 mb-4">
+                                            <h3 className="text-lg font-[family-name:var(--font-eczar)] font-bold line-clamp-2">
+                                                {item.title}
+                                            </h3>
+                                            <span className="px-2 py-1 text-xs uppercase tracking-widest font-bold bg-green-100 text-green-800">
+                                                Verified
+                                            </span>
+                                        </div>
+
+                                        {item.description && (
+                                            <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-3">{item.description}</p>
+                                        )}
+
+                                        {mediaType === 'audio' && (
+                                            <div className="mb-4">
+                                                <audio controls className="w-full">
+                                                    <source src={mediaUrl} />
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </div>
+                                        )}
+
+                                        {mediaType === 'video' && (
+                                            <div className="mb-4">
+                                                <video controls className="w-full rounded-sm">
+                                                    <source src={mediaUrl} />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </div>
+                                        )}
+
+                                        {mediaType === 'unknown' && (
+                                            <div className="mb-4 rounded-lg border border-dashed border-[var(--accent-primary)]/30 p-4 text-center text-xs uppercase tracking-[0.3em] text-[var(--text-secondary)]">
+                                                Media preview unavailable
+                                            </div>
+                                        )}
+
+                                        {item.transcription && (
+                                            <div className="mb-4">
+                                                <span className="text-[10px] uppercase tracking-widest text-[var(--accent-primary)] font-bold block mb-1">
+                                                    Transcription Snippet
+                                                </span>
+                                                <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2">&quot;{item.transcription}&quot;</p>
+                                            </div>
+                                        )}
+
+                                        {deities.length > 0 && (
+                                            <div className="mb-2">
+                                                <span className="text-[10px] uppercase tracking-widest text-amber-600 font-bold block mb-1">
+                                                    Deities
+                                                </span>
+                                                <div className="flex flex-wrap gap-1">
+                                                    {deities.map((d, i) => (
+                                                        <span
+                                                            key={`${item.id}-deity-${i}`}
+                                                            className="text-[10px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200"
+                                                        >
+                                                            {d}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {places.length > 0 && (
+                                            <div className="mb-2">
+                                                <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block mb-1">
+                                                    Places
+                                                </span>
+                                                <div className="flex flex-wrap gap-1">
+                                                    {places.map((p, i) => (
+                                                        <span
+                                                            key={`${item.id}-place-${i}`}
+                                                            className="text-[10px] bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded border border-blue-200"
+                                                        >
+                                                            {p}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {botanicals.length > 0 && (
+                                            <div className="mb-4">
+                                                <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block mb-1">
+                                                    Botanicals
+                                                </span>
+                                                <div className="flex flex-wrap gap-1">
+                                                    {botanicals.map((b, i) => (
+                                                        <span
+                                                            key={`${item.id}-botanical-${i}`}
+                                                            className="text-[10px] bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200"
+                                                        >
+                                                            {b}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+                                            <span className="font-[family-name:var(--font-gotu)]">{item.language || 'Unknown'}</span>
+                                            <span>
+                                                {new Date(item.created_at).toLocaleDateString('en-US', {
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                })}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
-            </section>
-        </main>
+            </div>
+        </div>
     );
 }
