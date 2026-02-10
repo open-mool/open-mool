@@ -4,11 +4,7 @@ import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileAudio, FileVideo, X, CheckCircle } from 'lucide-react';
-import { cn } from '@/lib/utils'; // Assuming cn exists, if not I will replace or create it.
-
-// Helper for classNames if cn doesn't exist? I'll assume it likely does in a modern stack or use `clsx` directly if I can import it.
-// Checking package.json: "clsx": "^2.1.1", "tailwind-merge": "^3.4.0". Typically `lib/utils.ts` has `cn`.
-// I'll assume it exists. If not, I'll fallback to simple string interpolation or create it.
+import { cn } from '@/lib/utils';
 
 interface FileUploaderProps {
     file: File | null;
@@ -39,10 +35,10 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
             if (errorCode === 'file-too-large') {
                 const file = rejection.file;
                 const rawSizeMB = file.size / (1024 * 1024);
-                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1); //to display decimal values only when needed.
+                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1);
                 const limitMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
 
-                setValidationError(`File too large, sad. Maximum file size is ${limitMB}MB. Your file is ${sizeMB}MB.`);
+                setValidationError(`File too large. Maximum size is ${limitMB}MB. (Your file: ${sizeMB}MB)`);
             } 
             
             //reject unsupported formats early. (UX-level validation)
@@ -64,10 +60,10 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
 
             if(file.size > MAX_FILE_SIZE) {
                 const rawSizeMB = file.size / (1024 * 1024);
-                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1); //to display decimal values only when needed.
+                const sizeMB = rawSizeMB % 1 === 0 ? rawSizeMB.toString() : rawSizeMB.toFixed(1);
                 const limitMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
 
-                setValidationError(`Hey, File too large. Maximum file size is ${limitMB}MB. Your file is ${sizeMB}MB. Try in parts or reduce the size.`);
+                setValidationError(`File too large. Maximum size is ${limitMB}MB. (Your file: ${sizeMB}MB)`);
                 
                 //do not allow invalid files into application state
                 return;
@@ -82,7 +78,7 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
             'audio/*': ['.mp3', '.wav'],
             'video/*': ['.mp4', '.mov']
         },
-        maxSize: 500 * 1024 * 1024, // 500MB
+        maxSize: MAX_FILE_SIZE,
         maxFiles: 1,
         multiple: false,
         disabled: status === 'uploading' || status === 'success'
@@ -125,7 +121,7 @@ export function FileUploader({ file, setFile, progress, status, error }: FileUpl
                                     Click to upload or drag and drop
                                 </p>
                                 <p className="text-xs text-slate-500">
-                                    MP3, WAV, MP4 (max 500MB)
+                                    MP3, WAV, MP4, MOV (max 500MB)
                                 </p>
                             </div>
                         </motion.div>
