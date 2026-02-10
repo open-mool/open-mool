@@ -40,7 +40,7 @@ export default async function Home() {
             <CTASection />
 
             {/* Footer */}
-            <footer className="py-12 px-8 border-t border-gray-100">
+            <footer className="py-12 px-8 border-t border-gray-100 dark:border-gray-800">
                 <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="font-human text-sm text-text-secondary">
                         Dev-Gatha &bull; Itihas &bull; Reeti-Rivaj

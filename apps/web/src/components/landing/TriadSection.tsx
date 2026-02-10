@@ -50,7 +50,7 @@ export function TriadSection() {
                     {pillars.map((pillar, index) => (
                         <motion.div
                             key={pillar.title}
-                            className="group relative p-8 bg-canvas border border-gray-100 rounded-lg hover:border-gray-200 transition-all duration-300"
+                            className="group relative p-8 bg-canvas border border-gray-100 dark:border-gray-800 rounded-lg hover:border-gray-200 dark:hover:border-gray-700 transition-all duration-300"
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: '-50px' }}

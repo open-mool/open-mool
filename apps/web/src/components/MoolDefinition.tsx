@@ -8,7 +8,7 @@ export function MoolDefinition() {
                 <div className="flex-1 min-w-0 flex flex-col justify-center">
                     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
                         <span className="font-heading text-3xl sm:text-4xl text-text-primary">Mool</span>
-                        <span className="font-mono text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest bg-white/50 px-2 py-0.5 rounded-full whitespace-nowrap">/mool/ • noun</span>
+                        <span className="font-mono text-[10px] sm:text-xs text-text-secondary uppercase tracking-widest bg-white/50 dark:bg-subtle/50 px-2 py-0.5 rounded-full whitespace-nowrap">/mool/ • noun</span>
                     </div>
                     <p className="font-body text-lg text-text-secondary leading-relaxed">
                         The Root. The Source. The Origin.<br />

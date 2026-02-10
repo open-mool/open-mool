@@ -51,7 +51,7 @@ export function CTASection() {
                             key={role.title}
                             className={`relative p-8 rounded-xl border overflow-hidden ${role.primary
                                     ? 'bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20'
-                                    : 'bg-canvas border-gray-200'
+                                    : 'bg-canvas border-gray-200 dark:border-gray-800'
                                 }`}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}

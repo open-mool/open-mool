@@ -191,7 +191,7 @@ export default function PrivacyPolicy() {
                 </section>
 
                 {/* Footer Links */}
-                <div className="mt-12 pt-8 border-t border-gray-200 flex flex-wrap gap-4 text-sm">
+                <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-wrap gap-4 text-sm">
                     <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
                     <Link href="/about" className="text-primary hover:underline">About Open Mool</Link>
                     <Link href="/" className="text-text-secondary hover:text-primary">Home</Link>

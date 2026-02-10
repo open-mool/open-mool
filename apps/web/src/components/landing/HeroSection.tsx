@@ -50,7 +50,7 @@ export function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-text-secondary/70 border border-gray-200 px-4 py-2 rounded-full">
+                    <span className="font-mono text-xs uppercase tracking-[0.3em] text-text-secondary/70 border border-gray-200 dark:border-gray-800 px-4 py-2 rounded-full">
                         Open Source Cultural Archive
                     </span>
                 </motion.div>
@@ -100,7 +100,7 @@ export function HeroSection() {
 
                     <Link href="/about">
                         <motion.button
-                            className="flex items-center gap-3 px-8 py-4 bg-white/80 backdrop-blur border border-gray-200 text-text-primary rounded-lg font-body font-medium text-lg hover:border-primary/50 hover:bg-white transition-all duration-300"
+                            className="flex items-center gap-3 px-8 py-4 bg-white/80 dark:bg-subtle/80 backdrop-blur border border-gray-200 dark:border-gray-800 text-text-primary rounded-lg font-body font-medium text-lg hover:border-primary/50 hover:bg-white dark:hover:bg-subtle transition-all duration-300"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
