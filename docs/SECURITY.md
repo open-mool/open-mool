@@ -31,15 +31,19 @@ npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET --env staging
 **Never** put actual secret values in `wrangler.toml`. Use `wrangler secret` commands.
 
 #### Local Development
-For local dev, creates a `.dev.vars` file in `apps/api`. **This file is git-ignored.**
+For local dev, copy `apps/api/.dev.vars.example` to `apps/api/.dev.vars`. **`.dev.vars` is git-ignored.**
 
 ```ini
-# apps/api/.dev.vars
+# apps/api/.dev.vars (minimum required)
 CLERK_ISSUER=...
 CLERK_JWKS_URL=...
 INTERNAL_PROXY_SIGNING_SECRET=...
-R2_ACCESS_KEY_ID=...
+R2_BUCKET_NAME=open-mool-storage
 ```
+
+Optional local keys:
+- `GEMINI_API_KEY` for semantic/vector search and refinery enrichment.
+- `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` if using direct presigned uploads locally.
 
 ### 3. Frontend Secrets
 The Web App (`apps/web`) is a client-side application.

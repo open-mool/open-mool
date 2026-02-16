@@ -1,0 +1,23 @@
+# Required for Clerk JWT verification in local Worker runtime
+CLERK_ISSUER='https://your-clerk-instance.clerk.accounts.dev'
+CLERK_JWKS_URL='https://your-clerk-instance.clerk.accounts.dev/.well-known/jwks.json'
+
+# Must match INTERNAL_PROXY_SIGNING_SECRET in apps/web/.env.local
+INTERNAL_PROXY_SIGNING_SECRET='replace_with_long_random_secret'
+
+# Local bucket name used by wrangler/dev bindings
+R2_BUCKET_NAME='open-mool-storage'
+
+# Optional: audience check for Clerk JWTs if you configured one
+# CLERK_AUDIENCE='your-api-audience'
+
+# Optional: legacy internal proxy fallback
+# API_SECRET=''
+
+# Optional: enables semantic search and refinery entity extraction
+# GEMINI_API_KEY='your-gemini-key'
+
+# Optional: required only if using direct presigned uploads in local mode
+# R2_ACCOUNT_ID='your-cloudflare-account-id'
+# R2_ACCESS_KEY_ID='your-r2-access-key-id'
+# R2_SECRET_ACCESS_KEY='your-r2-secret-access-key'
