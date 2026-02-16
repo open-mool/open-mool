@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { auth0 } from "@/lib/auth0";
+import { authClient } from "@/lib/auth";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { TriadSection } from "@/components/landing/TriadSection";
 import { StatsSection } from "@/components/landing/StatsSection";
@@ -12,7 +12,7 @@ export const runtime = 'edge';
 export default async function Home() {
     let isLoggedIn = false;
     try {
-        const session = await auth0.getSession();
+        const session = await authClient.getSession();
         isLoggedIn = !!session?.user;
     } catch (error) {
         console.error('Session error:', error);

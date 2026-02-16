@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { auth0 } from '@/lib/auth0';
+import { authClient } from '@/lib/auth';
 
 export const runtime = 'edge';
 
 export async function GET() {
     try {
-        const session = await auth0.getSession();
+        const session = await authClient.getSession();
         
         if (!session?.user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

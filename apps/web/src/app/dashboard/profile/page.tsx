@@ -1,4 +1,4 @@
-import { auth0 } from '@/lib/auth0';
+import { authClient } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
@@ -29,7 +29,7 @@ async function getContributionCount(userId: string): Promise<number> {
 export default async function ProfilePage() {
     let session = null;
     try {
-        session = await auth0.getSession();
+        session = await authClient.getSession();
     } catch (error) {
         console.error('Session error:', error);
     }

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { auth0 } from '@/lib/auth0';
+import { authClient } from '@/lib/auth';
 import Link from 'next/link';
 import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 
@@ -44,7 +44,7 @@ async function fetchMyUploads(userSub: string): Promise<Upload[] | null> {
 export default async function MyUploadsPage() {
     let session = null;
     try {
-        session = await auth0.getSession();
+        session = await authClient.getSession();
     } catch (error) {
         console.error('Session error:', error);
     }

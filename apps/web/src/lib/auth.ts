@@ -57,7 +57,7 @@ const getSession = async (): Promise<Session | null> => {
     };
 };
 
-export const auth0 = {
+export const authClient = {
     getSession,
 };
 

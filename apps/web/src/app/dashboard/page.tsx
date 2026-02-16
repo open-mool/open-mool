@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { auth0 } from '@/lib/auth0';
+import { authClient } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
 export const runtime = 'edge';
@@ -7,7 +7,7 @@ export const runtime = 'edge';
 export default async function DashboardPage() {
     let session = null;
     try {
-        session = await auth0.getSession();
+        session = await authClient.getSession();
     } catch (error) {
         console.error('Session error:', error);
     }

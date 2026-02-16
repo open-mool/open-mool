@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth0 } from '@/lib/auth0';
+import { authClient } from '@/lib/auth';
 import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 
 export const runtime = 'edge';
@@ -7,7 +7,7 @@ export const runtime = 'edge';
 const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 export async function GET() {
     try {
-        const session = await auth0.getSession();
+        const session = await authClient.getSession();
         
         if (!session?.user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
