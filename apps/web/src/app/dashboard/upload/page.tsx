@@ -13,6 +13,9 @@ import { useMultipartUpload } from '@/hooks/useMultipartUpload';
 import { cn } from '@/lib/utils';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
+const IS_LOCAL_API =
+    API_URL.includes('localhost') ||
+    API_URL.includes('127.0.0.1');
 
 export default function UploadPage() {
     const [file, setFile] = useState<File | null>(null);
@@ -110,7 +113,7 @@ export default function UploadPage() {
         setError('');
 
         try {
-            if (isLargeFile || (process.env.NEXT_PUBLIC_MOCK_LOGIN === 'true')) {
+            if (isLargeFile || IS_LOCAL_API) {
                 // Robust retry using hook's internal state if file is missing in UI
                 const key = await multipart.resumeUpload(file || undefined);
                 if (key) {
@@ -149,13 +152,13 @@ export default function UploadPage() {
         if (file && status === 'idle') {
             const fileSizeInMB = file.size / (1024 * 1024);
             const isLarge = fileSizeInMB > 100;
-            const isLocalDev = process.env.NEXT_PUBLIC_MOCK_LOGIN === 'true';
+            const shouldForceMultipart = IS_LOCAL_API;
 
             setIsLargeFile(isLarge);
 
-            // In local dev (mock login), always use multipart because it proxies through the worker.
-            // Direct S3 uploads (presigned urls) won't work locally without real credentials.
-            if (isLarge || isLocalDev) {
+            // For local API targets, prefer multipart because direct presigned uploads
+            // often require cloud R2 credentials that OSS contributors do not have.
+            if (isLarge || shouldForceMultipart) {
                 startMultipartUpload(file);
             } else {
                 startUpload(file);

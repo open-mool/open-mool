@@ -53,7 +53,7 @@ export const viewport: Viewport = {
 
 const clerkPublishableKey =
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
-    'pk_test_YXJ0aXN0aWMtYnVubnktNzAuY2xlcmsuYWNjb3VudHMuZGV2JA';
+    'pk_test_replace_me';
 
 export default function RootLayout({
     children,
