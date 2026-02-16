@@ -15,12 +15,12 @@
 - [x] Login redirects to Dashboard
 
 ### 1.2 The Gatekeeper (Auth & Identity)
-- [x] Auth0 v4 SDK integration (middleware pattern)
+- [x] Clerk integration (middleware pattern)
 - [x] User schema in D1 (`users` table)
 - [x] Role system: `SCOUT`, `GUARDIAN`, `ARCHIVIST`
 - [x] Reputation score tracking
 - [x] Profile page with "Guardian Card" UI
-- [x] Auth0 webhook for user sync
+- [x] Clerk session-backed user identity in app routes
 - [x] Post-login redirect to Dashboard
 
 ### 1.3 The Ingest Engine
@@ -47,9 +47,9 @@
 ## � In Progress
 
 ### API User Integration (Priority 1)
-- [ ] Add `user_id` to media records on upload (from Auth0 session)
-- [ ] Create `GET /api/media/my-uploads` endpoint (authenticated)
-- [ ] Filter uploads by authenticated user
+- [x] Add `user_id` to media records on upload (from authenticated session)
+- [x] Create `GET /api/media/my-uploads` endpoint (authenticated)
+- [x] Filter uploads by authenticated user
 
 ### Priority 2: The Refinery (AI Processing)
 1. **Transcription Worker**
@@ -126,7 +126,7 @@
 - **Backend:** Hono (Cloudflare Workers)
 - **Database:** Cloudflare D1 + Drizzle ORM
 - **Storage:** Cloudflare R2
-- **Auth:** Auth0
+- **Auth:** Clerk
 
 ### Future Additions
 - **AI:** Cloudflare Workers AI / OpenAI Whisper

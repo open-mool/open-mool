@@ -16,16 +16,16 @@ You are a Backend Engineer working on "Open Mool", a Himalayan digital archive.
 **Tech Stack:**
 - **API:** Hono (Cloudflare Workers)
 - **Database:** Cloudflare D1 with Drizzle ORM
-- **Auth:** Auth0 (v4 SDK, middleware pattern)
+- **Auth:** Clerk session + JWT middleware
 - **Existing Schema:** `media` table has `user_id` column (TEXT, nullable).
 
 **Current State:**
-- Auth0 integration is complete. Sessions are available via `auth0.getSession()`.
+- Clerk integration is complete. Sessions are available via `auth().userId` / server session claims.
 - Media uploads work but `user_id` is currently NULL.
 - The `/upload/complete` endpoint stores metadata but doesn't capture the uploader.
 
 **Requirements:**
-1.  **Auth Context:** Modify `POST /upload/complete` to extract `user.sub` from the Auth0 session and store it in the `user_id` column.
+1.  **Auth Context:** Modify `POST /upload/complete` to extract the authenticated user ID from Clerk session and store it in the `user_id` column.
 2.  **My Uploads Endpoint:** Create `GET /api/media/my-uploads` that:
     - Requires authentication (401 if no session).
     - Filters media by `user_id = session.user.sub`.

@@ -4,9 +4,9 @@ Welcome! We are building the **Source Code of the Himalayas**, and we're thrille
 
 ## 🚀 Getting Started
 
-### 1-Minute Quick Start (For Frontend / UI Fixes)
+### Path A: Public UI Work (No Auth Setup)
 
-If you just want to work on the UI, you don't need any secrets or complex setup.
+If you are working on public pages (`/`, `/about`, `/how-it-works`, styling, components), you can start without Clerk setup.
 
 1.  **Clone & Install:**
     ```bash
@@ -15,25 +15,47 @@ If you just want to work on the UI, you don't need any secrets or complex setup.
     pnpm install
     ```
 
-2.  **Enable Dev Mode:**
-    Copy the example environment file and enable Mock Mode.
+2.  **Copy web env file:**
     ```bash
     cp apps/web/.env.example apps/web/.env.local
-    # Ensure NEXT_PUBLIC_MOCK_LOGIN='true' is uncommented in apps/web/.env.local
     ```
+    You can leave Clerk values as placeholders for public UI work.
 
 3.  **Run Locally:**
     ```bash
     pnpm dev
     ```
-    *   **Open:** [http://localhost:3000](http://localhost:3000)
-    *   **Login:** Click "Join" to auto-login as a mock user.
+    - Web: [http://localhost:3000](http://localhost:3000)
 
-4.  **(Optional) Backend Setup:**
-    If you need to modify the API or database schema, initialize the local database emulator:
+### Path B: Full Stack Work (Dashboard, Uploads, Auth)
+
+If you are touching `/dashboard`, upload APIs, session logic, or protected routes, use this setup.
+
+1.  **Create local env files:**
+    ```bash
+    cp apps/web/.env.example apps/web/.env.local
+    cp apps/api/.dev.vars.example apps/api/.dev.vars
+    ```
+
+2.  **Create Clerk dev instance keys (free):**
+    - In Clerk dashboard, create/get a Development instance.
+    - Set in `apps/web/.env.local`:
+      - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+      - `CLERK_SECRET_KEY`
+    - Set in `apps/api/.dev.vars`:
+      - `CLERK_ISSUER`
+      - `CLERK_JWKS_URL`
+    - Set `INTERNAL_PROXY_SIGNING_SECRET` to the same value in both files.
+
+3.  **Initialize local DB and run app:**
     ```bash
     cd packages/db && pnpm db:push:local
+    cd ../..
+    pnpm dev
     ```
+    - Web: [http://localhost:3000](http://localhost:3000)
+    - API: [http://localhost:8787](http://localhost:8787)
+    - Sign in via `/sign-in`.
 
 ---
 
@@ -59,10 +81,10 @@ pnpm dev:remote
 - `packages/`: Shared UI and TS config
 
 ### Making Changes
-1. **Create a Branch**: `git checkout -b feature/my-cool-feature` (Branch off `dev` usually!)
+1. **Create a Branch**: `git checkout -b fix/my-cool-feature` (branch off `dev` unless maintainers ask otherwise)
 2. **Make Changes**: Write your code.
 3. **Lint**: Run `pnpm lint` to fix style issues.
-4. **Push**: `git push origin feature/my-cool-feature`.
+4. **Push**: `git push origin fix/my-cool-feature`.
 
 ### Submitting a PR
 - Open a Pull Request targeting the **`dev`** branch.

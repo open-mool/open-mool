@@ -19,18 +19,28 @@ Cloudflare Pages provides built-in CI/CD through direct Git integration - no Git
 5. Configure the build settings:
    - **Project name**: `open-mool-web`
    - **Production branch**: `main` or `master`
-   - **Framework preset**: Next.js (Static HTML Export)
+   - **Framework preset**: Next.js
    - **Build command**: `pnpm install && pnpm --filter web run build`
-   - **Build output directory**: `apps/web/out`
+   - **Build output directory**: `.next` (or leave blank for Next.js managed output)
    - **Root directory**: `/` (leave as default)
-   - **Environment variables**: None required (see `apps/web/.env.example` for details)
+   - **Environment variables**: Required (see section below)
 6. Click **"Save and Deploy"**
 
 ### Environment Variables
 
-Currently, the web application **does not require any environment variables**. It is configured as a static export without API routes or server-side features.
+The web application uses Clerk auth and server-side proxy routes, so environment variables are required.
 
-For reference, see the `apps/web/.env.example` file which documents the structure for future integrations if needed.
+Set these in Cloudflare Pages (staging and production as applicable):
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `NEXT_PUBLIC_API_URL`
+- `API_URL`
+- `INTERNAL_PROXY_SIGNING_SECRET`
+
+Optional legacy fallback:
+- `API_SECRET`
+
+For local reference values, see `apps/web/.env.example`.
 
 ## Step 2: Verify the Deployment
 
