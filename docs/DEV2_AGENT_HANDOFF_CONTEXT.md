@@ -1,6 +1,6 @@
 # dev-2 Agent Handoff Context
 
-Last updated: 2026-02-10
+Last updated: 2026-02-10 (post-release-sync)
 Branch: `dev-2`
 
 ## 1) Current Repository State
@@ -19,6 +19,13 @@ Branch: `dev-2`
 Important note:
 - This repo uses `master` as the production-equivalent branch name, not `main`.
 - Some release docs mention `main`; treat `master` as the actual target in git operations unless explicitly changed by maintainers.
+
+Release-sync status (latest):
+- `origin/dev...dev-2` divergence: `0 behind / 44 ahead`.
+- `origin/master...dev-2` divergence: `0 behind / 81 ahead`.
+- `dev-2` includes latest `origin/master` history via:
+  - `3a3849c` `chore(release): sync origin/master into dev-2`
+- Result: `dev-2` is prepared for merge into `dev` now, and later into `master`, without needing to first pull commits from either target branch.
 
 ## 2) What Has Already Been Completed
 
