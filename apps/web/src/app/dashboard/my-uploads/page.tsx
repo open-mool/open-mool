@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { auth0 } from '@/lib/auth0';
 import Link from 'next/link';
+import { Mountain } from 'lucide-react';
 
 export const runtime = 'edge';
 
@@ -107,24 +108,24 @@ export default async function MyUploadsPage() {
                 </p>
             </header>
 
-            {uploads.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="w-24 h-24 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center mb-6">
-                        <svg className="w-12 h-12 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    </div>
-                    <h2 className="text-2xl font-[family-name:var(--font-eczar)] mb-2">No uploads yet</h2>
-                    <p className="text-[var(--text-secondary)] mb-6 max-w-md">
-                        Start preserving the Himalayan heritage by uploading your first audio or video
-                    </p>
-                    <Link
-                        href="/dashboard/upload"
-                        className="px-6 py-3 bg-[var(--accent-primary)] text-white uppercase tracking-widest text-sm font-bold hover:opacity-90 transition-opacity"
-                    >
-                        Upload Now
-                    </Link>
-                </div>
+           {uploads.length === 0 ? (
+               <div className="flex flex-col items-center justify-center py-16 text-center">
+                   <div className="w-24 h-24 rounded-full bg-[var(--bg-subtle)] flex items-center justify-center mb-6">
+                       <Mountain className="w-12 h-12 text-[var(--text-secondary)]" strokeWidth={1.5} />
+                   </div>
+                   <h2 className="text-2xl font-[family-name:var(--font-eczar)] mb-2 text-[var(--text-primary)]">
+                       Your archive is empty
+                   </h2>
+                   <p className="text-[var(--text-secondary)] mb-6 max-w-md font-[family-name:var(--font-gotu)]">
+                       Take the first step in preserving a piece of Himalayan Heritage. Upload an audio or video to start your archive.
+                   </p>
+                   <Link
+                       href="/dashboard/upload"
+                       className="px-6 py-3 bg-[var(--accent-primary)] text-white uppercase tracking-widest text-sm font-bold hover:opacity-90 transition-opacity"
+                   >
+                       Upload Now
+                   </Link>
+               </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {uploads.map((upload) => (
