@@ -117,7 +117,7 @@ export default async function MyUploadsPage() {
                        Your archive is empty
                    </h2>
                    <p className="text-[var(--text-secondary)] mb-6 max-w-md font-[family-name:var(--font-gotu)]">
-                       Take the first step in preserving a piece of Himalayan Heritage. Upload an audio or video to start your archive.
+                       Take the first step towards preserving a piece of Himalayan Heritage. Upload an audio or video to start your archive.
                    </p>
                    <Link
                        href="/dashboard/upload"
