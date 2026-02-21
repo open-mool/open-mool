@@ -14,6 +14,10 @@ R2_BUCKET_NAME='open-mool-storage'
 # Optional: legacy internal proxy fallback
 # API_SECRET=''
 
+# Local-only auth bypass for OSS contributors without Clerk keys.
+# Must stay 'false' outside local development.
+LOCAL_DEV_AUTH_BYPASS='false'
+
 # Optional: enables semantic search and refinery entity extraction
 # GEMINI_API_KEY='your-gemini-key'
 

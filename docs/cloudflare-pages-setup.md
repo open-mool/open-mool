@@ -42,6 +42,8 @@ Optional legacy fallback:
 
 For local reference values, see `apps/web/.env.example`.
 
+Do not set `LOCAL_DEV_AUTH_BYPASS=true` in Cloudflare environments. It is intended for localhost contributor workflows only.
+
 ## Step 2: Verify the Deployment
 
 1. After saving, Cloudflare will automatically trigger the first build

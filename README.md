@@ -103,6 +103,11 @@ Then set Clerk dev keys and shared signing secret:
 - `CLERK_JWKS_URL` (api)
 - `INTERNAL_PROXY_SIGNING_SECRET` (same value in web + api)
 
+If you do not have Clerk keys yet and want to test protected flows locally, you can enable local-only bypass in both files:
+- `LOCAL_DEV_AUTH_BYPASS='true'`
+
+This creates a local dummy user (`dev_dummy_user`) and is blocked to localhost-only runtime checks.
+
 For contributor onboarding details, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ---

@@ -44,6 +44,7 @@ R2_BUCKET_NAME=open-mool-storage
 Optional local keys:
 - `GEMINI_API_KEY` for semantic/vector search and refinery enrichment.
 - `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` if using direct presigned uploads locally.
+- `LOCAL_DEV_AUTH_BYPASS=true` only for localhost contributor testing without Clerk keys. Never enable this in staging/production.
 
 ### 3. Frontend Secrets
 The Web App (`apps/web`) is a client-side application.

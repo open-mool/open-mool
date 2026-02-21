@@ -47,6 +47,11 @@ If you are touching `/dashboard`, upload APIs, session logic, or protected route
       - `CLERK_JWKS_URL`
     - Set `INTERNAL_PROXY_SIGNING_SECRET` to the same value in both files.
 
+    If you do not have Clerk keys yet, enable local-only fallback in both files:
+    - `LOCAL_DEV_AUTH_BYPASS='true'`
+
+    This uses a dummy local user (`dev_dummy_user`) and is restricted to localhost runtime only.
+
 3.  **Initialize local DB and run app:**
     ```bash
     cd packages/db && pnpm db:push:local
