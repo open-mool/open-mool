@@ -13,6 +13,22 @@ type Session = {
 
 type SessionClaims = Record<string, unknown> | null;
 
+const LOCAL_BYPASS_USER = {
+    sub: 'dev_dummy_user',
+    email: 'dev-dummy@open-mool.local',
+    name: 'Local Dev Dummy',
+    picture: null,
+} satisfies SessionUser;
+
+const isLocalApiTarget = () => {
+    const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || '';
+    return apiUrl.includes('localhost') || apiUrl.includes('127.0.0.1');
+};
+
+export const isLocalDevAuthBypassEnabled = () => {
+    return process.env.LOCAL_DEV_AUTH_BYPASS === 'true' && isLocalApiTarget();
+};
+
 const readClaim = (claims: SessionClaims, key: string) => {
     const value = claims?.[key];
     return typeof value === 'string' ? value : null;
@@ -36,6 +52,10 @@ const resolveName = (claims: SessionClaims, email: string | null, fallback: stri
 };
 
 const getSession = async (): Promise<Session | null> => {
+    if (isLocalDevAuthBypassEnabled()) {
+        return { user: LOCAL_BYPASS_USER };
+    }
+
     const authState = await auth();
 
     if (!authState.userId) {

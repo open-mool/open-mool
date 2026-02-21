@@ -8,6 +8,7 @@ interface AuthEnv {
     CLERK_AUDIENCE?: string
     INTERNAL_PROXY_SIGNING_SECRET?: string
     API_SECRET?: string
+    LOCAL_DEV_AUTH_BYPASS?: string
 }
 
 type AuthVariables = {
@@ -46,8 +47,23 @@ const getBearerToken = (authorizationHeader: string | undefined) => {
     return token
 }
 
+const isLocalRequest = (url: string) => {
+    try {
+        const hostname = new URL(url).hostname
+        return hostname === 'localhost' || hostname === '127.0.0.1'
+    } catch {
+        return false
+    }
+}
+
 export const authMiddleware = () => {
     return async (c: AuthContext, next: () => Promise<void>) => {
+        const localBypassEnabled = c.env.LOCAL_DEV_AUTH_BYPASS === 'true' && isLocalRequest(c.req.url)
+        if (localBypassEnabled) {
+            c.set('jwtPayload', { sub: 'dev_dummy_user' })
+            return next()
+        }
+
         const userId = c.req.header('x-user-id')
         const internalAuthHeader = c.req.header('x-internal-auth')
 
