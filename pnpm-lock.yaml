@@ -120,6 +120,9 @@ importers:
       drizzle-orm:
         specifier: ^0.30.0
         version: 0.30.10(@cloudflare/workers-types@4.20260117.0)(@types/react@18.3.27)(react@18.3.1)
+      wrangler:
+        specifier: ^3.0.0
+        version: 3.114.17(@cloudflare/workers-types@4.20260117.0)
     devDependencies:
       drizzle-kit:
         specifier: ^0.20.0
