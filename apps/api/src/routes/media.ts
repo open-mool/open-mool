@@ -151,7 +151,7 @@ export const getExploreMedia = async (c: Context<{ Bindings: Env }>) => {
         const limit = Math.min(48, Math.max(1, Number.parseInt(c.req.query('limit') || '24', 10) || 24))
 
         const params: Array<string | number> = []
-        const whereClauses: string[] = []
+        const whereClauses: string[] = ['processed = 1']
 
         if (language) {
             whereClauses.push('LOWER(language) = ?')
