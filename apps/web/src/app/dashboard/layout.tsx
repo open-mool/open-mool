@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@/lib/client-auth';
+import { Settings } from 'lucide-react';
 
 export default function DashboardLayout({
     children,
@@ -18,8 +19,9 @@ export default function DashboardLayout({
         { name: 'My Uploads', href: '/dashboard/my-uploads' },
         { name: 'Archive a Story', href: '/dashboard/upload' },
         { name: 'The Oracle', href: '/explore' },
-        { name: 'Settings', href: '/dashboard/settings' },
     ];
+
+    const isSettings = pathname === '/dashboard/settings';
 
     return (
         <div className="flex min-h-screen bg-[var(--bg-canvas)]">
@@ -60,10 +62,10 @@ export default function DashboardLayout({
                     </nav>
                 </div>
 
-                {/* Bottom: user chip */}
-                {user && (
-                    <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full">
-                        <div className="flex items-center gap-3 pl-1">
+                {/* Bottom: user chip + settings */}
+                <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full">
+                    {user && (
+                        <div className="flex items-center gap-3 pl-1 mb-4">
                             <div className="w-8 h-8 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20 overflow-hidden relative shrink-0">
                                 {user.picture ? (
                                     <Image
@@ -77,7 +79,7 @@ export default function DashboardLayout({
                                     user.name?.[0] || 'G'
                                 )}
                             </div>
-                            <div className="flex flex-col overflow-hidden">
+                            <div className="flex flex-col overflow-hidden flex-1 min-w-0">
                                 <span className="font-bold text-xs truncate font-[family-name:var(--font-yantramanav)] text-[var(--text-primary)]">
                                     {user.name?.split(' ')[0] || 'Guardian'}
                                 </span>
@@ -85,9 +87,19 @@ export default function DashboardLayout({
                                     {user.email}
                                 </span>
                             </div>
+                            <Link
+                                href="/dashboard/settings"
+                                aria-label="Settings"
+                                className={`shrink-0 p-1.5 rounded-md transition-colors ${isSettings
+                                        ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/10'
+                                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
+                                    }`}
+                            >
+                                <Settings className="w-3.5 h-3.5" />
+                            </Link>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </aside>
 
             {/* Main Content */}
