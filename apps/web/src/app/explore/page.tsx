@@ -17,10 +17,11 @@ interface ExploreMedia {
     botanicals: string | null;
 }
 
-const getMediaType = (key: string): 'audio' | 'video' | 'unknown' => {
+const getMediaType = (key: string): 'audio' | 'video' | 'image' | 'unknown' => {
     const lowerKey = key.toLowerCase();
-    if (/(mp3|wav|ogg|m4a)$/.test(lowerKey)) return 'audio';
-    if (/(mp4|webm|mov|avi|flv)$/.test(lowerKey)) return 'video';
+    if (/(mp3|wav|ogg|m4a|flac|aac)$/.test(lowerKey)) return 'audio';
+    if (/(mp4|webm|mov|avi|mkv|flv)$/.test(lowerKey)) return 'video';
+    if (/(jpg|jpeg|png|webp|gif|avif|heic|heif)$/.test(lowerKey)) return 'image';
     return 'unknown';
 };
 
@@ -47,7 +48,8 @@ async function fetchExploreMedia(): Promise<ExploreMedia[] | null> {
         }
 
         const data = await response.json();
-        return data.media || [];
+        // API returns { results: [...] } from getExploreMedia
+        return data.results || data.media || [];
     } catch (error) {
         console.error('Failed to fetch explore media:', error);
         return null;
@@ -164,6 +166,18 @@ export default async function ExplorePage() {
                                                     <source src={mediaUrl} />
                                                     Your browser does not support the video tag.
                                                 </video>
+                                            </div>
+                                        )}
+
+                                        {mediaType === 'image' && (
+                                            <div className="mb-4">
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                    src={mediaUrl}
+                                                    alt={item.title}
+                                                    className="w-full max-h-48 object-cover rounded-sm"
+                                                    loading="lazy"
+                                                />
                                             </div>
                                         )}
 
