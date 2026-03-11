@@ -82,3 +82,16 @@ To ensure maximum security and separation of concerns:
 - **Authentication:** Handled by Clerk. Session validation on Edge.
 - **D1 Security:** Access solely via bound Workers/Pages functions. No public database exposure.
 - **R2 Security:** Signed URLs for uploads. Public bucket for read-only gallery assets.
+
+---
+
+## 7. Custom Domain DNS (Clerk Integration)
+To enable seamless authentication under the `openmool.org` domain, the following CNAME records must be configured in your DNS provider (e.g. Cloudflare DNS):
+
+| Type  | Name | Value | Proxy Status |
+| :--- | :--- | :--- | :--- |
+| CNAME | `clerk` | `frontend-api.clerk.services` | DNS Only (Optional/Proxy) |
+| CNAME | `accounts` | `accounts.clerk.services` | DNS Only |
+| CNAME | `clkmail` | `mail.r7djrv7w467k.clerk.services` | DNS Only |
+| CNAME | `clk._domainkey` | `dkim1.r7djrv7w467k.clerk.services` | DNS Only |
+| CNAME | `clk2._domainkey` | `dkim2.r7djrv7w467k.clerk.services` | DNS Only |
