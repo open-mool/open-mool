@@ -65,7 +65,7 @@ export function SettingsSidebar({ open, onClose }: { open: boolean; onClose: () 
                 aria-label="Settings"
                 aria-modal="true"
                 className={`
-                    fixed top-0 left-0 z-40 h-full w-80
+                    fixed top-0 left-0 z-40 h-full w-[640px] max-w-[90vw]
                     bg-[var(--bg-canvas)] border-r border-[var(--border-subtle)]
                     flex flex-col
                     shadow-2xl
@@ -130,31 +130,28 @@ export function SettingsSidebar({ open, onClose }: { open: boolean; onClose: () 
                         <h2 className="font-[family-name:var(--font-yantramanav)] text-[10px] uppercase tracking-[0.25em] font-bold text-[var(--text-secondary)] mb-3">
                             Account
                         </h2>
-                        <div className="rounded-lg overflow-hidden border border-[var(--border-subtle)]">
-                            <UserProfile
-                                appearance={{
-                                    elements: {
-                                        rootBox: 'w-full',
-                                        card: 'shadow-none rounded-none border-0 bg-transparent w-full',
-                                        navbar: 'hidden',
-                                        navbarMobileMenuButton: 'hidden',
-                                        headerTitle: 'hidden',
-                                        headerSubtitle: 'hidden',
-                                        scrollBox: 'px-0 pt-0',
-                                        pageScrollBox: 'p-4',
-                                        profileSectionTitle__profile: 'hidden',
-                                    },
-                                    variables: {
-                                        colorBackground: 'var(--bg-canvas)',
-                                        colorText: 'var(--text-primary)',
-                                        colorTextSecondary: 'var(--text-secondary)',
-                                        colorPrimary: 'var(--accent-primary)',
-                                        borderRadius: '0.5rem',
-                                        fontFamily: 'var(--font-yantramanav)',
-                                    },
-                                }}
-                            />
-                        </div>
+                        <UserProfile
+                            appearance={{
+                                elements: {
+                                    rootBox: 'w-full',
+                                    card: 'shadow-none rounded-none border-0 bg-transparent w-full p-0',
+                                    navbar: 'hidden',
+                                    navbarMobileMenuButton: 'hidden',
+                                    headerTitle: 'hidden',
+                                    headerSubtitle: 'hidden',
+                                    scrollBox: 'p-0',
+                                    pageScrollBox: 'px-0 py-2',
+                                },
+                                variables: {
+                                    colorBackground: 'var(--bg-canvas)',
+                                    colorText: 'var(--text-primary)',
+                                    colorTextSecondary: 'var(--text-secondary)',
+                                    colorPrimary: 'var(--accent-primary)',
+                                    borderRadius: '0.5rem',
+                                    fontFamily: 'var(--font-yantramanav)',
+                                },
+                            }}
+                        />
                     </section>
                 </div>
             </div>
