@@ -294,10 +294,23 @@ export default function UploadPage() {
                             </div>
                         </div>
 
-                        {file && status === 'success' &&
-                            (file.type.startsWith('audio')
+                        {file && status === 'success' && (
+                            file.type.startsWith('audio')
                                 ? <AudioPreview file={file} onRemove={handleRemove} />
-                                : <VideoPreview file={file} onRemove={handleRemove} />)}
+                                : file.type.startsWith('image')
+                                    ? (
+                                        <div className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-4 rounded-lg">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img
+                                                src={URL.createObjectURL(file)}
+                                                alt={file.name}
+                                                className="w-full max-h-64 object-contain rounded"
+                                            />
+                                            <p className="text-xs text-[var(--text-secondary)] mt-2 truncate font-[family-name:var(--font-gotu)]">{file.name}</p>
+                                        </div>
+                                    )
+                                    : <VideoPreview file={file} onRemove={handleRemove} />
+                        )}
                     </div>
 
                     <div className="lg:col-span-7">
