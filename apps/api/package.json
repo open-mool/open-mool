@@ -6,7 +6,7 @@
         "build": "wrangler deploy --dry-run",
         "type-check": "tsc --noEmit",
         "deploy": "wrangler deploy",
-        "dev": "wrangler dev --experimental-vectorize-bind-to-prod",
+        "dev": "CLOUDFLARE_ACCOUNT_ID=230954685943e3c5f646e7d2d53f828a wrangler dev --experimental-vectorize-bind-to-prod",
         "dev:remote": "wrangler dev --env staging --remote",
         "start": "wrangler dev"
     },

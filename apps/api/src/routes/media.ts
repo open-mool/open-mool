@@ -136,9 +136,9 @@ export const searchMedia = async (c: Context<{ Bindings: Env }>) => {
             results: sortedResults,
             count: sortedResults.length,
         })
-    } catch (error) {
+    } catch (error: any) {
         console.error('Search failed:', error)
-        return c.json({ error: 'Internal Server Error' }, 500)
+        return c.json({ error: error.message || 'Internal Server Error', stack: error.stack }, 500)
     }
 }
 
