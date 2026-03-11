@@ -1,5 +1,5 @@
 import { Context } from 'hono'
-import { getGeminiEmbedding } from '../lib/embeddings'
+import { getWorkersAiEmbedding } from '../lib/embeddings'
 import { getAuthUserId } from '../middleware/auth'
 import { parseArchiveMetadata } from '../lib/parser'
 
@@ -9,7 +9,6 @@ interface Env {
     VECTOR_INDEX: VectorizeIndex
     AI: any
     API_SECRET?: string
-    GEMINI_API_KEY?: string
 }
 
 type MediaRow = {
@@ -100,12 +99,12 @@ export const searchMedia = async (c: Context<{ Bindings: Env }>) => {
             return c.json({ error: 'Query parameter "q" is required' }, 400)
         }
 
-        const geminiApiKey = c.env.GEMINI_API_KEY
-        if (!geminiApiKey) {
+        const ai = c.env.AI
+        if (!ai) {
             return c.json({ error: 'Search is currently unavailable' }, 503)
         }
 
-        const embedding = await getGeminiEmbedding(query, geminiApiKey)
+        const embedding = await getWorkersAiEmbedding(query, ai)
 
         const vectorResults = await c.env.VECTOR_INDEX.query(embedding, {
             topK: 10,

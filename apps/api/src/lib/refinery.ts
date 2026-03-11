@@ -1,4 +1,4 @@
-import { getGeminiEmbedding } from "./embeddings";
+import { getWorkersAiEmbedding } from "./embeddings";
 
 export interface ExtractedEntities {
     deities: string[];
@@ -63,12 +63,12 @@ Transcription:
     try {
         const data = (await response.json()) as any;
         const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        
+
         if (!content) {
             console.error('Gemini extraction returned no content:', JSON.stringify(data));
             return { deities: [], places: [], botanicals: [] };
         }
-        
+
         return JSON.parse(content) as ExtractedEntities;
     } catch (e) {
         console.error('Failed to parse Gemini extraction response:', e);
@@ -99,21 +99,21 @@ export async function processMedia(
         if (object) {
             // Check if it's likely an audio/video file
             const isMedia = key.match(/\.(mp3|wav|ogg|m4a|mp4|webm|mov|avi|flv)$/i);
-            
+
             if (isMedia) {
                 const blob = await object.arrayBuffer();
-                
+
                 // Limit file size for Workers AI transcription (typically 25MB)
                 if (blob.byteLength < 25 * 1024 * 1024) {
                     console.log(`[Refinery] Transcribing media ${mediaId}...`);
                     const aiResponse = await env.AI.run('@cf/openai/whisper', {
                         audio: [...new Uint8Array(blob)]
                     });
-                    
+
                     if (aiResponse && aiResponse.text) {
                         transcription = aiResponse.text;
                         console.log(`[Refinery] Transcription complete for ${mediaId}`);
-                        
+
                         // Save transcription to DB
                         await env.DB.prepare(
                             `UPDATE media SET transcription = ? WHERE id = ?`
@@ -129,7 +129,7 @@ export async function processMedia(
         let extractedDeities: string[] = [];
         let extractedPlaces: string[] = [];
         let extractedBotanicals: string[] = [];
-        
+
         if (geminiApiKey && transcription) {
             try {
                 console.log(`[Refinery] Extracting entities for media ${mediaId}...`);
@@ -137,7 +137,7 @@ export async function processMedia(
                 extractedDeities = entities.deities;
                 extractedPlaces = entities.places;
                 extractedBotanicals = entities.botanicals;
-                
+
                 await env.DB.prepare(
                     `UPDATE media SET deities = ?, places = ?, botanicals = ? WHERE id = ?`
                 ).bind(
@@ -153,7 +153,7 @@ export async function processMedia(
         }
 
         // 3. Generate and save embedding
-        if (geminiApiKey) {
+        if (env.AI) {
             try {
                 console.log(`[Refinery] Generating embedding for media ${mediaId}...`);
                 // Include title, description, transcription, and extracted entities in the embedding
@@ -161,29 +161,29 @@ export async function processMedia(
                 const textToEmbed = `
                     Title: ${title}
                     Description: ${description || ''}
-                    Transcription: ${transcription}
+                    Transcription: ${transcription || ''}
                     Entities: ${entitiesStr}
                 `.trim();
-                
-                const embedding = await getGeminiEmbedding(textToEmbed, geminiApiKey);
-                
+
+                const embedding = await getWorkersAiEmbedding(textToEmbed, env.AI);
+
                 await env.VECTOR_INDEX.upsert([
                     {
                         id: mediaId.toString(),
                         values: embedding,
-                        metadata: { 
-                            title, 
-                            userId, 
-                            transcription: transcription.substring(0, 100) 
+                        metadata: {
+                            title,
+                            userId,
+                            transcription: transcription.substring(0, 100)
                         }
                     }
                 ]);
-                
+
                 // Mark as processed in DB
                 await env.DB.prepare(
                     `UPDATE media SET processed = 1 WHERE id = ?`
                 ).bind(mediaId).run();
-                
+
                 console.log(`[Refinery] Processing complete for media ${mediaId}`);
             } catch (embedError) {
                 console.error(`[Refinery] Failed to generate/save embedding for ${mediaId}:`, embedError);

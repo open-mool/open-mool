@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 import { getAuthUserId } from '../middleware/auth'
-import { getGeminiEmbedding } from '../lib/embeddings'
+import { getWorkersAiEmbedding } from '../lib/embeddings'
 
 interface Env {
     DB: D1Database
@@ -147,7 +147,8 @@ export const adminBackfillEmbeddings = async (c: Context<{ Bindings: Env }>) => 
         ).all()
 
         let count = 0
-        const geminiApiKey = (c.env as any).GEMINI_API_KEY as string;
+        const ai = (c.env as any).AI;
+        let lastError = null;
 
         for (const item of results) {
             try {
@@ -163,12 +164,12 @@ export const adminBackfillEmbeddings = async (c: Context<{ Bindings: Env }>) => 
                     Entities: ${entitiesStr}
                 `.trim()
 
-                if (!geminiApiKey) {
-                    console.log('[Backfill] Skipping item, no API key')
+                if (!ai) {
+                    console.log('[Backfill] Skipping item, AI binding missing')
                     continue;
                 }
 
-                const embedding = await getGeminiEmbedding(textToEmbed, geminiApiKey)
+                const embedding = await getWorkersAiEmbedding(textToEmbed, ai)
 
                 await (c.env as any).VECTOR_INDEX.upsert([{
                     id: String(item.id),
@@ -182,9 +183,10 @@ export const adminBackfillEmbeddings = async (c: Context<{ Bindings: Env }>) => 
                 console.log(`Backfilled item ${item.id}`)
             } catch (e: any) {
                 console.error(`Error backfilling item ${item.id}:`, e)
+                lastError = e.message || 'Unknown error'
             }
         }
-        return c.json({ success: true, count, hasApiKey: !!geminiApiKey })
+        return c.json({ success: true, count, totalFound: results.length, hasAiBinding: !!ai, lastError })
     } catch (error: any) {
         console.error('Backfill error:', error)
         return c.json({ error: error.message || 'Internal Server Error' }, 500)
