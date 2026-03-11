@@ -241,3 +241,29 @@ export const serveMedia = async (c: Context<{ Bindings: Env }>) => {
         return c.json({ error: 'Internal Server Error' }, 500)
     }
 }
+
+export const getMediaById = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        const id = Number.parseInt(c.req.param('id'), 10)
+        if (Number.isNaN(id)) {
+            return c.json({ error: 'Invalid media ID' }, 400)
+        }
+
+        const row = await c.env.DB.prepare(
+            `SELECT id, key, title, description, language, location_lat, location_lng, created_at, processed, user_id, transcription, deities, places, botanicals
+             FROM media
+             WHERE id = ? AND processed = 1`
+        ).bind(id).first<MediaRow>()
+
+        if (!row) {
+            return c.json({ error: 'Media not found' }, 404)
+        }
+
+        return c.json({
+            media: enrichMediaRow(row)
+        })
+    } catch (error) {
+        console.error('Failed to fetch media by id:', error)
+        return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}

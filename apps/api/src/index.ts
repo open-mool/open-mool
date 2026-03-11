@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import upload from './routes/upload'
-import { getExploreMedia, getMyUploads, getMediaCount, searchMedia, getPublicMedia, serveMedia } from './routes/media'
+import { getExploreMedia, getMyUploads, getMediaCount, searchMedia, getPublicMedia, serveMedia, getMediaById } from './routes/media'
 import { authMiddleware } from './middleware/auth'
 import { adminAuthMiddleware, adminListMedia, adminApproveMedia, adminRejectMedia, adminDeleteMedia, adminBackfillEmbeddings } from './routes/admin'
 
@@ -39,6 +39,7 @@ app.get('/', (c) => {
 app.get('/media/explore', getExploreMedia)
 app.get('/api/media/explore', getPublicMedia)
 app.get('/api/media/file/:key', serveMedia)
+app.get('/api/media/:id', getMediaById)
 
 // Protected API routes
 app.use('/api/*', authMiddleware())

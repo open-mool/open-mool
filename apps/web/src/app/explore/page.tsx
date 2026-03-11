@@ -134,133 +134,134 @@ export default async function ExplorePage() {
                                 const mediaUrl = `${apiUrl}/api/media/file/${encodeURIComponent(item.key)}`;
 
                                 return (
-                                    <div
-                                        key={item.id}
-                                        className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-6 hover:border-[var(--accent-primary)]/30 transition-all"
-                                    >
-                                        <div className="flex items-start justify-between gap-4 mb-4">
-                                            <h3 className="text-lg font-[family-name:var(--font-eczar)] font-bold line-clamp-2">
-                                                {item.title}
-                                            </h3>
-                                            <span className="px-2 py-1 text-xs uppercase tracking-widest font-bold bg-green-100 text-green-800">
-                                                Verified
-                                            </span>
+                                    <Link href={`/explore/${item.id}`} key={item.id} className="block group">
+                                        <div
+                                            className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-6 h-full hover:border-[var(--accent-primary)]/30 transition-all cursor-pointer"
+                                        >
+                                            <div className="flex items-start justify-between gap-4 mb-4">
+                                                <h3 className="text-lg font-[family-name:var(--font-eczar)] font-bold line-clamp-2 group-hover:text-[var(--accent-primary)] transition-colors">
+                                                    {item.title}
+                                                </h3>
+                                                <span className="px-2 py-1 text-xs uppercase tracking-widest font-bold bg-green-100 text-green-800 shrink-0">
+                                                    Verified
+                                                </span>
+                                            </div>
+
+                                            {item.description && (
+                                                <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-3">{item.description}</p>
+                                            )}
+
+                                            {mediaType === 'audio' && (
+                                                <div className="mb-4" onClick={(e) => e.preventDefault()}>
+                                                    <audio controls className="w-full">
+                                                        <source src={mediaUrl} />
+                                                        Your browser does not support the audio element.
+                                                    </audio>
+                                                </div>
+                                            )}
+
+                                            {mediaType === 'video' && (
+                                                <div className="mb-4">
+                                                    <video preload="metadata" className="w-full rounded-sm">
+                                                        <source src={mediaUrl} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+                                            )}
+
+                                            {mediaType === 'image' && (
+                                                <div className="mb-4">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        src={mediaUrl}
+                                                        alt={item.title}
+                                                        className="w-full h-48 object-cover rounded-sm group-hover:scale-[1.02] transition-transform duration-500"
+                                                        loading="lazy"
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {mediaType === 'unknown' && (
+                                                <div className="mb-4 rounded-lg border border-dashed border-[var(--accent-primary)]/30 p-4 text-center text-xs uppercase tracking-[0.3em] text-[var(--text-secondary)]">
+                                                    Media preview unavailable
+                                                </div>
+                                            )}
+
+                                            {item.transcription && (
+                                                <div className="mb-4">
+                                                    <span className="text-[10px] uppercase tracking-widest text-[var(--accent-primary)] font-bold block mb-1">
+                                                        Transcription Snippet
+                                                    </span>
+                                                    <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2">&quot;{item.transcription}&quot;</p>
+                                                </div>
+                                            )}
+
+                                            {deities.length > 0 && (
+                                                <div className="mb-2">
+                                                    <span className="text-[10px] uppercase tracking-widest text-amber-600 font-bold block mb-1">
+                                                        Deities
+                                                    </span>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {deities.map((d, i) => (
+                                                            <span
+                                                                key={`${item.id}-deity-${i}`}
+                                                                className="text-[10px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200"
+                                                            >
+                                                                {d}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {places.length > 0 && (
+                                                <div className="mb-2">
+                                                    <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block mb-1">
+                                                        Places
+                                                    </span>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {places.map((p, i) => (
+                                                            <span
+                                                                key={`${item.id}-place-${i}`}
+                                                                className="text-[10px] bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded border border-blue-200"
+                                                            >
+                                                                {p}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {botanicals.length > 0 && (
+                                                <div className="mb-4">
+                                                    <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block mb-1">
+                                                        Botanicals
+                                                    </span>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {botanicals.map((b, i) => (
+                                                            <span
+                                                                key={`${item.id}-botanical-${i}`}
+                                                                className="text-[10px] bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200"
+                                                            >
+                                                                {b}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            <div className="mt-auto pt-4 flex items-center justify-between text-xs text-[var(--text-secondary)] w-full">
+                                                <span className="font-[family-name:var(--font-gotu)]">{item.language || 'Unknown'}</span>
+                                                <span>
+                                                    {new Date(item.created_at).toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                        year: 'numeric',
+                                                    })}
+                                                </span>
+                                            </div>
                                         </div>
-
-                                        {item.description && (
-                                            <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-3">{item.description}</p>
-                                        )}
-
-                                        {mediaType === 'audio' && (
-                                            <div className="mb-4">
-                                                <audio controls className="w-full">
-                                                    <source src={mediaUrl} />
-                                                    Your browser does not support the audio element.
-                                                </audio>
-                                            </div>
-                                        )}
-
-                                        {mediaType === 'video' && (
-                                            <div className="mb-4">
-                                                <video controls className="w-full rounded-sm">
-                                                    <source src={mediaUrl} />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            </div>
-                                        )}
-
-                                        {mediaType === 'image' && (
-                                            <div className="mb-4">
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img
-                                                    src={mediaUrl}
-                                                    alt={item.title}
-                                                    className="w-full max-h-48 object-cover rounded-sm"
-                                                    loading="lazy"
-                                                />
-                                            </div>
-                                        )}
-
-                                        {mediaType === 'unknown' && (
-                                            <div className="mb-4 rounded-lg border border-dashed border-[var(--accent-primary)]/30 p-4 text-center text-xs uppercase tracking-[0.3em] text-[var(--text-secondary)]">
-                                                Media preview unavailable
-                                            </div>
-                                        )}
-
-                                        {item.transcription && (
-                                            <div className="mb-4">
-                                                <span className="text-[10px] uppercase tracking-widest text-[var(--accent-primary)] font-bold block mb-1">
-                                                    Transcription Snippet
-                                                </span>
-                                                <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2">&quot;{item.transcription}&quot;</p>
-                                            </div>
-                                        )}
-
-                                        {deities.length > 0 && (
-                                            <div className="mb-2">
-                                                <span className="text-[10px] uppercase tracking-widest text-amber-600 font-bold block mb-1">
-                                                    Deities
-                                                </span>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {deities.map((d, i) => (
-                                                        <span
-                                                            key={`${item.id}-deity-${i}`}
-                                                            className="text-[10px] bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200"
-                                                        >
-                                                            {d}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {places.length > 0 && (
-                                            <div className="mb-2">
-                                                <span className="text-[10px] uppercase tracking-widest text-blue-600 font-bold block mb-1">
-                                                    Places
-                                                </span>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {places.map((p, i) => (
-                                                        <span
-                                                            key={`${item.id}-place-${i}`}
-                                                            className="text-[10px] bg-blue-50 text-blue-800 px-1.5 py-0.5 rounded border border-blue-200"
-                                                        >
-                                                            {p}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {botanicals.length > 0 && (
-                                            <div className="mb-4">
-                                                <span className="text-[10px] uppercase tracking-widest text-emerald-600 font-bold block mb-1">
-                                                    Botanicals
-                                                </span>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {botanicals.map((b, i) => (
-                                                        <span
-                                                            key={`${item.id}-botanical-${i}`}
-                                                            className="text-[10px] bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200"
-                                                        >
-                                                            {b}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
-                                            <span className="font-[family-name:var(--font-gotu)]">{item.language || 'Unknown'}</span>
-                                            <span>
-                                                {new Date(item.created_at).toLocaleDateString('en-US', {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric',
-                                                })}
-                                            </span>
-                                        </div>
-                                    </div>
+                                    </Link>
                                 );
                             })}
                         </div>

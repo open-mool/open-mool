@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Search, Sparkles, Loader2, X, Play, Music, Video, MapPin, Tag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -59,10 +60,11 @@ export const OracleSearch: React.FC<OracleSearchProps> = ({ apiUrl }) => {
         setError(null);
     };
 
-    const getMediaType = (key: string): 'audio' | 'video' | 'unknown' => {
+    const getMediaType = (key: string): 'audio' | 'video' | 'image' | 'unknown' => {
         const lowerKey = key.toLowerCase();
         if (/(mp3|wav|ogg|m4a)$/.test(lowerKey)) return 'audio';
         if (/(mp4|webm|mov|avi|flv)$/.test(lowerKey)) return 'video';
+        if (/(jpg|jpeg|png|webp|gif|avif|heic|heif)$/.test(lowerKey)) return 'image';
         return 'unknown';
     };
 
@@ -114,7 +116,7 @@ export const OracleSearch: React.FC<OracleSearchProps> = ({ apiUrl }) => {
                         </button>
                     </div>
                 </form>
-                
+
                 <div className="mt-3 flex flex-wrap gap-2 justify-center">
                     {['Mountain Spirits', 'Harvest Rituals', 'Spiti Dialect', 'Medicinal Plants'].map((suggestion) => (
                         <button
@@ -188,84 +190,97 @@ export const OracleSearch: React.FC<OracleSearchProps> = ({ apiUrl }) => {
                             const mediaUrl = `${apiUrl}/api/media/file/${encodeURIComponent(item.key)}`;
 
                             return (
-                                <motion.div
-                                    key={item.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.05 }}
-                                    className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-6 hover:border-[var(--accent-primary)]/30 transition-all group flex flex-col h-full"
-                                >
-                                    <div className="flex items-start justify-between gap-4 mb-4">
-                                        <h3 className="text-lg font-[family-name:var(--font-eczar)] font-bold line-clamp-2 group-hover:text-[var(--accent-primary)] transition-colors">
-                                            {item.title}
-                                        </h3>
-                                        <div className="flex items-center">
-                                            {mediaType === 'audio' ? (
-                                                <Music className="w-4 h-4 text-amber-600" />
-                                            ) : (
-                                                <Video className="w-4 h-4 text-blue-600" />
+                                <Link key={item.id} href={`/explore/${item.id}`} className="block">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-6 hover:border-[var(--accent-primary)]/30 transition-all group flex flex-col h-full cursor-pointer"
+                                    >
+                                        <div className="flex items-start justify-between gap-4 mb-4">
+                                            <h3 className="text-lg font-[family-name:var(--font-eczar)] font-bold line-clamp-2 group-hover:text-[var(--accent-primary)] transition-colors">
+                                                {item.title}
+                                            </h3>
+                                            <div className="flex items-center">
+                                                {mediaType === 'audio' ? (
+                                                    <Music className="w-4 h-4 text-amber-600" />
+                                                ) : (
+                                                    <Video className="w-4 h-4 text-blue-600" />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {item.description && (
+                                            <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-3 font-[family-name:var(--font-gotu)]">
+                                                {item.description}
+                                            </p>
+                                        )}
+
+                                        <div className="mt-auto space-y-4">
+                                            {mediaType === 'audio' && (
+                                                <div className="bg-white/50 dark:bg-black/20 rounded-lg p-2" onClick={(e) => e.preventDefault()}>
+                                                    <audio controls className="w-full h-8">
+                                                        <source src={mediaUrl} />
+                                                    </audio>
+                                                </div>
                                             )}
-                                        </div>
-                                    </div>
 
-                                    {item.description && (
-                                        <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-3 font-[family-name:var(--font-gotu)]">
-                                            {item.description}
-                                        </p>
-                                    )}
+                                            {mediaType === 'video' && (
+                                                <div className="relative aspect-video bg-black rounded overflow-hidden">
+                                                    <video preload="metadata" className="w-full h-full">
+                                                        <source src={mediaUrl} />
+                                                    </video>
+                                                </div>
+                                            )}
 
-                                    <div className="mt-auto space-y-4">
-                                        {mediaType === 'audio' && (
-                                            <div className="bg-white/50 dark:bg-black/20 rounded-lg p-2">
-                                                <audio controls className="w-full h-8">
-                                                    <source src={mediaUrl} />
-                                                </audio>
+                                            {mediaType === 'image' && (
+                                                <div className="relative aspect-video rounded overflow-hidden">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        src={mediaUrl}
+                                                        alt={item.title}
+                                                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                                                        loading="lazy"
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {item.transcription && (
+                                                <div className="p-3 bg-white/30 dark:bg-black/10 rounded border border-[var(--accent-primary)]/5">
+                                                    <span className="text-[9px] uppercase tracking-widest text-[var(--accent-primary)] font-bold block mb-1 flex items-center gap-1">
+                                                        <Sparkles className="w-2.5 h-2.5" /> Transcription
+                                                    </span>
+                                                    <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
+                                                        &quot;{item.transcription}&quot;
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {places.map((p, i) => (
+                                                    <span key={i} className="flex items-center gap-0.5 text-[9px] uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full border border-blue-100 dark:border-blue-800">
+                                                        <MapPin className="w-2.5 h-2.5" /> {p}
+                                                    </span>
+                                                ))}
+                                                {deities.map((d, i) => (
+                                                    <span key={i} className="flex items-center gap-0.5 text-[9px] uppercase tracking-wider bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full border border-amber-100 dark:border-amber-800">
+                                                        <Tag className="w-2.5 h-2.5" /> {d}
+                                                    </span>
+                                                ))}
+                                                {botanicals.map((b, i) => (
+                                                    <span key={i} className="flex items-center gap-0.5 text-[9px] uppercase tracking-wider bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800">
+                                                        <Tag className="w-2.5 h-2.5" /> {b}
+                                                    </span>
+                                                ))}
                                             </div>
-                                        )}
 
-                                        {mediaType === 'video' && (
-                                            <div className="relative aspect-video bg-black rounded overflow-hidden">
-                                                <video controls className="w-full h-full">
-                                                    <source src={mediaUrl} />
-                                                </video>
+                                            <div className="pt-4 border-t border-[var(--accent-primary)]/5 flex items-center justify-between text-[10px] text-[var(--text-secondary)] uppercase tracking-widest font-bold">
+                                                <span>{item.language || 'Unknown Language'}</span>
+                                                <span>{new Date(item.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>
                                             </div>
-                                        )}
-
-                                        {item.transcription && (
-                                            <div className="p-3 bg-white/30 dark:bg-black/10 rounded border border-[var(--accent-primary)]/5">
-                                                <span className="text-[9px] uppercase tracking-widest text-[var(--accent-primary)] font-bold block mb-1 flex items-center gap-1">
-                                                    <Sparkles className="w-2.5 h-2.5" /> Transcription
-                                                </span>
-                                                <p className="text-xs italic text-[var(--text-secondary)] line-clamp-2 leading-relaxed">
-                                                    &quot;{item.transcription}&quot;
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        <div className="flex flex-wrap gap-1.5">
-                                            {places.map((p, i) => (
-                                                <span key={i} className="flex items-center gap-0.5 text-[9px] uppercase tracking-wider bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full border border-blue-100 dark:border-blue-800">
-                                                    <MapPin className="w-2.5 h-2.5" /> {p}
-                                                </span>
-                                            ))}
-                                            {deities.map((d, i) => (
-                                                <span key={i} className="flex items-center gap-0.5 text-[9px] uppercase tracking-wider bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full border border-amber-100 dark:border-amber-800">
-                                                    <Tag className="w-2.5 h-2.5" /> {d}
-                                                </span>
-                                            ))}
-                                            {botanicals.map((b, i) => (
-                                                <span key={i} className="flex items-center gap-0.5 text-[9px] uppercase tracking-wider bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800">
-                                                    <Tag className="w-2.5 h-2.5" /> {b}
-                                                </span>
-                                            ))}
                                         </div>
-
-                                        <div className="pt-4 border-t border-[var(--accent-primary)]/5 flex items-center justify-between text-[10px] text-[var(--text-secondary)] uppercase tracking-widest font-bold">
-                                            <span>{item.language || 'Unknown Language'}</span>
-                                            <span>{new Date(item.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>
-                                        </div>
-                                    </div>
-                                </motion.div>
+                                    </motion.div>
+                                </Link>
                             );
                         })}
                     </motion.div>
