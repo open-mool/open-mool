@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@/lib/client-auth';
+import { SettingsTrigger, SettingsSidebar } from '@/components/SettingsSidebar';
 
 export default function DashboardLayout({
     children,
@@ -12,6 +14,7 @@ export default function DashboardLayout({
 }) {
     const pathname = usePathname();
     const { user } = useUser();
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     const navItems = [
         { name: 'Profile', href: '/dashboard/profile' },
@@ -22,6 +25,8 @@ export default function DashboardLayout({
 
     return (
         <div className="flex min-h-screen bg-[var(--bg-canvas)]">
+            <SettingsSidebar open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+
             {/* Sidebar */}
             <aside className="w-64 border-r border-[var(--text-secondary)]/10 p-6 flex flex-col justify-between sticky top-0 h-screen overflow-hidden relative bg-[var(--bg-canvas)] z-20 shrink-0">
                 {/* Watermark Symbol */}
@@ -59,16 +64,17 @@ export default function DashboardLayout({
                     </nav>
                 </div>
 
-                {user && (
-                    <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20 overflow-hidden relative">
+                {/* Bottom: user chip + settings trigger */}
+                <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full flex flex-col gap-1">
+                    {user && (
+                        <div className="flex items-center gap-3 mb-3 pl-1">
+                            <div className="w-8 h-8 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20 overflow-hidden relative shrink-0">
                                 {user.picture ? (
                                     <Image
                                         src={user.picture}
                                         alt={user.name || 'User'}
-                                        width={40}
-                                        height={40}
+                                        width={32}
+                                        height={32}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
@@ -76,31 +82,18 @@ export default function DashboardLayout({
                                 )}
                             </div>
                             <div className="flex flex-col overflow-hidden">
-                                <div className="flex items-center gap-2">
-                                    <span className="font-bold text-sm truncate font-[family-name:var(--font-yantramanav)] text-[var(--text-primary)]">
-                                        {user.name?.split(' ')[0] || 'Guardian'}
-                                    </span>
-                                    <span className="text-[10px] bg-[var(--accent-primary)] text-white px-1.5 py-0.5 rounded-sm uppercase tracking-wider font-bold leading-none">
-                                        Scout
-                                    </span>
-                                </div>
-                                <span className="text-xs text-[var(--text-secondary)] truncate font-[family-name:var(--font-gotu)] opacity-80">
+                                <span className="font-bold text-xs truncate font-[family-name:var(--font-yantramanav)] text-[var(--text-primary)]">
+                                    {user.name?.split(' ')[0] || 'Guardian'}
+                                </span>
+                                <span className="text-[10px] text-[var(--text-secondary)] truncate font-[family-name:var(--font-gotu)] opacity-80">
                                     {user.email}
                                 </span>
                             </div>
                         </div>
+                    )}
 
-                        <a
-                            href="/auth/logout"
-                            className="text-[10px] uppercase tracking-widest text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 pl-1"
-                        >
-                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            Disconnect
-                        </a>
-                    </div>
-                )}
+                    <SettingsTrigger onClick={() => setSettingsOpen(true)} />
+                </div>
             </aside>
 
             {/* Main Content */}
@@ -112,3 +105,4 @@ export default function DashboardLayout({
         </div>
     );
 }
+
