@@ -1,6 +1,6 @@
 export async function getGeminiEmbedding(text: string, apiKey: string): Promise<number[]> {
-    const model = "text-embedding-004";
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${apiKey}`;
+    const model = "models/gemini-embedding-001";
+    const url = `https://generativelanguage.googleapis.com/v1beta/${model}:embedContent?key=${apiKey}`;
 
     const response = await fetch(url, {
         method: 'POST',

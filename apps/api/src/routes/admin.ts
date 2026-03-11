@@ -1,5 +1,6 @@
 import { Context } from 'hono'
 import { getAuthUserId } from '../middleware/auth'
+import { getGeminiEmbedding } from '../lib/embeddings'
 
 interface Env {
     DB: D1Database
@@ -135,5 +136,57 @@ export const adminDeleteMedia = async (c: Context<{ Bindings: Env }>) => {
     } catch (error) {
         console.error('Admin delete failed:', error)
         return c.json({ error: 'Internal Server Error' }, 500)
+    }
+}
+
+// POST /admin/backfill
+export const adminBackfillEmbeddings = async (c: Context<{ Bindings: Env }>) => {
+    try {
+        const { results } = await (c.env.DB as any).prepare(
+            `SELECT id, key, title, description, transcription, deities, places, botanicals FROM media WHERE processed = 1`
+        ).all()
+
+        let count = 0
+        const geminiApiKey = (c.env as any).GEMINI_API_KEY as string;
+
+        for (const item of results) {
+            try {
+                const deities = JSON.parse((item.deities as string) || '[]')
+                const places = JSON.parse((item.places as string) || '[]')
+                const botanicals = JSON.parse((item.botanicals as string) || '[]')
+                const entitiesStr = [...deities, ...places, ...botanicals].join(' ')
+
+                const textToEmbed = `
+                    Title: ${item.title}
+                    Description: ${item.description || ''}
+                    Transcription: ${item.transcription || ''}
+                    Entities: ${entitiesStr}
+                `.trim()
+
+                if (!geminiApiKey) {
+                    console.log('[Backfill] Skipping item, no API key')
+                    continue;
+                }
+
+                const embedding = await getGeminiEmbedding(textToEmbed, geminiApiKey)
+
+                await (c.env as any).VECTOR_INDEX.upsert([{
+                    id: String(item.id),
+                    values: embedding,
+                    metadata: {
+                        title: item.title as string,
+                        transcription: (item.transcription as string || '').substring(0, 100)
+                    }
+                }])
+                count++
+                console.log(`Backfilled item ${item.id}`)
+            } catch (e: any) {
+                console.error(`Error backfilling item ${item.id}:`, e)
+            }
+        }
+        return c.json({ success: true, count, hasApiKey: !!geminiApiKey })
+    } catch (error: any) {
+        console.error('Backfill error:', error)
+        return c.json({ error: error.message || 'Internal Server Error' }, 500)
     }
 }

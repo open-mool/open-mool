@@ -3,7 +3,7 @@ import { cors } from 'hono/cors'
 import upload from './routes/upload'
 import { getExploreMedia, getMyUploads, getMediaCount, searchMedia, getPublicMedia, serveMedia } from './routes/media'
 import { authMiddleware } from './middleware/auth'
-import { adminAuthMiddleware, adminListMedia, adminApproveMedia, adminRejectMedia, adminDeleteMedia } from './routes/admin'
+import { adminAuthMiddleware, adminListMedia, adminApproveMedia, adminRejectMedia, adminDeleteMedia, adminBackfillEmbeddings } from './routes/admin'
 
 type Bindings = {
   R2_BUCKET_NAME: string
@@ -55,5 +55,6 @@ app.get('/api/admin/media', adminListMedia)
 app.patch('/api/admin/media/:id/approve', adminApproveMedia)
 app.patch('/api/admin/media/:id/reject', adminRejectMedia)
 app.delete('/api/admin/media/:id', adminDeleteMedia)
+app.post('/api/admin/backfill', adminBackfillEmbeddings)
 
 export default app
