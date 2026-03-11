@@ -180,7 +180,7 @@ export const OracleSearch: React.FC<OracleSearchProps> = ({ apiUrl }) => {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        className="columns-1 md:columns-2 lg:columns-3 gap-6"
                     >
                         {results.map((item, index) => {
                             const mediaType = getMediaType(item.key);
@@ -190,7 +190,7 @@ export const OracleSearch: React.FC<OracleSearchProps> = ({ apiUrl }) => {
                             const mediaUrl = `${apiUrl}/api/media/file/${encodeURIComponent(item.key)}`;
 
                             return (
-                                <Link key={item.id} href={`/explore/${item.id}`} className="block">
+                                <Link key={item.id} href={`/explore/${item.id}`} className="block break-inside-avoid mb-6">
                                     <motion.div
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -226,20 +226,20 @@ export const OracleSearch: React.FC<OracleSearchProps> = ({ apiUrl }) => {
                                             )}
 
                                             {mediaType === 'video' && (
-                                                <div className="relative aspect-video bg-black rounded overflow-hidden">
-                                                    <video preload="metadata" className="w-full h-full">
+                                                <div className="relative bg-black rounded overflow-hidden">
+                                                    <video preload="metadata" className="w-full h-auto">
                                                         <source src={mediaUrl} />
                                                     </video>
                                                 </div>
                                             )}
 
                                             {mediaType === 'image' && (
-                                                <div className="relative aspect-video rounded overflow-hidden">
+                                                <div className="relative rounded overflow-hidden">
                                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img
                                                         src={mediaUrl}
                                                         alt={item.title}
-                                                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                                                        className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
                                                         loading="lazy"
                                                     />
                                                 </div>

@@ -125,7 +125,7 @@ export default async function ExplorePage() {
                             </Link>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
                             {media.map((item) => {
                                 const mediaType = getMediaType(item.key);
                                 const deities = parseTags(item.deities);
@@ -134,7 +134,7 @@ export default async function ExplorePage() {
                                 const mediaUrl = `${apiUrl}/api/media/file/${encodeURIComponent(item.key)}`;
 
                                 return (
-                                    <Link href={`/explore/${item.id}`} key={item.id} className="block group">
+                                    <Link href={`/explore/${item.id}`} key={item.id} className="block group break-inside-avoid mb-6">
                                         <div
                                             className="bg-[var(--bg-subtle)] border border-[var(--accent-primary)]/10 p-6 h-full hover:border-[var(--accent-primary)]/30 transition-all cursor-pointer"
                                         >
@@ -162,7 +162,7 @@ export default async function ExplorePage() {
 
                                             {mediaType === 'video' && (
                                                 <div className="mb-4">
-                                                    <video preload="metadata" className="w-full rounded-sm">
+                                                    <video preload="metadata" className="w-full h-auto rounded-sm">
                                                         <source src={mediaUrl} />
                                                         Your browser does not support the video tag.
                                                     </video>
@@ -170,12 +170,12 @@ export default async function ExplorePage() {
                                             )}
 
                                             {mediaType === 'image' && (
-                                                <div className="mb-4">
+                                                <div className="mb-4 overflow-hidden rounded-sm">
                                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img
                                                         src={mediaUrl}
                                                         alt={item.title}
-                                                        className="w-full h-48 object-cover rounded-sm group-hover:scale-[1.02] transition-transform duration-500"
+                                                        className="w-full h-auto rounded-sm group-hover:scale-[1.02] transition-transform duration-500"
                                                         loading="lazy"
                                                     />
                                                 </div>
