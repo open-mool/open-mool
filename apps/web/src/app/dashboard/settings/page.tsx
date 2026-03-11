@@ -19,9 +19,8 @@ export default function SettingsPage() {
     React.useEffect(() => { setMounted(true); }, []);
 
     return (
-        <div className="max-w-2xl py-12 px-2 font-[family-name:var(--font-yantramanav)]">
+        <div className="py-12 px-2 font-[family-name:var(--font-yantramanav)] max-w-3xl">
 
-            {/* Page title */}
             <h1 className="text-3xl font-[family-name:var(--font-eczar)] font-bold text-[var(--text-primary)] mb-1">
                 Settings
             </h1>
@@ -47,7 +46,7 @@ export default function SettingsPage() {
                                         flex items-center gap-2 px-4 py-2 text-[11px] font-bold uppercase tracking-widest
                                         border transition-all duration-150 rounded-sm
                                         ${active
-                                            ? 'border-[var(--accent-primary)] text-[var(--accent-primary)] bg-[var(--accent-primary)]/8'
+                                            ? 'border-[var(--accent-primary)] text-[var(--accent-primary)] bg-[var(--accent-primary)]/10'
                                             : 'border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--text-secondary)]/50 hover:text-[var(--text-primary)]'
                                         }
                                     `}
@@ -63,10 +62,9 @@ export default function SettingsPage() {
                 )}
             </section>
 
-            {/* Divider */}
             <div className="border-t border-[var(--border-subtle)] mb-12" />
 
-            {/* Account — Clerk fills this section cleanly */}
+            {/* Account */}
             <section>
                 <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-[var(--text-secondary)] mb-6">
                     Account
@@ -74,26 +72,26 @@ export default function SettingsPage() {
                 <UserProfile
                     appearance={{
                         elements: {
-                            // Strip all card/container chrome — let it sit flush on the page
-                            rootBox: 'w-full !shadow-none',
-                            card: '!shadow-none !border-0 !bg-transparent !p-0 !rounded-none w-full',
+                            rootBox: 'w-full',
+                            card: 'shadow-none border-0 w-full',
                             navbar: 'hidden',
                             navbarMobileMenuButton: 'hidden',
                             headerTitle: 'hidden',
                             headerSubtitle: 'hidden',
-                            scrollBox: '!p-0 !shadow-none',
-                            pageScrollBox: '!p-0',
-                            profilePage: 'gap-6',
+                            scrollBox: 'shadow-none',
                         },
                         variables: {
-                            colorBackground: 'var(--bg-canvas)',
+                            // Match page background so the card is invisible
+                            colorBackground: 'transparent',
                             colorText: 'var(--text-primary)',
                             colorTextSecondary: 'var(--text-secondary)',
-                            colorPrimary: 'var(--accent-primary)',
+                            colorPrimary: '#D64933',
                             colorInputBackground: 'var(--bg-subtle)',
+                            colorNeutral: 'var(--text-primary)',
                             borderRadius: '0.25rem',
                             fontFamily: 'var(--font-yantramanav), sans-serif',
                             fontSize: '14px',
+                            spacingUnit: '1rem',
                         },
                     }}
                 />
