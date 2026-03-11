@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import upload from './routes/upload'
 import { getExploreMedia, getMyUploads, getMediaCount, searchMedia, getPublicMedia, serveMedia } from './routes/media'
 import { authMiddleware } from './middleware/auth'
+import { adminAuthMiddleware, adminListMedia, adminApproveMedia, adminRejectMedia, adminDeleteMedia } from './routes/admin'
 
 type Bindings = {
   R2_BUCKET_NAME: string
@@ -16,6 +17,8 @@ type Bindings = {
   CLERK_JWKS_URL?: string
   CLERK_ISSUER?: string
   CLERK_AUDIENCE?: string
+  ADMIN_USER_IDS?: string
+  LOCAL_DEV_AUTH_BYPASS?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -44,5 +47,13 @@ app.get('/api/media/count', getMediaCount)
 app.get('/api/media/search', searchMedia)
 
 app.route('/upload', upload)
+
+// Admin routes (auth + admin role required)
+app.use('/api/admin/*', authMiddleware())
+app.use('/api/admin/*', adminAuthMiddleware())
+app.get('/api/admin/media', adminListMedia)
+app.patch('/api/admin/media/:id/approve', adminApproveMedia)
+app.patch('/api/admin/media/:id/reject', adminRejectMedia)
+app.delete('/api/admin/media/:id', adminDeleteMedia)
 
 export default app
