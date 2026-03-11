@@ -18,6 +18,11 @@ const nextConfig = {
                 hostname: 'images.clerk.dev',
                 pathname: '/**',
             },
+            {
+                protocol: 'https',
+                hostname: 'img.clerk.com',
+                pathname: '/**',
+            },
         ],
     },
     webpack: (config, { isServer, nextRuntime }) => {
