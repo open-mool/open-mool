@@ -21,7 +21,7 @@ LOCAL_DEV_AUTH_BYPASS='false'
 # Optional: enables semantic search and refinery entity extraction
 # GEMINI_API_KEY='your-gemini-key'
 
-# Optional: required only if using direct presigned uploads in local mode
-# R2_ACCOUNT_ID='your-cloudflare-account-id'
-# R2_ACCESS_KEY_ID='your-r2-access-key-id'
-# R2_SECRET_ACCESS_KEY='your-r2-secret-access-key'
+# REQUIRED for direct presigned uploads (Gallery -> R2)
+R2_ACCOUNT_ID='your-cloudflare-account-id'
+R2_ACCESS_KEY_ID='your-r2-access-key-id'
+R2_SECRET_ACCESS_KEY='your-r2-secret-access-key'
