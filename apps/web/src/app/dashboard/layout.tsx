@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@/lib/client-auth';
-import { SettingsTrigger, SettingsSidebar } from '@/components/SettingsSidebar';
 
 export default function DashboardLayout({
     children,
@@ -14,19 +12,17 @@ export default function DashboardLayout({
 }) {
     const pathname = usePathname();
     const { user } = useUser();
-    const [settingsOpen, setSettingsOpen] = useState(false);
 
     const navItems = [
         { name: 'Profile', href: '/dashboard/profile' },
         { name: 'My Uploads', href: '/dashboard/my-uploads' },
         { name: 'Archive a Story', href: '/dashboard/upload' },
         { name: 'The Oracle', href: '/explore' },
+        { name: 'Settings', href: '/dashboard/settings' },
     ];
 
     return (
         <div className="flex min-h-screen bg-[var(--bg-canvas)]">
-            <SettingsSidebar open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-
             {/* Sidebar */}
             <aside className="w-64 border-r border-[var(--text-secondary)]/10 p-6 flex flex-col justify-between sticky top-0 h-screen overflow-hidden relative bg-[var(--bg-canvas)] z-20 shrink-0">
                 {/* Watermark Symbol */}
@@ -64,10 +60,10 @@ export default function DashboardLayout({
                     </nav>
                 </div>
 
-                {/* Bottom: user chip + settings trigger */}
-                <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full flex flex-col gap-1">
-                    {user && (
-                        <div className="flex items-center gap-3 mb-3 pl-1">
+                {/* Bottom: user chip */}
+                {user && (
+                    <div className="pt-6 border-t border-[var(--text-secondary)]/10 relative z-10 bg-[var(--bg-canvas)]/50 backdrop-blur-sm w-full">
+                        <div className="flex items-center gap-3 pl-1">
                             <div className="w-8 h-8 bg-[var(--accent-tech)]/10 rounded-full flex items-center justify-center font-[family-name:var(--font-eczar)] font-bold text-[var(--accent-tech)] border border-[var(--accent-tech)]/20 overflow-hidden relative shrink-0">
                                 {user.picture ? (
                                     <Image
@@ -90,10 +86,8 @@ export default function DashboardLayout({
                                 </span>
                             </div>
                         </div>
-                    )}
-
-                    <SettingsTrigger onClick={() => setSettingsOpen(true)} />
-                </div>
+                    </div>
+                )}
             </aside>
 
             {/* Main Content */}
