@@ -5,6 +5,12 @@ const isProtectedRoute = createRouteMatcher([
     '/api/upload(.*)',
     '/api/media(.*)',
     '/api/user(.*)',
+    '/api/admin(.*)',
+]);
+
+const isAdminRoute = createRouteMatcher([
+    '/dashboard/admin(.*)',
+    '/api/admin(.*)',
 ]);
 
 const isLocalDevAuthBypassEnabled = () => {
@@ -18,11 +24,28 @@ export default clerkMiddleware(async (auth, request) => {
         const hostname = request.nextUrl.hostname;
         const isLocalRequest = hostname === 'localhost' || hostname === '127.0.0.1';
 
+        // Local development bypass
         if (isLocalRequest && isLocalDevAuthBypassEnabled()) {
             return;
         }
 
-        await auth.protect();
+        const authState = await auth();
+        if (!authState.userId) {
+            return authState.redirectToSignIn({ returnBackUrl: request.url });
+        }
+
+        // Apply admin checks for admin routes
+        if (isAdminRoute(request)) {
+            const adminIds = (process.env.ADMIN_USER_IDS || '')
+                .split(',')
+                .map((id) => id.trim())
+                .filter(Boolean);
+
+            if (adminIds.length > 0 && !adminIds.includes(authState.userId)) {
+                // Not an admin, redirect them to the generic dashboard
+                return Response.redirect(new URL('/dashboard', request.url));
+            }
+        }
     }
 });
 
