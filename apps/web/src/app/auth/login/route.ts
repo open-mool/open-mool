@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
+
 export const GET = (request: Request) => {
     const url = new URL(request.url);
     const returnTo = url.searchParams.get('returnTo') || '/dashboard';

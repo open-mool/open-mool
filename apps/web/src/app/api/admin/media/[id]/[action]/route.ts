@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { authClient } from '@/lib/auth';
 import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 
+export const runtime = 'edge';
+
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 
 const isAdminUser = (userId: string | null): boolean => {

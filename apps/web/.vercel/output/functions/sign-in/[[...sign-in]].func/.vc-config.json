@@ -1,0 +1,21 @@
+{
+  "runtime": "edge",
+  "name": "sign-in/[[...sign-in]]",
+  "deploymentTarget": "v8-worker",
+  "entrypoint": "index.js",
+  "assets": [
+    {
+      "name": "noto-sans-v27-latin-regular.5dda3fca77107598.ttf",
+      "path": "assets/noto-sans-v27-latin-regular.5dda3fca77107598.ttf"
+    }
+  ],
+  "framework": {
+    "slug": "nextjs",
+    "version": "14.2.0"
+  },
+  "filePathMap": {
+    "wasm/wasm_77d9faebf7af9e421806970ce10a58e9d83116d7.wasm": ".next/server/edge-chunks/wasm_77d9faebf7af9e421806970ce10a58e9d83116d7.wasm",
+    "wasm/wasm_ef4866ecae192fd87727067cf2c0c0cf9fb8b020.wasm": ".next/server/edge-chunks/wasm_ef4866ecae192fd87727067cf2c0c0cf9fb8b020.wasm",
+    "assets/noto-sans-v27-latin-regular.5dda3fca77107598.ttf": ".next/server/edge-chunks/asset_noto-sans-v27-latin-regular.5dda3fca77107598.ttf"
+  }
+}

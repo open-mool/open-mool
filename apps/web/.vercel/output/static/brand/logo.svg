@@ -1,0 +1,27 @@
+<svg width="160" height="40" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Eczar:wght@700&amp;display=swap');
+        .text { font-family: 'Eczar', serif; font-weight: 700; font-size: 24px; letter-spacing: -0.025em; }
+    </style>
+    <defs>
+        <linearGradient id="logo-gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#D64933" stop-opacity="1" />
+            <stop offset="100%" stop-color="#D64933" stop-opacity="0.8" />
+        </linearGradient>
+    </defs>
+    
+    <!-- Icon Group -->
+    <g>
+        <rect x="1" y="1" width="38" height="38" rx="12" stroke="url(#logo-gradient)" stroke-width="3" fill="#D64933" fill-opacity="0.05" />
+        <path 
+            d="M16 1V22C16 24.5 12 24.5 12 22C12 19.5 16 19.5 16 19.5H39" 
+            stroke="#D64933" 
+            stroke-width="3" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+        />
+    </g>
+
+    <!-- Text -->
+    <text x="52" y="28" class="text" fill="#1A1C20">Open<tspan fill="#D64933">Mool</tspan></text>
+</svg>

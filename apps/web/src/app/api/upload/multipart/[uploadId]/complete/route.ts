@@ -2,6 +2,9 @@ import { authClient } from '@/lib/auth';
 import { buildInternalApiHeaders } from '@/lib/internal-api-auth';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
+
 export const POST = async (req: Request, { params }: { params: { uploadId: string } }) => {
   try {
     const session = await authClient.getSession();

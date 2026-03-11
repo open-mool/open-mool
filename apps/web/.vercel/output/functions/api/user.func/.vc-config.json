@@ -1,0 +1,11 @@
+{
+  "runtime": "edge",
+  "name": "api/user",
+  "deploymentTarget": "v8-worker",
+  "entrypoint": "index.js",
+  "assets": [],
+  "framework": {
+    "slug": "nextjs",
+    "version": "14.2.0"
+  }
+}

@@ -3,6 +3,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { CheckCircle, XCircle, Trash2, RefreshCw, Filter } from 'lucide-react';
 
+export const runtime = 'edge';
+
+
 type MediaItem = {
     id: number;
     key: string;

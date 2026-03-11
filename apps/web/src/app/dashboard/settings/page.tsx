@@ -5,6 +5,9 @@ import { useTheme } from 'next-themes';
 import { UserProfile } from '@clerk/nextjs';
 import { Sun, Moon, Monitor } from 'lucide-react';
 
+export const runtime = 'edge';
+
+
 type ThemeMode = 'light' | 'dark' | 'system';
 
 const MODES: { value: ThemeMode; label: string; Icon: React.ElementType }[] = [

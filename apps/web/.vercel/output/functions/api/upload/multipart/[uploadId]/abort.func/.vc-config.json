@@ -1,0 +1,11 @@
+{
+  "runtime": "edge",
+  "name": "api/upload/multipart/[uploadId]/abort",
+  "deploymentTarget": "v8-worker",
+  "entrypoint": "index.js",
+  "assets": [],
+  "framework": {
+    "slug": "nextjs",
+    "version": "14.2.0"
+  }
+}

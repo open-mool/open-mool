@@ -12,6 +12,9 @@ import { MetadataForm, Metadata } from '@/components/upload/MetadataForm';
 import { useMultipartUpload } from '@/hooks/useMultipartUpload';
 import { cn } from '@/lib/utils';
 
+export const runtime = 'edge';
+
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787';
 const IS_LOCAL_API =
     API_URL.includes('localhost') ||
