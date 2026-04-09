@@ -1,250 +1,158 @@
 # Deployment Guide
 
-This guide covers how to deploy the Open Mool monorepo. The project consists of two main applications:
-- **API**: A Cloudflare Worker (`apps/api`)
-- **Web**: A Next.js application (`apps/web`)
+This guide reflects the current monorepo architecture:
+
+- `apps/api`: Hono API deployed to Cloudflare Workers
+- `apps/web`: Next.js 14 app deployed to Cloudflare Pages via `next-on-pages`
 
 ## Prerequisites
 
-- **Node.js**: v18 or later.
-- **pnpm**: `npm install -g pnpm`
-- **Cloudflare Account**: For deploying the API and R2 storage.
-- **Auth0 Account**: For authentication (or alternative OAuth provider).
-- **Vercel Account**: For deploying the frontend (optional, Cloudflare Pages recommended).
+- Node.js 18+
+- pnpm 9+
+- Cloudflare account with Workers, Pages, D1, R2, and Vectorize access
+- Clerk account for user auth
 
----
+## Local Setup
 
-## Local Development Setup
-
-### Step 1: Install Dependencies
-
-From the project root:
+Install dependencies from the repo root:
 
 ```bash
 pnpm install
 ```
 
-### Step 2: Configure Auth0
-
-1. Create an Auth0 application (Single Page Application type)
-2. Configure the following settings:
-   - **Allowed Callback URLs**: `http://localhost:3000/api/auth/callback`
-   - **Allowed Logout URLs**: `http://localhost:3000`
-   - **Allowed Web Origins**: `http://localhost:3000`
-
-3. Create `apps/web/.env.local`:
+Create local env files:
 
 ```bash
-AUTH0_SECRET='use [openssl rand -hex 32] to generate'
-AUTH0_BASE_URL='http://localhost:3000'
-AUTH0_ISSUER_BASE_URL='https://YOUR_DOMAIN.auth0.com'
-AUTH0_CLIENT_ID='your_client_id'
-AUTH0_CLIENT_SECRET='your_client_secret'
+cp apps/web/.env.example apps/web/.env.local
+cp apps/api/.dev.vars.example apps/api/.dev.vars
 ```
 
-### Step 3: Configure Cloudflare R2 & D1
+Set these required values before testing authenticated or upload flows:
 
-#### 3a. Create D1 Database
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `CLERK_ISSUER`
+- `CLERK_JWKS_URL`
+- `INTERNAL_PROXY_SIGNING_SECRET` in both files, with the same value
+- `R2_ACCOUNT_ID`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
 
-```bash
-cd apps/api
-npx wrangler d1 create open-mool-db
-```
+Optional local-only fallback:
 
-Copy the database ID from the output and update `apps/api/wrangler.toml`:
+- `LOCAL_DEV_AUTH_BYPASS='true'` in both files for localhost contributor testing without Clerk keys
 
-```toml
-[[d1_databases]]
-binding = "DB"
-database_name = "open-mool-db"
-database_id = "YOUR_DATABASE_ID_HERE"
-```
-
-#### 3b. Create R2 Bucket
-
-```bash
-npx wrangler r2 bucket create open-mool-storage
-```
-
-Update `apps/api/wrangler.toml`:
-
-```toml
-[[r2_buckets]]
-binding = "STORAGE"
-bucket_name = "open-mool-storage"
-```
-
-#### 3c. Generate R2 Access Keys
-
-1. Go to **Cloudflare Dashboard** > **R2** > **Manage R2 API Tokens**
-2. Create a new API token with "Admin Read & Write" permissions
-3. Copy the **Access Key ID** and **Secret Access Key**
-
-#### 3d. Configure Local Secrets
-
-Create `apps/api/.dev.vars`:
-
-```bash
-R2_ACCOUNT_ID=your_cloudflare_account_id
-R2_ACCESS_KEY_ID=your_r2_access_key_id
-R2_SECRET_ACCESS_KEY=your_r2_secret_access_key
-AUTH0_WEBHOOK_SECRET=your_webhook_secret
-```
-
-### Step 4: Run Database Migrations
-
-```bash
-cd apps/api
-npx wrangler d1 migrations apply open-mool-db --local
-```
-
-### Step 5: Start Development Server
-
-From the project root:
+Start both apps:
 
 ```bash
 pnpm dev
 ```
 
-This starts:
-- **Web**: http://localhost:3000
-- **API**: http://localhost:8787
+Default local endpoints:
 
-### Step 6: Verify Setup
+- Web: `http://localhost:3000`
+- API: `http://localhost:8787`
 
-1. **Auth Flow**: Visit http://localhost:3000, click "Login", complete Auth0 login
-2. **Upload**: Navigate to http://localhost:3000/upload, drop a file
-3. **Database**: Check data with `npx wrangler d1 execute open-mool-db --local --command "SELECT * FROM media"`
+## Local Verification
 
----
+Run the release checks from the repo root:
 
-## 1. Deploying the API (Cloudflare Workers)
+```bash
+pnpm lint
+pnpm -C apps/api run type-check
+pnpm build
+pnpm -C apps/web run pages:build
+```
 
-The API is built using Hono and runs on Cloudflare Workers.
+Notes:
 
-### Step 1: Login to Cloudflare
-Authenticate Wrangler with your Cloudflare account:
+- `pnpm build` runs the monorepo production build, including `wrangler deploy --dry-run` for the API.
+- `pnpm -C apps/web run pages:build` runs `next build` and then packages the already-built output with `next-on-pages`.
+
+## Deploying the API
+
+The API deploy target is configured in [apps/api/wrangler.toml](./apps/api/wrangler.toml).
+
+Authenticate Wrangler first:
+
 ```bash
 npx wrangler login
 ```
 
-### Step 2: Configure `wrangler.toml`
-Ensure `apps/api/wrangler.toml` has the correct configuration. You may need to update the `name` or add KV/D1 namespace bindings if your project uses them later.
+Deploy production:
 
-### Step 3: Deploy
-Run the deployment command from the `apps/api` directory:
-
-```bash
-cd apps/api
-pnpm run deploy
-```
-*Or from the root:*
 ```bash
 pnpm --filter api run deploy
 ```
 
-Once deployed, Cloudflare will return your worker's URL (e.g., `https://open-mool-api.open-mool.workers.dev`).
-
-### Step 4: Add Secrets (Optional)
-If your API requires environment variables (like Database URLs or API keys), set them using `wrangler secret`:
+Useful preflight command:
 
 ```bash
-cd apps/api
-npx wrangler secret put DATABASE_URL
+pnpm --filter api run build
 ```
 
----
+Set production secrets in Cloudflare before deploying protected flows:
 
-## 2. Alternative: Deploying the Web App to Vercel
+```bash
+npx wrangler secret put CLERK_ISSUER
+npx wrangler secret put CLERK_JWKS_URL
+npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET
+```
 
-While Cloudflare Pages is the recommended deployment target (see below), Vercel is also supported.
+Add optional secrets only if the feature is enabled:
 
-The frontend is a standard Next.js application with static export enabled.
+- `GEMINI_API_KEY`
+- `API_SECRET`
 
-### Step 1: Push to GitHub/GitLab
-Ensure your latest code is pushed to your remote repository.
+## Deploying the Web App to Cloudflare Pages
 
-### Step 2: Import into Vercel
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard).
-2. Click **"Add New..."** -> **"Project"**.
-3. Import your `open-mool` repository.
+Cloudflare Pages is the primary web deployment target.
 
-### Step 3: Configure Build Settings
-Vercel usually auto-detects monorepos, but confirm the settings:
-- **Framework Preset**: Next.js
-- **Root Directory**: `apps/web` (Important: Select the web app folder, not the root)
+### Recommended dashboard setup
 
-### Step 4: Environment Variables
-Add any necessary environment variables in the Vercel dashboard. You likely need to connect the Frontend to your deployed API:
-- `NEXT_PUBLIC_API_URL`: The URL of your deployed Cloudflare Worker (from Section 1).
+1. Go to Cloudflare Dashboard > Workers & Pages.
+2. Create a new Pages project connected to the `open-mool` repository.
+3. Use these build settings:
 
-### Step 5: Deploy
-Click **Deploy**. Vercel will build and host your application.
+- Production branch: `main` or your chosen release branch
+- Framework preset: `Next.js`
+- Build command: `pnpm install && pnpm --filter web run pages:build`
+- Build output directory: `apps/web/.vercel/output/static`
+- Root directory: `/`
 
----
+### Required web environment variables
 
-## Deploying Web App to Cloudflare Pages (Recommended)
+Set these in Cloudflare Pages for each environment:
 
-The web application is configured for deployment to Cloudflare Pages with automated CI/CD via Cloudflare's native Git integration.
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `NEXT_PUBLIC_API_URL`
+- `API_URL`
+- `INTERNAL_PROXY_SIGNING_SECRET`
 
-### Cloudflare Pages Setup
+Optional legacy fallback:
 
-Cloudflare Pages provides built-in CI/CD that automatically builds and deploys your application when you push to your repository.
+- `API_SECRET`
 
-#### Prerequisites
-1. A Cloudflare account with Pages enabled
-2. GitHub repository access
+Do not enable `LOCAL_DEV_AUTH_BYPASS` outside localhost development.
 
-#### Setup Steps
+### Manual Pages deployment
 
-1. Go to **Cloudflare Dashboard** > **Pages**
-2. Click **"Create a project"** > **"Connect to Git"**
-3. Authorize Cloudflare to access your GitHub account
-4. Select your `open-mool` repository
-5. Configure build settings:
-   - **Production branch**: `main` (or `master`)
-   - **Framework preset**: `Next.js (Static HTML Export)`
-   - **Build command**: `pnpm install && pnpm --filter web run build`
-   - **Build output directory**: `apps/web/out`
-   - **Root directory**: `/` (leave as root)
-   - **Environment variables**: None required (see `apps/web/.env.example` for details)
-6. Click **"Save and Deploy"**
+```bash
+pnpm --filter web run pages:build
+npx wrangler pages deploy apps/web/.vercel/output/static --project-name=open-mool-web
+```
 
-#### How It Works
+## Deployment Notes
 
-Cloudflare Pages will:
-1. Monitor your repository for changes to the production branch
-2. Automatically trigger builds when you push commits
-3. Install dependencies using pnpm
-4. Build the Next.js application as a static export
-5. Deploy the `apps/web/out` directory to Cloudflare's edge network
-6. Automatically create preview deployments for pull requests
+- The web app is not a static export. It depends on `next-on-pages` to package dynamic routes, middleware, and Clerk-backed flows for Cloudflare.
+- The API and web app must share the same `INTERNAL_PROXY_SIGNING_SECRET`.
+- Preview and production environments should use different Cloudflare resources where appropriate, especially for D1 and R2.
+- `LOCAL_DEV_AUTH_BYPASS` is for localhost-only contributor workflows and must remain disabled in remote environments.
 
-### Security Features
+## Related Docs
 
-The deployment includes the following security hardening:
-
-- **Strict HTTPS enforcement** via HSTS headers
-- **Content Security Policy (CSP)** headers to prevent XSS attacks
-- **Clickjacking protection** with X-Frame-Options
-- **MIME type sniffing prevention** with X-Content-Type-Options
-- **Referrer policy** for privacy
-- **Permissions policy** to restrict browser features
-
-These are configured via:
-- Next.js middleware (`src/middleware.ts`) for dynamic routes
-- Static `_headers` file (`public/_headers`) for Cloudflare Pages
-
-### Important Notes
-
-- The app is configured for static export (`output: 'export'` in `next.config.mjs`)
-- This means no server-side rendering or API routes - purely static HTML/CSS/JS
-- All security headers are applied at the edge via Cloudflare
-- For SSR support on Cloudflare Pages, use `@cloudflare/next-on-pages` instead
-
-### Mobile-First Design
-
-The application is built with a mobile-first responsive design:
-- Uses Tailwind CSS with mobile-first breakpoints
-- Viewport configuration optimized for all devices
-- Tested across major browsers and device sizes
+- [README.md](./README.md)
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [docs/cloudflare-pages-setup.md](./docs/cloudflare-pages-setup.md)
+- [docs/SECURITY.md](./docs/SECURITY.md)
