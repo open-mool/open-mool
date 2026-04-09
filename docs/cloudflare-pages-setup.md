@@ -20,8 +20,8 @@ Cloudflare Pages provides built-in CI/CD through direct Git integration - no Git
    - **Project name**: `open-mool-web`
    - **Production branch**: `main` or `master`
    - **Framework preset**: Next.js
-   - **Build command**: `pnpm install && pnpm --filter web run build`
-   - **Build output directory**: `.next` (or leave blank for Next.js managed output)
+   - **Build command**: `pnpm install && pnpm --filter web run pages:build`
+   - **Build output directory**: `apps/web/.vercel/output/static`
    - **Root directory**: `/` (leave as default)
    - **Environment variables**: Required (see section below)
 6. Click **"Save and Deploy"**
@@ -74,7 +74,7 @@ You can also add a custom domain in the Cloudflare Pages settings.
 
 ### Build fails with dependency errors
 - Check that `pnpm-lock.yaml` is committed to the repository
-- Verify the build command in Cloudflare Pages settings matches: `pnpm install && pnpm --filter web run build`
+- Verify the build command in Cloudflare Pages settings matches: `pnpm install && pnpm --filter web run pages:build`
 - Check build logs in the Cloudflare Pages dashboard for specific errors
 
 ### Build fails with ESLint errors
@@ -95,11 +95,11 @@ If you need to deploy manually (not recommended for production):
 # Install dependencies
 pnpm install
 
-# Build the app
-pnpm --filter web run build
+# Build the app for Pages
+pnpm --filter web run pages:build
 
 # Deploy using Wrangler CLI (requires CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID)
-npx wrangler pages deploy apps/web/out --project-name=open-mool-web
+npx wrangler pages deploy apps/web/.vercel/output/static --project-name=open-mool-web
 ```
 
 ## Security Best Practices
