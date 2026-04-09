@@ -16,9 +16,9 @@ Secrets for the running application (e.g., database keys, Clerk secrets) are man
 #### API Secrets
 To set required API secrets for **Production**:
 ```bash
-npx wrangler secret put CLERK_ISSUER --env production
-npx wrangler secret put CLERK_JWKS_URL --env production
-npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET --env production
+npx wrangler secret put CLERK_ISSUER
+npx wrangler secret put CLERK_JWKS_URL
+npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET
 ```
 
 To set required API secrets for **Staging**:
@@ -29,6 +29,25 @@ npx wrangler secret put INTERNAL_PROXY_SIGNING_SECRET --env staging
 ```
 
 **Never** put actual secret values in `wrangler.toml`. Use `wrangler secret` commands.
+
+#### How to determine `CLERK_ISSUER` and `CLERK_JWKS_URL`
+
+Use your Clerk Frontend API domain.
+
+- Clerk docs describe the Frontend API as the instance URL hosted at `https://<slug>.clerk.accounts.dev` for development, and they note that you can find that URL in the Clerk Dashboard Domains page.
+- Clerk docs also state that the JWKS URL is your Frontend API URL with `/.well-known/jwks.json` appended.
+- If you change your production Clerk domain, Clerk notes that downstream JWT issuer and JWKS endpoint values must be updated as well.
+
+Practical mapping:
+
+- Development instance example:
+  - `CLERK_ISSUER=https://artistic-bunny-70.clerk.accounts.dev`
+  - `CLERK_JWKS_URL=https://artistic-bunny-70.clerk.accounts.dev/.well-known/jwks.json`
+- Production custom-domain example:
+  - `CLERK_ISSUER=https://clerk.openmool.org`
+  - `CLERK_JWKS_URL=https://clerk.openmool.org/.well-known/jwks.json`
+
+If you are unsure which production domain to use, open Clerk Dashboard -> Domains / API Keys and copy the Frontend API URL shown there. The issuer should match the `iss` claim in Clerk-issued session tokens.
 
 #### Local Development
 For local dev, copy `apps/api/.dev.vars.example` to `apps/api/.dev.vars`. **`.dev.vars` is git-ignored.**
@@ -50,6 +69,18 @@ Optional local keys:
 The Web App (`apps/web`) is a client-side application.
 - **`NEXT_PUBLIC_` variables**: Are exposed to the browser. Do not put secrets here.
 - **env.local**: Used for local dev. Git-ignored.
+
+#### Pages runtime variables
+
+Cloudflare Pages should have these runtime variables for both preview and production:
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `NEXT_PUBLIC_API_URL`
+- `API_URL`
+- `INTERNAL_PROXY_SIGNING_SECRET`
+- `ADMIN_USER_IDS` if admin access is needed
+- `LOCAL_DEV_AUTH_BYPASS=false`
 
 ---
 

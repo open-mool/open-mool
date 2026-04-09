@@ -36,6 +36,8 @@ Set these in Cloudflare Pages (staging and production as applicable):
 - `NEXT_PUBLIC_API_URL`
 - `API_URL`
 - `INTERNAL_PROXY_SIGNING_SECRET`
+- `ADMIN_USER_IDS` if you want `/dashboard/admin` enabled
+- `LOCAL_DEV_AUTH_BYPASS='false'`
 
 Optional legacy fallback:
 - `API_SECRET`
@@ -43,6 +45,24 @@ Optional legacy fallback:
 For local reference values, see `apps/web/.env.example`.
 
 Do not set `LOCAL_DEV_AUTH_BYPASS=true` in Cloudflare environments. It is intended for localhost contributor workflows only.
+
+### How to map the values
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Clerk Dashboard -> API Keys
+- `CLERK_SECRET_KEY`: Clerk Dashboard -> API Keys
+- `NEXT_PUBLIC_API_URL`: public URL of the API Worker for the same environment
+- `API_URL`: same value as `NEXT_PUBLIC_API_URL` unless you intentionally route server-side traffic differently
+- `INTERNAL_PROXY_SIGNING_SECRET`: a long random shared secret that must exactly match the Worker secret of the same name
+
+### Current Open Mool Cloudflare state
+
+As of the latest repo verification, the `open-mool` Pages project already uses the current build pipeline:
+
+- Build command: `pnpm install && pnpm --filter web run pages:build`
+- Output directory: `.vercel/output/static`
+- Root directory: `apps/web`
+
+The Pages project deployment config for both preview and production expects the Clerk-era variables listed above. The next production deploy will use that config, so the remaining requirement is making sure the actual production values are populated in the Pages dashboard before promoting `dev` to `master`.
 
 ## Step 2: Verify the Deployment
 

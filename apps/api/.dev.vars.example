@@ -1,4 +1,11 @@
 # Required for Clerk JWT verification in local Worker runtime
+# Use the same Frontend API domain shown in Clerk Dashboard -> Domains / API Keys.
+# Development example:
+#   CLERK_ISSUER='https://your-instance.clerk.accounts.dev'
+#   CLERK_JWKS_URL='https://your-instance.clerk.accounts.dev/.well-known/jwks.json'
+# Production custom-domain example:
+#   CLERK_ISSUER='https://clerk.your-domain.com'
+#   CLERK_JWKS_URL='https://clerk.your-domain.com/.well-known/jwks.json'
 CLERK_ISSUER='https://your-clerk-instance.clerk.accounts.dev'
 CLERK_JWKS_URL='https://your-clerk-instance.clerk.accounts.dev/.well-known/jwks.json'
 
