@@ -19,6 +19,7 @@ wrangler-debug.log
 .env.local
 .env.*.local
 .env.*
+.omx
 
 # Debug logs
 npm-debug.log*

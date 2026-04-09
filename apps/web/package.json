@@ -18,7 +18,7 @@
         "dev": "next dev",
         "dev:remote": "next dev",
         "build": "next build",
-        "pages:build": "npx @cloudflare/next-on-pages",
+        "pages:build": "rm -rf .vercel/output && pnpm exec next-on-pages",
         "start": "next start",
         "lint": "next lint"
     },

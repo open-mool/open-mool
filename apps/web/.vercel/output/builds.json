@@ -6,11 +6,11 @@
     "/Users/sid/Library/Caches/pnpm/dlx/gom5al2jeu66xh23luivskjate/pkg/node_modules/vercel/dist/vc.js",
     "build"
   ],
-  "cliVersion": "50.31.1",
+  "cliVersion": "50.42.0",
   "builds": [
     {
       "require": "@vercel/next",
-      "requirePath": "/Users/sid/Library/Caches/pnpm/dlx/gom5al2jeu66xh23luivskjate/19cdb97fcb6-5f0d/node_modules/.pnpm/@vercel+next@4.16.1/node_modules/@vercel/next/dist/index",
+      "requirePath": "/Users/sid/Library/Caches/pnpm/dlx/gom5al2jeu66xh23luivskjate/19d6f41a859-d60c/node_modules/.pnpm/@vercel+next@4.16.5/node_modules/@vercel/next/dist/index",
       "apiVersion": 2,
       "src": "package.json",
       "use": "@vercel/next",
