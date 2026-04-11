@@ -40,12 +40,12 @@ app.get('/media/explore', getExploreMedia)
 app.get('/api/media/explore', getPublicMedia)
 app.get('/api/media/file/:key', serveMedia)
 app.get('/api/media/search', searchMedia)
-app.get('/api/media/:id', getMediaById)
 
 // Protected API routes
 app.use('/api/*', authMiddleware())
 app.get('/api/media/my-uploads', getMyUploads)
 app.get('/api/media/count', getMediaCount)
+app.get('/api/media/:id', getMediaById)
 
 app.route('/upload', upload)
 
