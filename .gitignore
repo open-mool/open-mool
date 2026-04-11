@@ -30,8 +30,4 @@ pnpm-debug.log*
 # System Files
 .DS_Store
 Thumbs.db
-.playwright-mcp/console-2026-04-09T03-19-43-598Z.log
-.playwright-mcp/console-2026-04-09T03-59-26-840Z.log
-.playwright-mcp/page-2026-04-09T03-19-45-027Z.yml
-.playwright-mcp/page-2026-04-09T03-59-27-413Z.yml
-.playwright-mcp/page-2026-04-09T04-04-09-349Z.yml
+.playwright-mcp/*

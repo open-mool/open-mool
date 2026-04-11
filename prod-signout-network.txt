@@ -1,0 +1,16 @@
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://openmool.org/?_rsc=lrvyd => [200] 
+[GET] https://openmool.org/about?_rsc=lrvyd => [200] 
+[GET] https://openmool.org/how-it-works?_rsc=lrvyd => [200] 
+[GET] https://openmool.org/explore?_rsc=lrvyd => [200] 
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
+[GET] https://clerk.openmool.org/npm/@clerk/clerk-js@5/dist/clerk.browser.js => [FAILED] csp
